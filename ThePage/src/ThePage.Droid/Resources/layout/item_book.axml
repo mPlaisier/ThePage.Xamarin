@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:local="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/border_blue"
+	android:layout_marginTop="3dp"
+	android:layout_marginBottom="3dp"
+	android:padding="5dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+	<TextView
+		android:id="@+id/lblName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20dp"
+		local:layout_constraintTop_toTopOf="parent"
+		local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
+		local:MvxBind="Text Title"/>
+	<TextView
+		android:id="@+id/lblAuthor"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textSize="14dp"
+		local:layout_constraintTop_toBottomOf="@+id/lblName"
+		local:layout_constraintBottom_toBottomOf="parent"
+		local:MvxBind="Text Author.Name"/>
+
+	<ImageView
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:src="@drawable/ic_arrow_right"
+		local:layout_constraintTop_toTopOf="@+id/lblName"
+		local:layout_constraintBottom_toBottomOf="@id/lblAuthor"
+		local:layout_constraintEnd_toEndOf="parent"    />
+</android.support.constraint.ConstraintLayout>

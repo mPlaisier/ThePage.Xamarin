@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -9,5 +10,7 @@ namespace ThePage.Core
         Task<List<BookCell>> GetAllBooks();
 
         Task<List<AuthorCell>> GetAllAuthors();
+
+        Task<bool> AddAuthor(Author author);
     }
 }

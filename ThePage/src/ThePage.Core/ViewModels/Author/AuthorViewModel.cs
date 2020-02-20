@@ -48,8 +48,8 @@ namespace ThePage.Core
 
         });
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
+        IMvxCommand _addAuthorCommand;
+        public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
         {
             var result = await _navigation.Navigate<AddAuthorViewModel, bool>();
             if (result)

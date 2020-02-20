@@ -11,11 +11,12 @@ namespace ThePage.Core
     public class BookViewModel : BaseViewModel
     {
         readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<Book> _books;
-        public List<Book> Books
+        List<BookCell> _books;
+        public List<BookCell> Books
         {
             get => _books;
             set => SetProperty(ref _books, value);
@@ -27,9 +28,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookViewModel(IMvxNavigationService navigation)
+        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService)
         {
             _navigation = navigation;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -70,7 +72,7 @@ namespace ThePage.Core
 
         async Task Refresh()
         {
-            Books = await BookManager.FetchBooks(CancellationToken.None);
+            Books = await _thePageService.GetAllBooks();
         }
 
         #endregion
