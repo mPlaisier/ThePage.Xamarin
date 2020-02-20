@@ -6,5 +6,6 @@ namespace ThePage.Core.ViewModels.Main
 {
     public class MainViewModel : BaseViewModel
     {
+        public override string Title => "Title";
     }
 }

@@ -12,7 +12,7 @@ namespace ThePage.Api
     {
         #region FETCH
 
-        public static async Task<List<Author>> FetchAuthor(CancellationToken cancellationToken)
+        public static async Task<List<Author>> FetchAuthors(CancellationToken cancellationToken)
         {
             try
             {

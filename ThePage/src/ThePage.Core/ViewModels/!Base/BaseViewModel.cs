@@ -7,5 +7,6 @@ namespace ThePage.Core.ViewModels
 {
     public abstract class BaseViewModel : MvxViewModel
     {
+        public abstract string Title { get; }
     }
 }
