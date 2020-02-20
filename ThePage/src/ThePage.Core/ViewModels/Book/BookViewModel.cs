@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,40 +8,38 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AuthorViewModel : BaseViewModel
+    public class BookViewModel : BaseViewModel
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<AuthorCell> _authors;
-        public List<AuthorCell> Authors
+        List<Book> _books;
+        public List<Book> Books
         {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
+            get => _books;
+            set => SetProperty(ref _books, value);
         }
 
-        public override string Title => "Authors";
+        public override string Title => "Books";
 
         #endregion
 
         #region Constructor
 
-        public AuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public BookViewModel(IMvxNavigationService navigation)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
         }
 
         #endregion
 
         #region Commands
 
-        IMvxCommand<Author> _itemClickCommand;
-        public IMvxCommand<Author> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Author>(async (item) =>
+        IMvxCommand<Book> _itemClickCommand;
+        public IMvxCommand<Book> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Book>(async (item) =>
         {
-            var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
+            var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)
                 await Refresh();
 
@@ -51,7 +48,7 @@ namespace ThePage.Core
         IMvxCommand _addbookCommand;
         public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddAuthorViewModel, bool>();
+            var result = await _navigation.Navigate<AddBookViewModel, bool>();
             if (result)
                 await Refresh();
         });
@@ -73,7 +70,7 @@ namespace ThePage.Core
 
         async Task Refresh()
         {
-            Authors = await _thePageService.GetAllAuthors();
+            Books = await BookManager.FetchBooks(CancellationToken.None);
         }
 
         #endregion

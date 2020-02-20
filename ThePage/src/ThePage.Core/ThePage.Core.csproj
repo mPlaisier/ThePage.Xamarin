@@ -10,6 +10,8 @@
   <ItemGroup>
     <Folder Include="ViewModels\Author\" />
     <Folder Include="Services\" />
+    <Folder Include="ViewModels\Book\" />
+    <Folder Include="Cells\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />
