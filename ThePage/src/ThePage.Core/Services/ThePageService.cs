@@ -41,6 +41,13 @@ namespace ThePage.Core
             return list;
         }
 
+        public async Task<bool> AddAuthor(Author author)
+        {
+            var result = await AuthorManager.AddAuthor(author, CancellationToken.None);
+
+            return result != null;
+        }
+
         #endregion
 
         #region Private
@@ -54,7 +61,6 @@ namespace ThePage.Core
         {
             return await AuthorManager.FetchAuthors(CancellationToken.None);
         }
-
 
         #endregion
     }

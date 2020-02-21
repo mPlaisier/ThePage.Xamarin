@@ -17,7 +17,7 @@ namespace ThePage.Core
 
         public override string Title => "Add book";
 
-        public string LblName => "Title:";
+        public string LblName => "Name:";
 
         string _txtName;
         public string TxtName
@@ -32,14 +32,14 @@ namespace ThePage.Core
 
         public bool IsValid => !string.IsNullOrEmpty(TxtName);
 
-        public string LblBtn => "Add Book";
+        public string LblBtn => "Add author";
 
         #endregion
 
         #region Commands
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
+        IMvxCommand _addAuthorCommand;
+        public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
         {
             await AddAuthor();
         });

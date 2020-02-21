@@ -10,4 +10,9 @@
 
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
+
+
+    <color name="primaryColorError">#c62828</color>
+    <color name="primaryDarkColorError">#8e0000</color>
+    <color name="primaryLightColorError">#ff5f52</color>
 </resources>
