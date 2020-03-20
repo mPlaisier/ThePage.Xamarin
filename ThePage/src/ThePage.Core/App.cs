@@ -13,7 +13,7 @@ namespace ThePage.Core
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
 
-            RegisterAppStart<AuthorViewModel>();
+            RegisterAppStart<MainViewModel>();
         }
     }
 }

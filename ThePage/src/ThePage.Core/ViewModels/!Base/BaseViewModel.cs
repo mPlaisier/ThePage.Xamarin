@@ -8,5 +8,12 @@ namespace ThePage.Core.ViewModels
     public abstract class BaseViewModel : MvxViewModel
     {
         public abstract string Title { get; }
+
+        bool _isLoading;
+        public virtual bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
+        }
     }
 }

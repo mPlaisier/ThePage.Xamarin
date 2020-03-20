@@ -12,6 +12,8 @@
     <Folder Include="Services\" />
     <Folder Include="ViewModels\Book\" />
     <Folder Include="Cells\" />
+    <Folder Include="Cells\Menu\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />

@@ -18,7 +18,7 @@ namespace ThePage.Api
             {
                 using (var client = new HttpClient())
                 using (var request = new HttpRequestMessage(HttpMethod.Get, Constants.ThePageAPI_Url + EndPoints.GetAuthors))
-                using (var response = client.SendAsync(request, cancellationToken).Result)
+                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     var content = await response.Content.ReadAsStringAsync();
 
@@ -45,7 +45,7 @@ namespace ThePage.Api
             {
                 using (var client = new HttpClient())
                 using (var request = new HttpRequestMessage(HttpMethod.Get, $"{Constants.ThePageAPI_Url}{EndPoints.GetAuthor}{id}"))
-                using (var response = client.SendAsync(request, cancellationToken).Result)
+                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     var content = await response.Content.ReadAsStringAsync();
 

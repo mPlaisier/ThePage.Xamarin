@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -61,9 +60,9 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
-            await Refresh();
-
             await base.Initialize();
+
+            Refresh().Forget();
         }
 
         #endregion
@@ -72,7 +71,11 @@ namespace ThePage.Core
 
         async Task Refresh()
         {
+            IsLoading = true;
+
             Books = await _thePageService.GetAllBooks();
+
+            IsLoading = false;
         }
 
         #endregion

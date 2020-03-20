@@ -9,4 +9,15 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_huge">64dp</dimen>
+
+    <dimen name="padding_tiny">@dimen/margin_tiny</dimen>
+    <dimen name="padding_small">@dimen/margin_small</dimen>
+    <dimen name="padding_medium">@dimen/margin_medium</dimen>
+    <dimen name="padding_large">@dimen/margin_large</dimen>
+    <dimen name="padding_huge">@dimen/margin_huge</dimen>
+
+<!-- Font size -->
+    <dimen name="textNormal">15sp</dimen>
+    <dimen name="textTitle">20sp</dimen>
+
 </resources>

@@ -72,6 +72,8 @@
     <Compile Include="Views\Author\AuthorFragment.cs" />
     <Compile Include="Views\Book\BookFragment.cs" />
     <Compile Include="Views\Author\AddAuthorFragment.cs" />
+    <Compile Include="Views\Author\AuthorDetailFragment.cs" />
+    <Compile Include="Adapters\MenuTemplateSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -94,6 +96,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmCross.Plugin.Visibility">
+      <Version>6.4.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +161,22 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_bookdetail.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_authordetail.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_menu_item.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_menu_header.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -195,6 +216,7 @@
     <Folder Include="Author\" />
     <Folder Include="Views\Author\" />
     <Folder Include="Views\Book\" />
+    <Folder Include="Adapters\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

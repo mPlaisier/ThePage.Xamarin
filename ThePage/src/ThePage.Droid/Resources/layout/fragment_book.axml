@@ -20,5 +20,18 @@
         android:layout_margin="10dp"
         local:MvxItemTemplate="@layout/item_book"
         local:MvxBind="ItemsSource Books;ItemClick ItemClickCommand;" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        local:MvxBind="Visible IsLoading">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateOnly="true"
+            android:indeterminate="true" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

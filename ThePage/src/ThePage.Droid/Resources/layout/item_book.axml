@@ -32,4 +32,6 @@
 		local:layout_constraintTop_toTopOf="@+id/lblName"
 		local:layout_constraintBottom_toBottomOf="@id/lblAuthor"
 		local:layout_constraintEnd_toEndOf="parent"    />
+
+    
 </android.support.constraint.ConstraintLayout>

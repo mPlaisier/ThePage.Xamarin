@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -39,8 +36,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<Author> _itemClickCommand;
-        public IMvxCommand<Author> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Author>(async (item) =>
+        IMvxCommand<AuthorCell> _itemClickCommand;
+        public IMvxCommand<AuthorCell> ItemClickCommand => _itemClickCommand ??= new MvxCommand<AuthorCell>(async (item) =>
         {
             var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
             if (result)
@@ -62,9 +59,9 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
-            await Refresh();
-
             await base.Initialize();
+
+            Refresh().Forget();
         }
 
         #endregion
@@ -73,7 +70,11 @@ namespace ThePage.Core
 
         async Task Refresh()
         {
+            IsLoading = true;
+
             Authors = await _thePageService.GetAllAuthors();
+
+            IsLoading = false;
         }
 
         #endregion

@@ -1,9 +1,6 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,13 +9,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public Author Author { get; }
+        public AuthorCell Author { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(Author author)
+        public AuthorDetailParameter(AuthorCell author)
         {
             Author = author;
         }
@@ -26,7 +23,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>
+    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
 
@@ -34,7 +31,7 @@ namespace ThePage.Core
 
         public override string Title => "Author Detail";
 
-        public Author Author { get; internal set; }
+        public AuthorCell Author { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -51,9 +48,9 @@ namespace ThePage.Core
 
         public bool IsValid => !string.IsNullOrEmpty(TxtName);
 
-        public string LblUpdateBtn => "Update Book";
+        public string LblUpdateBtn => "Update Author";
 
-        public string LblDeleteBtn => "Delete Book";
+        public string LblDeleteBtn => "Delete Author";
 
         bool _isEditing;
         public bool IsEditing
@@ -66,24 +63,22 @@ namespace ThePage.Core
 
         #region Commands
 
-        //EditBookCommand
-        IMvxCommand _editbookCommand;
-        public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(() =>
+        IMvxCommand _editAuthorCommand;
+        public IMvxCommand EditAuthorCommand => _editAuthorCommand ??= new MvxCommand(() =>
         {
             IsEditing = !IsEditing;
         });
 
-        //DeleteBookCommand
-        IMvxCommand _deleteBookCommand;
-        public IMvxCommand DeleteBookCommand => _deleteBookCommand ??= new MvxCommand(async () =>
+        IMvxCommand _deleteAuthorCommand;
+        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(async () =>
         {
-            await DeleteAuthor();
+            //await DeleteAuthor();
         });
 
-        IMvxCommand _updateBookCommand;
-        public IMvxCommand UpdateBookCommand => _updateBookCommand ??= new MvxCommand(async () =>
+        IMvxCommand _updateAuthorCommand;
+        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(async () =>
         {
-            await UpdateAuthor();
+            //await UpdateAuthor();
         });
 
         #endregion
@@ -104,29 +99,30 @@ namespace ThePage.Core
             Author = parameter.Author;
 
             TxtName = Author.Name;
+            IsEditing = false;
         }
 
         #endregion
 
         #region Private
 
-        async Task UpdateAuthor()
-        {
-            Author.Name = TxtName;
+        //async Task UpdateAuthor()
+        //{
+        //    Author.Name = TxtName;
 
-            var author = AuthorManager.UpdateAuthor(Author, CancellationToken.None).Result;
+        //    var author = AuthorManager.UpdateAuthor(Author, CancellationToken.None).Result;
 
-            if (author != null)
-                await _navigation.Close(this, true);
-        }
+        //    if (author != null)
+        //        await _navigation.Close(this, true);
+        //}
 
-        async Task DeleteAuthor()
-        {
-            var result = AuthorManager.DeleteAuthor(Author, CancellationToken.None).Result;
+        //async Task DeleteAuthor()
+        //{
+        //    var result = AuthorManager.DeleteAuthor(Author, CancellationToken.None).Result;
 
-            if (result)
-                await _navigation.Close(this, true);
-        }
+        //    if (result)
+        //        await _navigation.Close(this, true);
+        //}
 
         #endregion
     }

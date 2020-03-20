@@ -1,30 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+﻿using Android.OS;
+using Android.Support.V7.Widget;
 using Android.Views;
-using Android.Widget;
 using MvvmCross.Droid.Support.V4;
-using MvvmCross.ViewModels;
 using MvvmCross.Platforms.Android.Binding.BindingContext;
+using MvvmCross.ViewModels;
+using ThePage.Core.ViewModels;
+using ThePage.Droid.Views.Main;
 
 namespace ThePage.Droid.Views
 {
     public abstract class BaseFragment<TViewModel> : MvxFragment<TViewModel>
-        where TViewModel : class, IMvxViewModel
+        where TViewModel : BaseViewModel, IMvxViewModel
     {
         protected abstract int FragmentLayoutId { get; }
+        protected virtual bool ShowNavigationIcon => true;
+
+        Toolbar _toolbar;
+
+        #region LifeCycle
+
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+
+
+
+        }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
 
+            var activity = (MainContainerActivity)Activity;
+            _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
+
+            InitializeToolbar();
+
             return this.BindingInflate(FragmentLayoutId, container, false);
         }
+
+        #endregion
+
+        #region Virtual
+
+        public virtual bool OnBackPressed()
+        {
+            return false;
+        }
+
+        #endregion
+
+        #region Public
+
+        public void InitializeToolbar()
+        {
+            var activity = (MainContainerActivity)Activity;
+            _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
+
+            if (_toolbar != null)
+            {
+                activity.SetSupportActionBar(_toolbar);
+                if (ShowNavigationIcon)
+                    activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+                else
+                    activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
+                _toolbar.Title = ViewModel.Title;
+            }
+        }
+
+        #endregion
     }
 }

@@ -18,5 +18,7 @@ namespace ThePage.Droid.Views.Main
     public class MainFragment : BaseFragment<MainViewModel>
     {
         protected override int FragmentLayoutId => Resource.Layout.fragment_main;
+
+        protected override bool ShowNavigationIcon => false;
     }
 }

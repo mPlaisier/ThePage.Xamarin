@@ -15,7 +15,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Add book";
+        public override string Title => "New Author";
 
         public string LblName => "Name:";
 
