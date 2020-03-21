@@ -29,6 +29,7 @@ namespace ThePage.Core
     public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
@@ -73,24 +74,19 @@ namespace ThePage.Core
         });
 
         IMvxCommand _deleteAuthorCommand;
-        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(async () =>
-        {
-            await DeleteAuthor();
-        });
+        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(() => DeleteAuthor().Forget());
 
         IMvxCommand _updateAuthorCommand;
-        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(async () =>
-        {
-            await UpdateAuthor();
-        });
+        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(() => UpdateAuthor().Forget());
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailViewModel(IMvxNavigationService navigation)
+        public AuthorDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService)
         {
             _navigation = navigation;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -111,20 +107,33 @@ namespace ThePage.Core
 
         async Task UpdateAuthor()
         {
+            if (IsLoading)
+                return;
+
+            IsLoading = true;
+
             Author.Name = TxtName;
 
-            var author = AuthorManager.UpdateAuthor(new Author(Author.Id, Author.Name), CancellationToken.None).Result;
+            await Task.Delay(5000);
+            var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
 
-            if (author != null)
-                await _navigation.Close(this, true);
+            IsEditing = false;
+            IsLoading = false;
         }
 
         async Task DeleteAuthor()
         {
-            var result = AuthorManager.DeleteAuthor(new Author(Author.Id, Author.Name), CancellationToken.None).Result;
+            if (IsLoading)
+                return;
+
+            IsLoading = true;
+
+            var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
 
             if (result)
                 await _navigation.Close(this, true);
+
+            IsLoading = false;
         }
 
         #endregion
