@@ -59,13 +59,18 @@ namespace ThePage.Core
 
         async Task AddAuthor()
         {
+            if (IsLoading)
+                return;
+
+            IsLoading = true;
+
             var author = new Author(TxtName);
             author = AuthorManager.AddAuthor(author, CancellationToken.None).Result;
 
             if (author != null)
-            {
                 await _navigation.Close(this, true);
-            }
+
+            IsLoading = false;
         }
 
         #endregion

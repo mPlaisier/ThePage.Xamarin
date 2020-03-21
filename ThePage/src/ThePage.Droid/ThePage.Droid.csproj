@@ -129,10 +129,6 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\ic_close.png">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable\ic_edit.png">
       <SubType></SubType>
       <Generator></Generator>
@@ -174,6 +170,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cell_menu_header.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_arrow_back.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_close.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

@@ -19,5 +19,16 @@ namespace ThePage.Droid.Views.Main
     public class MainContainerActivity : BaseActivity<MainContainerViewModel>
     {
         protected override int ActivityLayoutId => Resource.Layout.activity_main_container;
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                OnBackPressed();
+                return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
     }
 }
