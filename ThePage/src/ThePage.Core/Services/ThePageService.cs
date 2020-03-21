@@ -9,36 +9,37 @@ namespace ThePage.Core
 {
     public class ThePageService : IThePageService
     {
-        #region Books
+        #region Public(Books)
 
-        public async Task<List<BookCell>> GetAllBooks()
+        public async Task<List<Book>> GetAllBooks()
         {
-            var books = await FetchBooks();
-            var authors = await FetchAuthors();
+            return await BookManager.FetchBooks(CancellationToken.None);
+        }
 
-            var list = new List<BookCell>();
-            foreach (var item in books)
-            {
-                var author = authors.Where(x => x.Id == item.Author).First();
-                list.Add(new BookCell(item.Id, item.Title, author));
-            }
-            return list;
+        public async Task<bool> AddBook(Book book)
+        {
+            var result = await BookManager.AddBook(book, CancellationToken.None);
+
+            return result != null;
+        }
+
+        public async Task<Book> UpdateBook(Book book)
+        {
+            return await BookManager.AddBook(book, CancellationToken.None);
+        }
+
+        public async Task<bool> DeleteBook(Book content)
+        {
+            return await BookManager.DeleteBook(content, CancellationToken.None);
         }
 
         #endregion
 
         #region Authors
 
-        public async Task<List<AuthorCell>> GetAllAuthors()
+        public async Task<List<Author>> GetAllAuthors()
         {
-            var authors = await FetchAuthors();
-
-            var list = new List<AuthorCell>();
-            foreach (var item in authors)
-            {
-                list.Add(new AuthorCell(item.Id, item.Name));
-            }
-            return list;
+            return await AuthorManager.FetchAuthors(CancellationToken.None);
         }
 
         public async Task<bool> AddAuthor(Author author)
@@ -48,18 +49,14 @@ namespace ThePage.Core
             return result != null;
         }
 
-        #endregion
-
-        #region Private
-
-        async Task<List<Book>> FetchBooks()
+        public async Task<Author> UpdateAuthor(Author author)
         {
-            return await BookManager.FetchBooks(CancellationToken.None);
+            return await AuthorManager.UpdateAuthor(author, CancellationToken.None);
         }
 
-        async Task<List<Author>> FetchAuthors()
+        public async Task<bool> DeleteAuthor(Author author)
         {
-            return await AuthorManager.FetchAuthors(CancellationToken.None);
+            return await AuthorManager.DeleteAuthor(author, CancellationToken.None);
         }
 
         #endregion

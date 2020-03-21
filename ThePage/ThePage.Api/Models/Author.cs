@@ -13,7 +13,6 @@ namespace ThePage.Api
         [JsonProperty("name")]
         public string Name { get; set; }
 
-
         #endregion
 
         #region Constructor
@@ -24,6 +23,12 @@ namespace ThePage.Api
 
         public Author(string name)
         {
+            Name = name;
+        }
+
+        public Author(string id, string name)
+        {
+            Id = id;
             Name = name;
         }
 
