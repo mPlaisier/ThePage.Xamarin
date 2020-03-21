@@ -73,7 +73,7 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            Books = await _thePageService.GetAllBooks();
+            var books = await _thePageService.GetAllBooks();
 
             IsLoading = false;
         }

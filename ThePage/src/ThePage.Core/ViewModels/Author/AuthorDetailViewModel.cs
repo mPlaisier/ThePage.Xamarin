@@ -1,6 +1,9 @@
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -72,13 +75,13 @@ namespace ThePage.Core
         IMvxCommand _deleteAuthorCommand;
         public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(async () =>
         {
-            //await DeleteAuthor();
+            await DeleteAuthor();
         });
 
         IMvxCommand _updateAuthorCommand;
         public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(async () =>
         {
-            //await UpdateAuthor();
+            await UpdateAuthor();
         });
 
         #endregion
@@ -106,23 +109,23 @@ namespace ThePage.Core
 
         #region Private
 
-        //async Task UpdateAuthor()
-        //{
-        //    Author.Name = TxtName;
+        async Task UpdateAuthor()
+        {
+            Author.Name = TxtName;
 
-        //    var author = AuthorManager.UpdateAuthor(Author, CancellationToken.None).Result;
+            var author = AuthorManager.UpdateAuthor(new Author(Author.Id, Author.Name), CancellationToken.None).Result;
 
-        //    if (author != null)
-        //        await _navigation.Close(this, true);
-        //}
+            if (author != null)
+                await _navigation.Close(this, true);
+        }
 
-        //async Task DeleteAuthor()
-        //{
-        //    var result = AuthorManager.DeleteAuthor(Author, CancellationToken.None).Result;
+        async Task DeleteAuthor()
+        {
+            var result = AuthorManager.DeleteAuthor(new Author(Author.Id, Author.Name), CancellationToken.None).Result;
 
-        //    if (result)
-        //        await _navigation.Close(this, true);
-        //}
+            if (result)
+                await _navigation.Close(this, true);
+        }
 
         #endregion
     }

@@ -72,7 +72,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            Authors = await _thePageService.GetAllAuthors();
+            var authors = await _thePageService.GetAllAuthors();
+            Authors = AuthorBusinessLogic.AuthorToAuthorCell(authors);
 
             IsLoading = false;
         }
