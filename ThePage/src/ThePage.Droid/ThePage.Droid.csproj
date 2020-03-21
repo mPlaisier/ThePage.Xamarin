@@ -74,6 +74,7 @@
     <Compile Include="Views\Author\AddAuthorFragment.cs" />
     <Compile Include="Views\Author\AuthorDetailFragment.cs" />
     <Compile Include="Adapters\MenuTemplateSelector.cs" />
+    <Compile Include="Views\Book\AddBookFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -178,6 +179,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\ic_close.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_addbook.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\author_spinner_template.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

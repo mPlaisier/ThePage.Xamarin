@@ -12,6 +12,7 @@ namespace ThePage.Core
     public class AddAuthorViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
@@ -48,9 +49,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddAuthorViewModel(IMvxNavigationService navigation)
+        public AddAuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService)
         {
             _navigation = navigation;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -64,10 +66,9 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var author = new Author(TxtName);
-            author = AuthorManager.AddAuthor(author, CancellationToken.None).Result;
+            var result = await _thePageService.AddAuthor(new Author(TxtName));
 
-            if (author != null)
+            if (result)
                 await _navigation.Close(this, true);
 
             IsLoading = false;
