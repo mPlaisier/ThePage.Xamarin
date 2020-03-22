@@ -36,12 +36,13 @@
 
     <mvvmcross.platforms.android.binding.views.MvxSpinner
         android:id="@+id/spnrAuthor"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
         local:layout_constraintBottom_toTopOf="@+id/btnAdd"
         local:layout_constraintStart_toStartOf="parent"
         local:MvxItemTemplate="@layout/author_spinner_template"
+        local:MvxDropDownItemTemplate="@layout/author_spinner_template"
         local:MvxBind="ItemsSource Authors; SelectedItem SelectedAuthor; HandleItemSelected ItemSelectedCommand"/>
     
 

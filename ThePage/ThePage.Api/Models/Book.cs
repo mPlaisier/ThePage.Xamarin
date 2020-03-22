@@ -30,6 +30,11 @@ namespace ThePage.Api
             Author = author;
         }
 
+        public Book(string id, string title, string author) : this(title, author)
+        {
+            Id = id;
+        }
+
         #endregion
     }
 }

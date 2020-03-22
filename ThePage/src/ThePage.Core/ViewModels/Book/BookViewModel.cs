@@ -74,6 +74,8 @@ namespace ThePage.Core
             IsLoading = true;
 
             var books = await _thePageService.GetAllBooks();
+            var authors = await _thePageService.GetAllAuthors();
+            Books = BookBusinessLogic.BooksToBookCells(books, authors);
 
             IsLoading = false;
         }
