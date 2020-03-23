@@ -75,6 +75,7 @@
     <Compile Include="Views\Author\AuthorDetailFragment.cs" />
     <Compile Include="Adapters\MenuTemplateSelector.cs" />
     <Compile Include="Views\Book\AddBookFragment.cs" />
+    <Compile Include="Views\Book\BookDetailFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">

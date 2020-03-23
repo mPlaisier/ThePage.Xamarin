@@ -7,63 +7,66 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/lblName"
+        android:id="@+id/lblTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toTopOf="parent"
-        local:layout_constraintBottom_toTopOf="@+id/txtName"
+        local:layout_constraintBottom_toTopOf="@+id/txtTitle"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblName"/>
+        local:MvxBind="Text LblTitle"/>
 
     <EditText
-        android:id="@+id/txtName"
+        android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblName"
-        local:layout_constraintBottom_toTopOf="@+id/lblNameValue"
+        local:layout_constraintTop_toBottomOf="@+id/lblTitle"
+        local:layout_constraintBottom_toTopOf="@+id/lblTitleValue"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text TxtName;Visibility Visibility(IsEditing)"/>
+        local:MvxBind="Text TxtTitle;Visibility Visibility(IsEditing)"/>
 
      <TextView
-        android:id="@+id/lblNameValue"
+        android:id="@+id/lblTitleValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        local:layout_constraintTop_toBottomOf="@+id/txtName"
+        local:layout_constraintTop_toBottomOf="@+id/txtTitle"
         local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text Book.Name;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Text Book.Title;Visibility InvertedVisibility(IsEditing)"/>
 
     <TextView
         android:id="@+id/lblAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        local:layout_constraintTop_toBottomOf="@+id/lblNameValue"
-        local:layout_constraintBottom_toTopOf="@+id/txtAuthor"
+        local:layout_constraintTop_toBottomOf="@+id/lblTitleValue"
+        local:layout_constraintBottom_toTopOf="@+id/spnrAuthor"
         local:layout_constraintStart_toStartOf="parent"
         local:MvxBind="Text LblAuthor"/>
 
-    <EditText
-        android:id="@+id/txtAuthor"
+
+    <mvvmcross.platforms.android.binding.views.MvxSpinner
+        android:id="@+id/spnrAuthor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
         local:layout_constraintBottom_toTopOf="@+id/lblAuthorValue"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text TxtAuthor;Visibility Visibility(IsEditing)"/>
+        local:MvxItemTemplate="@layout/author_spinner_template"
+        local:MvxDropDownItemTemplate="@layout/author_spinner_template"
+        local:MvxBind="ItemsSource Authors; SelectedItem SelectedAuthor; HandleItemSelected ItemSelectedCommand;Visibility Visibility(IsEditing)"/>
 
     <TextView
         android:id="@+id/lblAuthorValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        local:layout_constraintTop_toBottomOf="@+id/txtAuthor"
+        local:layout_constraintTop_toBottomOf="@+id/spnrAuthor"
         local:layout_constraintBottom_toTopOf="@+id/PrimaryBtnWarning"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text Book.Author;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Text Book.Author.Name;Visibility InvertedVisibility(IsEditing)"/>
 
     <TextView
         style="@style/PrimaryBtnWarning"
@@ -101,4 +104,19 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Click EditBookCommand;Visibility Visibility(IsEditing)"/>
+
+     <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        local:MvxBind="Visible IsLoading">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateOnly="true"
+            android:indeterminate="true" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

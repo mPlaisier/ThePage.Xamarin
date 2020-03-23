@@ -114,7 +114,6 @@ namespace ThePage.Core
 
             Author.Name = TxtName;
 
-            await Task.Delay(5000);
             var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
 
             IsEditing = false;

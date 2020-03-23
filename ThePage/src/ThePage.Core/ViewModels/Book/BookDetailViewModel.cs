@@ -1,5 +1,6 @@
-using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -12,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public Book Book { get; }
+        public BookCell Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public BookDetailParameter(Book book)
+        public BookDetailParameter(BookCell book)
         {
             Book = book;
         }
@@ -28,40 +29,49 @@ namespace ThePage.Core
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
         public override string Title => "Book Detail";
 
-        public Book Book { get; internal set; }
+        BookCell _bookCell;
+        public BookCell Book
+        {
+            get => _bookCell;
+            internal set => SetProperty(ref _bookCell, value);
+        }
 
-        public string LblName => "Title:";
+        public string LblTitle => "Title:";
 
         public string LblAuthor => "Author:";
 
-        string _txtName;
-        public string TxtName
+        string _txtTitle;
+        public string TxtTitle
         {
-            get => _txtName;
+            get => _txtTitle;
             set
             {
-                SetProperty(ref _txtName, value);
+                SetProperty(ref _txtTitle, value);
                 RaisePropertyChanged(nameof(IsValid));
             }
         }
 
-        string _txtAuthor;
-        public string TxtAuthor
+        List<Author> _authors;
+        public List<Author> Authors
         {
-            get => _txtAuthor;
-            set
-            {
-                SetProperty(ref _txtAuthor, value);
-                RaisePropertyChanged(nameof(IsValid));
-            }
+            get => _authors;
+            set => SetProperty(ref _authors, value);
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtName) && !string.IsNullOrEmpty(TxtAuthor);
+        Author _selectedAuthor;
+        public Author SelectedAuthor
+        {
+            get => _selectedAuthor;
+            set => SetProperty(ref _selectedAuthor, value);
+        }
+
+        public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
 
         public string LblUpdateBtn => "Update Book";
 
@@ -83,28 +93,27 @@ namespace ThePage.Core
         public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(() =>
         {
             IsEditing = !IsEditing;
+            if (IsEditing)
+            {
+                SelectedAuthor = Book.Author != null ? Authors.FirstOrDefault(a => a.Id == Book.Author.Id) : Authors[0];
+                RaisePropertyChanged(nameof(IsValid));
+            }
         });
 
-        //DeleteBookCommand
         IMvxCommand _deleteBookCommand;
-        public IMvxCommand DeleteBookCommand => _deleteBookCommand ??= new MvxCommand(async () =>
-        {
-            await DeleteBook();
-        });
+        public IMvxCommand DeleteBookCommand => _deleteBookCommand ??= new MvxCommand(() => DeleteBook().Forget());
 
         IMvxCommand _updateBookCommand;
-        public IMvxCommand UpdateBookCommand => _updateBookCommand ??= new MvxCommand(async () =>
-        {
-            await UpdateBook();
-        });
+        public IMvxCommand UpdateBookCommand => _updateBookCommand ??= new MvxCommand(() => UpdateBook().Forget());
 
         #endregion
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation)
+        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService)
         {
             _navigation = navigation;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -115,8 +124,14 @@ namespace ThePage.Core
         {
             Book = parameter.Book;
 
-            TxtName = Book.Title;
-            TxtAuthor = Book.Author;
+            TxtTitle = Book.Title;
+        }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            FetchAuthors().Forget();
         }
 
         #endregion
@@ -125,21 +140,51 @@ namespace ThePage.Core
 
         async Task UpdateBook()
         {
-            Book.Title = TxtName;
-            Book.Author = TxtAuthor;
+            if (IsLoading)
+                return;
 
-            var book = BookManager.UpdateBook(Book, CancellationToken.None).Result;
+            IsLoading = true;
 
-            if (book != null)
-                await _navigation.Close(this, true);
+            Book.Title = TxtTitle;
+            Book.Author = SelectedAuthor;
+
+            var result = await _thePageService.UpdateBook(BookBusinessLogic.BookCellToBook(Book));
+
+            if (result != null)
+            {
+                Book = BookBusinessLogic.BookToBookCell(result, Authors);
+                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
+            }
+
+            IsEditing = false;
+            IsLoading = false;
         }
 
         async Task DeleteBook()
         {
-            var result = BookManager.DeleteBook(Book, CancellationToken.None).Result;
+            if (IsLoading)
+                return;
+
+            IsLoading = true;
+
+            var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
 
             if (result)
                 await _navigation.Close(this, true);
+        }
+
+        async Task FetchAuthors()
+        {
+            if (IsLoading)
+                return;
+
+            IsLoading = true;
+
+            Authors = await _thePageService.GetAllAuthors();
+
+            SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
+
+            IsLoading = false;
         }
 
         #endregion

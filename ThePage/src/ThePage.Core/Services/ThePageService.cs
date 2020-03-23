@@ -25,7 +25,7 @@ namespace ThePage.Core
 
         public async Task<Book> UpdateBook(Book book)
         {
-            return await BookManager.AddBook(book, CancellationToken.None);
+            return await BookManager.UpdateBook(book, CancellationToken.None);
         }
 
         public async Task<bool> DeleteBook(Book content)

@@ -37,8 +37,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<Book> _itemClickCommand;
-        public IMvxCommand<Book> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Book>(async (item) =>
+        IMvxCommand<BookCell> _itemClickCommand;
+        public IMvxCommand<BookCell> ItemClickCommand => _itemClickCommand ??= new MvxCommand<BookCell>(async (item) =>
         {
             var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)

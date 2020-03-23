@@ -1,9 +1,10 @@
 using System;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class BookCell : BaseCell
+    public class BookCell : MvxNotifyPropertyChanged, IBaseCell
     {
         #region Properties
 

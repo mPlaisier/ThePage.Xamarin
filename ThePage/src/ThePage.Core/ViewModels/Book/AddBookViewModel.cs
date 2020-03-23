@@ -58,7 +58,6 @@ namespace ThePage.Core
         IMvxCommand _addbookCommand;
         public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(() => AddBook().Forget());
 
-        //ItemSelectedCommand
         IMvxCommand<AuthorCell> _itemSelectedCommand;
         public IMvxCommand<AuthorCell> ItemSelectedCommand => _itemSelectedCommand ??= new MvxCommand<AuthorCell>((authorCell) =>
         {

@@ -11,7 +11,12 @@ namespace ThePage.Core
 
         public static List<BookCell> BooksToBookCells(List<Book> booksApi, List<Author> authorsApi)
         {
-            return booksApi.Select(x => new BookCell(x.Id, x.Title, authorsApi.FirstOrDefault(a => a.Id == x.Author))).ToList();
+            return booksApi.Select(x => BookToBookCell(x, authorsApi)).ToList();
+        }
+
+        public static BookCell BookToBookCell(Book book, List<Author> authorsApi)
+        {
+            return new BookCell(book.Id, book.Title, authorsApi.FirstOrDefault(a => a.Id == book.Author));
         }
 
         public static Book BookCellToBook(BookCell bookCell)
