@@ -21,7 +21,7 @@ namespace ThePage.Core
 
         public static Book BookCellToBook(BookCell bookCell)
         {
-            return new Book(bookCell.Id, bookCell.Title, bookCell.Author.Id);
+            return new Book(bookCell.Id, bookCell.Title, bookCell.Author?.Id);
         }
 
         #endregion
