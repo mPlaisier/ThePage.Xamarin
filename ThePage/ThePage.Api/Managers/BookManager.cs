@@ -27,7 +27,8 @@ namespace ThePage.Api
                         throw new ApiException
                         {
                             StatusCode = (int)response.StatusCode,
-                            Content = content
+                            Content = content,
+                            ApiError = JsonConvert.DeserializeObject<ApiError>(content)
                         };
                     }
                     return JsonConvert.DeserializeObject<List<Book>>(content);
@@ -54,7 +55,8 @@ namespace ThePage.Api
                         throw new ApiException
                         {
                             StatusCode = (int)response.StatusCode,
-                            Content = content
+                            Content = content,
+                            ApiError = JsonConvert.DeserializeObject<ApiError>(content)
                         };
                     }
                     return JsonConvert.DeserializeObject<Book>(content);

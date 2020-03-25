@@ -11,6 +11,8 @@ namespace ThePage.Core
 
         Task<List<Book>> GetAllBooks();
 
+        Task<Book> GetBook(string id);
+
         Task<bool> AddBook(Book book);
 
         Task<Book> UpdateBook(Book book);

@@ -16,6 +16,20 @@ namespace ThePage.Core
             return await BookManager.FetchBooks(CancellationToken.None);
         }
 
+        public async Task<Book> GetBook(string id)
+        {
+            try
+            {
+                var result = await BookManager.FetchBook(id, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+
+            }
+            return null;
+        }
+
         public async Task<bool> AddBook(Book book)
         {
             var result = await BookManager.AddBook(book, CancellationToken.None);
@@ -60,5 +74,25 @@ namespace ThePage.Core
         }
 
         #endregion
+
+        #region Private
+
+        //TODO perhaps move to a general Utils class/file
+        void HandleException(Exception ex)
+        {
+            var message = "";
+            if (ex is ApiException apiEx)
+            {
+                if (apiEx.ApiError.Code == EApiErrorCode.BookNotFound)
+                {
+                    message = "Book not found.";
+                }
+
+            }
+            //TODO show message or return error?
+        }
+
+        #endregion
+
     }
 }

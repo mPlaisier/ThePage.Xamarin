@@ -8,5 +8,7 @@ namespace ThePage.Api
         public int StatusCode { get; set; }
 
         public string Content { get; set; }
+
+        public ApiError ApiError { get; set; }
     }
 }
