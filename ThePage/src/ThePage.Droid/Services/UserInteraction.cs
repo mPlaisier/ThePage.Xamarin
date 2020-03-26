@@ -156,5 +156,18 @@ namespace ThePage.Droid
             Input(message, (ok, text) => tcs.SetResult(new InputResponse { Ok = ok, Text = text }), placeholder, title, okButton, cancelButton, initialText);
             return tcs.Task;
         }
+
+        public void ToastMessage(string message)
+        {
+            Application.SynchronizationContext.Post(ignored =>
+            {
+                if (CurrentActivity == null)
+                    return;
+
+                Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
+
+
+            }, null);
+        }
     }
 }

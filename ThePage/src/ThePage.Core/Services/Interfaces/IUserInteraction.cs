@@ -21,6 +21,8 @@ namespace ThePage.Core
 
         void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe");
         Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe");
+
+        void ToastMessage(string message);
     }
 
     public class InputResponse
