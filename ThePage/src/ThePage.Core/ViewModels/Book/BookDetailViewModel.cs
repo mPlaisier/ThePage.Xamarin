@@ -154,9 +154,12 @@ namespace ThePage.Core
 
             if (result != null)
             {
+                _userInteraction.ToastMessage("Book updated");
                 Book = BookBusinessLogic.BookToBookCell(result, Authors);
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
             }
+            else
+                _userInteraction.Alert("Failure updating book");
 
             IsEditing = false;
             IsLoading = false;
@@ -175,7 +178,16 @@ namespace ThePage.Core
                 var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
 
                 if (result)
+                {
+                    _userInteraction.ToastMessage("Book removed");
                     await _navigation.Close(this, true);
+                }
+                else
+                {
+                    _userInteraction.Alert("Failure removing book");
+                    IsLoading = false;
+                }
+
             }
         }
 

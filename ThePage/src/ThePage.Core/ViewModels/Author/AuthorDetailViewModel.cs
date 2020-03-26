@@ -117,6 +117,10 @@ namespace ThePage.Core
             Author.Name = TxtName;
 
             var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
+            if (author != null)
+                _userInteraction.ToastMessage("Author updated");
+            else
+                _userInteraction.Alert("Failure updating author");
 
             IsEditing = false;
             IsLoading = false;
@@ -134,7 +138,15 @@ namespace ThePage.Core
                 var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
 
                 if (result)
+                {
+                    _userInteraction.ToastMessage("Author removed");
                     await _navigation.Close(this, true);
+                }
+                else
+                {
+                    _userInteraction.Alert("Failure removing author");
+                    IsLoading = false;
+                }
             }
         }
 
