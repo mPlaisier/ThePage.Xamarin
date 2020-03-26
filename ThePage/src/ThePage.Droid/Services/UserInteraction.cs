@@ -41,7 +41,7 @@ namespace ThePage.Droid
                         {
                             if (answer != null)
                                 answer(false);
-                        })
+                        }).SetCancelable(false)
                         .Show();
             }, null);
         }
@@ -132,6 +132,7 @@ namespace ThePage.Droid
                 if (CurrentActivity == null)
                     return;
                 var input = new EditText(CurrentActivity) { Hint = hint, Text = initialText };
+                input.SetPadding(5, 0, 5, 0);
 
                 new AlertDialog.Builder(CurrentActivity)
                     .SetMessage(message)
@@ -139,13 +140,11 @@ namespace ThePage.Droid
                         .SetView(input)
                         .SetPositiveButton(okButton, delegate
                         {
-                            if (answer != null)
-                                answer(true, input.Text);
+                            answer?.Invoke(true, input.Text);
                         })
                         .SetNegativeButton(cancelButton, delegate
                         {
-                            if (answer != null)
-                                answer(false, input.Text);
+                            answer?.Invoke(false, input.Text);
                         })
                         .Show();
             }, null);

@@ -4,7 +4,7 @@ using ThePage.Core;
 
 namespace ThePage.Droid
 {
-    public class MenuTemplateSelector : MvxTemplateSelector<CellMenu>
+    public class DebugTemplateSelector : MvxTemplateSelector<CellDebug>
     {
         #region Properties
 
@@ -14,14 +14,14 @@ namespace ThePage.Droid
 
         #region Protected
 
-        protected override int SelectItemViewType(CellMenu forItemObject)
+        protected override int SelectItemViewType(CellDebug forItemObject)
         {
             switch (forItemObject)
             {
-                case CellMenuItem c:
-                    return Resource.Layout.cell_menu_item;
-                case CellMenuHeader c:
-                    return Resource.Layout.cell_menu_header;
+                case CellDebugHeader c:
+                    return Resource.Layout.cell_debug_header;
+                case CellDebugItem c:
+                    return Resource.Layout.cell_debug_item;
                 default:
                     throw new NotSupportedException("Unknown cell type");
             }

@@ -12,10 +12,11 @@ namespace ThePage.Core.ViewModels.Main
         public enum EMenu
         {
             Books,
-            Authors
+            Authors,
+            Debug
         }
 
-        IMvxNavigationService _navigationService;
+        readonly IMvxNavigationService _navigationService;
 
         #region Properties
 
@@ -29,7 +30,6 @@ namespace ThePage.Core.ViewModels.Main
 
         private MvxCommand<CellMenu> _itemClickCommand;
         public MvxCommand<CellMenu> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<CellMenu>(OnItemClick);
-
 
         #endregion
 
@@ -59,9 +59,11 @@ namespace ThePage.Core.ViewModels.Main
         {
             Items = new List<CellMenu>
             {
-               new CellMenuHeader("Header"),
+               new CellMenuHeader("ThePage"),
                new CellMenuItem("Books",EMenu.Books),
-               new CellMenuItem("Authors",EMenu.Authors)
+               new CellMenuItem("Authors",EMenu.Authors),
+               new CellMenuHeader("Other"),
+               new CellMenuItem("Debug",EMenu.Debug),
             };
         }
 
@@ -77,8 +79,11 @@ namespace ThePage.Core.ViewModels.Main
                     case EMenu.Authors:
                         _navigationService.Navigate<AuthorViewModel>();
                         break;
-                    default:
+                    case EMenu.Debug:
+                        _navigationService.Navigate<DebugViewModel>();
                         break;
+                    default:
+                        throw new NotSupportedException("Unknown Menu item");
                 }
             }
         }
