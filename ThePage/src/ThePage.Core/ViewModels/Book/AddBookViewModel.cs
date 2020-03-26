@@ -122,6 +122,11 @@ namespace ThePage.Core
 
             if (authors != null)
                 Authors = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
+            else
+            {
+                _userInteraction.Alert("Error retrieving data from Server", null, "Error");
+                await _navigation.Close(this, true);
+            }
 
             IsLoading = false;
         }
