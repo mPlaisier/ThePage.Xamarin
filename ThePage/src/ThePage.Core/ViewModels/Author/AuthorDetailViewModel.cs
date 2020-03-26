@@ -30,6 +30,7 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
@@ -83,10 +84,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public AuthorDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -125,14 +127,15 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            IsLoading = true;
+            if (await _userInteraction.ConfirmAsync("Remove Author?", "Confirm", "DELETE"))
+            {
+                IsLoading = true;
 
-            var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
+                var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
 
-            if (result)
-                await _navigation.Close(this, true);
-
-            IsLoading = false;
+                if (result)
+                    await _navigation.Close(this, true);
+            }
         }
 
         #endregion

@@ -30,6 +30,7 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
@@ -110,10 +111,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -165,12 +167,16 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            IsLoading = true;
+            var answer = await _userInteraction.ConfirmAsync("Remove book?", "Confirm", "DELETE");
+            if (answer)
+            {
+                IsLoading = true;
 
-            var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
+                var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
 
-            if (result)
-                await _navigation.Close(this, true);
+                if (result)
+                    await _navigation.Close(this, true);
+            }
         }
 
         async Task FetchAuthors()
