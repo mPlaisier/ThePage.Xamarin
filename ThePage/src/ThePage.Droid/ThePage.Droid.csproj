@@ -76,6 +76,7 @@
     <Compile Include="Adapters\MenuTemplateSelector.cs" />
     <Compile Include="Views\Book\AddBookFragment.cs" />
     <Compile Include="Views\Book\BookDetailFragment.cs" />
+    <Compile Include="Services\UserInteraction.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -231,6 +232,7 @@
     <Folder Include="Views\Author\" />
     <Folder Include="Views\Book\" />
     <Folder Include="Adapters\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
