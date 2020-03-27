@@ -1,161 +1,59 @@
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Refit;
 
 namespace ThePage.Api
 {
     public class AuthorManager
     {
+        #region Properties
+
+        static readonly IAuthorAPI _authorApi = RestService.For<IAuthorAPI>(Constants.ThePageAPI_Url);
+
+        #endregion
+
         #region FETCH
 
-        public static async Task<List<Author>> FetchAuthors(CancellationToken cancellationToken)
+        public static async Task<List<Author>> FetchAuthors()
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Get, Constants.ThePageAPI_Url + EndPoints.GetAuthors))
-                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode == false)
-                    {
-                        throw new ApiException
-                        {
-                            StatusCode = (int)response.StatusCode,
-                            Content = content
-                        };
-                    }
-                    return JsonConvert.DeserializeObject<List<Author>>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _authorApi.GetAuthors();
         }
 
-        public static async Task<Author> FetchAuthor(string id, CancellationToken cancellationToken)
+        public static async Task<Author> FetchAuthor(string id)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Get, $"{Constants.ThePageAPI_Url}{EndPoints.GetAuthor}{id}"))
-                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode == false) //TODO check if needed in other method
-                    {
-                        throw new ApiException
-                        {
-                            StatusCode = (int)response.StatusCode,
-                            Content = content
-                        };
-                    }
-                    return JsonConvert.DeserializeObject<Author>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _authorApi.GetAuthor(id);
         }
 
         #endregion
 
         #region ADD
 
-        public static async Task<Author> AddAuthor(Author content, CancellationToken cancellationToken)
+        public static async Task<Author> AddAuthor(Author author)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Post, Constants.ThePageAPI_Url + EndPoints.GetAuthors))
-                {
-                    var json = JsonConvert.SerializeObject(content);
-                    using (var stringContent = new StringContent(json, Encoding.UTF8, "application/json"))
-                    {
-                        request.Content = stringContent;
-
-                        using (var response = await client
-                            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                            .ConfigureAwait(false))
-                        {
-                            response.EnsureSuccessStatusCode();
-                            var newItem = await response.Content.ReadAsStringAsync();
-                            return JsonConvert.DeserializeObject<Author>(newItem);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _authorApi.AddAuthor(author);
         }
 
         #endregion
 
         #region PATCH
 
-        public static async Task<Author> UpdateAuthor(Author content, CancellationToken cancellationToken)
+        public static async Task<Author> UpdateAuthor(Author author)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Patch, $"{Constants.ThePageAPI_Url}{EndPoints.PatchAuthor}{content.Id}"))
-                {
-                    var json = JsonConvert.SerializeObject(content);
-                    using (var stringContent = new StringContent(json, Encoding.UTF8, "application/json"))
-                    {
-                        request.Content = stringContent;
-
-                        using (var response = await client
-                            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                            .ConfigureAwait(false))
-                        {
-                            response.EnsureSuccessStatusCode();
-                            var newItem = await response.Content.ReadAsStringAsync();
-                            return JsonConvert.DeserializeObject<Author>(newItem);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _authorApi.UpdateAuthor(author);
         }
 
         #endregion
 
         #region DELETE
 
-        public static async Task<bool> DeleteAuthor(Author content, CancellationToken cancellationToken)
+        public static async Task<bool> DeleteAuthor(Author author)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Delete, $"{Constants.ThePageAPI_Url}{EndPoints.DeleteAuthor}{content.Id}"))
-                {
-                    using (var response = await client
-                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                        .ConfigureAwait(false))
-                    {
-                        response.EnsureSuccessStatusCode();
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //TODO improve the API to return a better result
+            //ATM we receive if successfull:
+            //"{\"message\":\"Deleted book\"}"
+            await _authorApi.DeleteAuthor(author);
+
+            return true;
         }
 
         #endregion

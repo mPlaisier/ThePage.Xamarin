@@ -5,159 +5,56 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Refit;
 
 namespace ThePage.Api
 {
     public class BookManager
     {
+        #region Properties
+
+        static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Constants.ThePageAPI_Url);
+
+        #endregion
+
         #region FETCH
 
-        public static async Task<List<Book>> FetchBooks(CancellationToken cancellationToken)
+        public static async Task<List<Book>> FetchBooks()
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Get, Constants.ThePageAPI_Url + EndPoints.GetBooks))
-                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode == false)
-                    {
-                        throw new ApiException
-                        {
-                            StatusCode = (int)response.StatusCode,
-                            Content = content,
-                            ApiError = JsonConvert.DeserializeObject<ApiError>(content)
-                        };
-                    }
-                    return JsonConvert.DeserializeObject<List<Book>>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _bookAPI.GetBooks();
         }
 
-        public static async Task<Book> FetchBook(string id, CancellationToken cancellationToken)
+        public static async Task<Book> FetchBook(string id)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Get, $"{Constants.ThePageAPI_Url}{EndPoints.GetBook}{id}"))
-                using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode == false) //TODO check if needed in other method
-                    {
-                        throw new ApiException
-                        {
-                            StatusCode = (int)response.StatusCode,
-                            Content = content,
-                            ApiError = JsonConvert.DeserializeObject<ApiError>(content)
-                        };
-                    }
-                    return JsonConvert.DeserializeObject<Book>(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _bookAPI.GetBook(id);
         }
 
         #endregion
 
         #region ADD
 
-        public static async Task<Book> AddBook(Book content, CancellationToken cancellationToken)
+        public static async Task<Book> AddBook(Book book)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Post, Constants.ThePageAPI_Url + EndPoints.GetBooks))
-                {
-                    var json = JsonConvert.SerializeObject(content);
-                    using (var stringContent = new StringContent(json, Encoding.UTF8, "application/json"))
-                    {
-                        request.Content = stringContent;
-
-                        using (var response = await client
-                            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                            .ConfigureAwait(false))
-                        {
-                            response.EnsureSuccessStatusCode();
-                            var newItem = await response.Content.ReadAsStringAsync();
-                            return JsonConvert.DeserializeObject<Book>(newItem);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _bookAPI.AddBook(book);
         }
 
         #endregion
 
         #region PATCH
 
-        public static async Task<Book> UpdateBook(Book content, CancellationToken cancellationToken)
+        public static async Task<Book> UpdateBook(Book book)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Patch, $"{Constants.ThePageAPI_Url}{EndPoints.PatchBook}{content.Id}"))
-                {
-                    var json = JsonConvert.SerializeObject(content);
-                    using (var stringContent = new StringContent(json, Encoding.UTF8, "application/json"))
-                    {
-                        request.Content = stringContent;
-
-                        using (var response = await client
-                            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                            .ConfigureAwait(false))
-                        {
-                            response.EnsureSuccessStatusCode();
-                            var newItem = await response.Content.ReadAsStringAsync();
-                            return JsonConvert.DeserializeObject<Book>(newItem);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _bookAPI.UpdateBook(book);
         }
 
         #endregion
 
         #region DELETE
 
-        public static async Task<bool> DeleteBook(Book content, CancellationToken cancellationToken)
+        public static async Task<bool> DeleteBook(Book book)
         {
-            try
-            {
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage(HttpMethod.Delete, $"{Constants.ThePageAPI_Url}{EndPoints.DeleteBook}{content.Id}"))
-                {
-                    using (var response = await client
-                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                        .ConfigureAwait(false))
-                    {
-                        response.EnsureSuccessStatusCode();
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            await _bookAPI.DeleteBook(book);
+            return true;
         }
 
         #endregion
