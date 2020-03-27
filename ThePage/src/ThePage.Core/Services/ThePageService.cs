@@ -1,12 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MvvmCross;
+using Refit;
 using ThePage.Api;
 
 namespace ThePage.Core
 {
     public class ThePageService : IThePageService
     {
+        readonly IUserInteraction _userInteraction;
+        #region Constructor
+
+        public ThePageService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
+        {
+
+        }
+
+        public ThePageService(IUserInteraction userInteraction)
+        {
+            _userInteraction = userInteraction;
+        }
+
+        #endregion
         #region Public(Books)
 
         public async Task<List<Book>> GetAllBooks()
@@ -34,26 +50,49 @@ namespace ThePage.Core
             catch (Exception ex)
             {
                 HandleException(ex);
-
             }
             return result;
         }
 
         public async Task<bool> AddBook(Book book)
         {
-            var result = await BookManager.AddBook(book);
-
+            Book result = null;
+            try
+            {
+                result = await BookManager.AddBook(book);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
             return result != null;
         }
 
         public async Task<Book> UpdateBook(Book book)
         {
-            return await BookManager.UpdateBook(book);
+            Book result = null;
+            try
+            {
+                result = await BookManager.UpdateBook(book);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
         }
 
         public async Task<bool> DeleteBook(Book content)
         {
-            return await BookManager.DeleteBook(content);
+            try
+            {
+                return await BookManager.DeleteBook(content);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return false;
         }
 
         #endregion
@@ -62,24 +101,57 @@ namespace ThePage.Core
 
         public async Task<List<Author>> GetAllAuthors()
         {
-            return await AuthorManager.FetchAuthors();
+            List<Author> result = null;
+            try
+            {
+                result = await AuthorManager.FetchAuthors();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
         }
 
         public async Task<bool> AddAuthor(Author author)
         {
-            var result = await AuthorManager.AddAuthor(author);
-
+            Author result = null;
+            try
+            {
+                result = await AuthorManager.AddAuthor(author);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
             return result != null;
         }
 
         public async Task<Author> UpdateAuthor(Author author)
         {
-            return await AuthorManager.UpdateAuthor(author);
+            Author result = null;
+            try
+            {
+                result = await AuthorManager.UpdateAuthor(author);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
         }
 
         public async Task<bool> DeleteAuthor(Author author)
         {
-            return await AuthorManager.DeleteAuthor(author);
+            try
+            {
+                return await AuthorManager.DeleteAuthor(author);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return false;
         }
 
         #endregion
@@ -89,19 +161,19 @@ namespace ThePage.Core
         //TODO perhaps move to a general Utils class/file
         void HandleException(Exception ex)
         {
-            var message = "";
-            if (ex is ApiException apiEx)
+            if (ex is ApiException apiException)
             {
-                if (apiEx.ApiError.Code == EApiErrorCode.BookNotFound)
+                if (apiException.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    message = "Book not found.";
+                    _userInteraction.Alert("Item not found", null, "Error");
                 }
-
             }
-            //TODO show message or return error?
+            else
+            {
+                _userInteraction.Alert(ex.Message, null, "Error");
+            }
         }
 
         #endregion
-
     }
 }
