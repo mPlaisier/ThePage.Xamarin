@@ -15,6 +15,9 @@
     <Folder Include="Cells\Menu\" />
     <Folder Include="Extensions\" />
     <Folder Include="BusinessLogic\" />
+    <Folder Include="Services\Interfaces\" />
+    <Folder Include="ViewModels\Debug\" />
+    <Folder Include="Cells\Debug\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />
