@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
@@ -101,6 +102,13 @@ namespace ThePage.Core
 
             TxtName = Author.Name;
             IsEditing = false;
+        }
+
+        public override Task Initialize()
+        {
+            Analytics.TrackEvent($"Initialize {nameof(AuthorDetailViewModel)}");
+
+            return base.Initialize();
         }
 
         #endregion

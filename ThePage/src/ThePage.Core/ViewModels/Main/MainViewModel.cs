@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 
@@ -46,6 +47,8 @@ namespace ThePage.Core.ViewModels.Main
 
         public override Task Initialize()
         {
+            Analytics.TrackEvent($"Initialize {nameof(MainViewModel)}");
+
             CreateMenuItems();
 
             return base.Initialize();

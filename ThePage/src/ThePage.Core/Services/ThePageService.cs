@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 using MvvmCross;
 using Refit;
 using ThePage.Api;
@@ -161,6 +162,8 @@ namespace ThePage.Core
         //TODO perhaps move to a general Utils class/file
         void HandleException(Exception ex)
         {
+            Crashes.TrackError(ex);
+
             if (ex is ApiException apiException)
             {
                 if (apiException.StatusCode == System.Net.HttpStatusCode.NotFound)
