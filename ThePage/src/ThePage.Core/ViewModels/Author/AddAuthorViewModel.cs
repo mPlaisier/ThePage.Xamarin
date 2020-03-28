@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
@@ -59,6 +60,18 @@ namespace ThePage.Core
 
         #endregion
 
+        #region LifeCycle
+
+        public override Task Initialize()
+        {
+            Analytics.TrackEvent($"Initialize {nameof(AddAuthorViewModel)}");
+
+            return base.Initialize();
+        }
+
+        #endregion
+
+
         #region Private
 
         async Task AddAuthor()
@@ -67,6 +80,8 @@ namespace ThePage.Core
                 return;
 
             IsLoading = true;
+
+            Analytics.TrackEvent("Create new author");
 
             var result = await _thePageService.AddAuthor(new Author(TxtName));
 

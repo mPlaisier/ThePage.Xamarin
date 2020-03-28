@@ -60,6 +60,8 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent($"Initialize {nameof(BookViewModel)}");
+
             await base.Initialize();
 
             Refresh().Forget();

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
@@ -82,6 +83,8 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent($"Initialize {nameof(AddBookViewModel)}");
+
             await base.Initialize();
 
             FetchAuthors().Forget();
