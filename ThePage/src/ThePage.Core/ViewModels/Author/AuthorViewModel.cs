@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Core.ViewModels;
@@ -59,6 +61,8 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent($"Initialize {nameof(AuthorViewModel)}");
+
             await base.Initialize();
 
             Refresh().Forget();
