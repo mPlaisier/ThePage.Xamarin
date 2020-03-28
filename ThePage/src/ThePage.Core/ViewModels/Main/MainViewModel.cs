@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -60,6 +59,7 @@ namespace ThePage.Core.ViewModels.Main
 
         private void CreateMenuItems()
         {
+#if DEBUG
             Items = new List<CellMenu>
             {
                new CellMenuHeader("ThePage"),
@@ -68,6 +68,13 @@ namespace ThePage.Core.ViewModels.Main
                new CellMenuHeader("Other"),
                new CellMenuItem("Debug",EMenu.Debug),
             };
+#else
+            Items = new List<CellMenu>
+            {
+               new CellMenuItem("Books",EMenu.Books),
+               new CellMenuItem("Authors",EMenu.Authors)
+            };
+#endif
         }
 
         private void OnItemClick(CellMenu cell)
