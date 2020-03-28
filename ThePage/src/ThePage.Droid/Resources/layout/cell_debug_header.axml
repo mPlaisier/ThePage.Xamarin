@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_small"
     android:textSize="@dimen/textTitle"
-    android:textColor="@color/secondaryTextColor"
+    android:textColor="@color/white"
     android:textStyle="bold"
     android:background="@color/accentColor"
     local:MvxBind="Text Title;" />
