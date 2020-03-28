@@ -81,8 +81,6 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            Analytics.TrackEvent("Create new author");
-
             var result = await _thePageService.AddAuthor(new Author(TxtName));
 
             if (result)
