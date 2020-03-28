@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ThePage.Api
@@ -15,6 +15,9 @@ namespace ThePage.Api
 
         [JsonProperty("author")]
         public string Author { get; set; }
+
+        [JsonProperty("genres")]
+        public List<string> Genres { get; set; }
 
         #endregion
 
