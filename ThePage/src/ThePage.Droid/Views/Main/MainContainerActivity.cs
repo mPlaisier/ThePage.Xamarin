@@ -4,6 +4,7 @@ using Android.Views;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter.Distribute;
 using ThePage.Core.ViewModels.Main;
 
 namespace ThePage.Droid.Views.Main
@@ -25,8 +26,7 @@ namespace ThePage.Droid.Views.Main
         {
             base.OnCreate(bundle);
 
-            AppCenter.Start("2a35d66f-7eb1-4a30-af70-44348de2e4b9",
-                      typeof(Analytics), typeof(Crashes));
+            AppCenter.Start("2a35d66f-7eb1-4a30-af70-44348de2e4b9", typeof(Analytics), typeof(Crashes), typeof(Distribute));
         }
 
         #endregion
