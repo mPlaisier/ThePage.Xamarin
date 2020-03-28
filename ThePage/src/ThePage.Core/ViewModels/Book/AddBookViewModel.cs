@@ -15,6 +15,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -63,6 +64,7 @@ namespace ThePage.Core
         IMvxCommand<AuthorCell> _itemSelectedCommand;
         public IMvxCommand<AuthorCell> ItemSelectedCommand => _itemSelectedCommand ??= new MvxCommand<AuthorCell>((authorCell) =>
         {
+            _device.HideKeyboard();
             SelectedAuthor = authorCell;
         });
 
@@ -70,11 +72,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -98,6 +101,8 @@ namespace ThePage.Core
         {
             if (IsLoading)
                 return;
+
+            _device.HideKeyboard();
 
             var book = new Book(TxtTitle, SelectedAuthor.Id);
             var result = await _thePageService.AddBook(book);

@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -15,6 +13,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -44,6 +43,7 @@ namespace ThePage.Core
         IMvxCommand _addAuthorCommand;
         public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
         {
+            _device.HideKeyboard();
             await AddAuthor();
         });
 
@@ -51,11 +51,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddAuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public AddAuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion

@@ -32,6 +32,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -70,7 +71,12 @@ namespace ThePage.Core
         public Author SelectedAuthor
         {
             get => _selectedAuthor;
-            set => SetProperty(ref _selectedAuthor, value);
+            set
+            {
+                SetProperty(ref _selectedAuthor, value);
+                _device.HideKeyboard();
+            }
+
         }
 
         public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
@@ -94,6 +100,7 @@ namespace ThePage.Core
         IMvxCommand _editbookCommand;
         public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(() =>
         {
+            _device.HideKeyboard();
             IsEditing = !IsEditing;
             if (IsEditing)
             {
@@ -112,11 +119,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -148,6 +156,7 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
+            _device.HideKeyboard();
             IsLoading = true;
 
             Book.Title = TxtTitle;
