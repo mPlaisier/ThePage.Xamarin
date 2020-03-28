@@ -32,7 +32,7 @@ namespace ThePage.Core
             }
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtName);
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 
         public string LblBtn => "Add author";
 
@@ -82,7 +82,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddAuthor(new Author(TxtName));
+            var result = await _thePageService.AddAuthor(new Author(TxtName.Trim()));
 
             if (result)
             {

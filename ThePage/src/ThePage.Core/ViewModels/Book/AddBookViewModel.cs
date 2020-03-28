@@ -50,7 +50,7 @@ namespace ThePage.Core
             set => SetProperty(ref _selectedAuthor, value);
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
         public string LblBtn => "Add Book";
 
@@ -104,7 +104,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var book = new Book(TxtTitle, SelectedAuthor.Id);
+            var book = new Book(TxtTitle.Trim(), SelectedAuthor.Id);
             var result = await _thePageService.AddBook(book);
 
             if (result)

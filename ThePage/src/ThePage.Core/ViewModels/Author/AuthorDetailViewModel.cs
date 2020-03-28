@@ -51,7 +51,7 @@ namespace ThePage.Core
             }
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtName);
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 
         public string LblUpdateBtn => "Update Author";
 
@@ -122,8 +122,10 @@ namespace ThePage.Core
                 return;
 
             _device.HideKeyboard();
+
             IsLoading = true;
 
+            TxtName = TxtName.Trim();
             Author.Name = TxtName;
 
             var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));

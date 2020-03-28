@@ -79,7 +79,7 @@ namespace ThePage.Core
 
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
         public string LblUpdateBtn => "Update Book";
 
@@ -159,6 +159,7 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
+            TxtTitle = TxtTitle.Trim();
             Book.Title = TxtTitle;
             Book.Author = SelectedAuthor;
 
