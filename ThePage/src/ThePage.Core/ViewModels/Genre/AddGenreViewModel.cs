@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
@@ -8,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddAuthorViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
+    public class AddGenreViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -16,7 +17,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "New Author";
+        public override string Title => "New Genre";
 
         public string LblName => "Name:";
 
@@ -33,23 +34,23 @@ namespace ThePage.Core
 
         public bool IsValid => !string.IsNullOrEmpty(TxtName);
 
-        public string LblBtn => "Add author";
+        public string LblBtn => "Add genre";
 
         #endregion
 
         #region Commands
 
-        IMvxCommand _addAuthorCommand;
-        public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
         {
-            await AddAuthor();
+            await AddGenre();
         });
 
         #endregion
 
         #region Constructor
 
-        public AddAuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public AddGenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
@@ -62,7 +63,7 @@ namespace ThePage.Core
 
         public override Task Initialize()
         {
-            Analytics.TrackEvent($"Initialize {nameof(AddAuthorViewModel)}");
+            Analytics.TrackEvent($"Initialize {nameof(AddGenreViewModel)}");
 
             return base.Initialize();
         }
@@ -72,23 +73,23 @@ namespace ThePage.Core
 
         #region Private
 
-        async Task AddAuthor()
+        async Task AddGenre()
         {
             if (IsLoading)
                 return;
 
             IsLoading = true;
 
-            var result = await _thePageService.AddAuthor(new Author(TxtName));
+            var result = await _thePageService.AddGenre(new Genre(TxtName));
 
             if (result)
             {
-                _userInteraction.ToastMessage("Author added");
+                _userInteraction.ToastMessage("Genre added");
                 await _navigation.Close(this, true);
             }
             else
             {
-                _userInteraction.Alert("Failure adding author");
+                _userInteraction.Alert("Failure adding genre");
                 IsLoading = false;
             }
         }

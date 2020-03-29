@@ -40,18 +40,18 @@ namespace ThePage.Core
         IMvxCommand<CellGenre> _itemClickCommand;
         public IMvxCommand<CellGenre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellGenre>(async (item) =>
         {
-            //var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
-            //if (result)
-            //    await Refresh();
+            var result = await _navigation.Navigate<GenreDetailViewModel, GenreDetailParameter, bool>(new GenreDetailParameter(item));
+            if (result)
+                await Refresh();
 
         });
 
         IMvxCommand _addGenreCommand;
         public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
         {
-            //var result = await _navigation.Navigate<AddAuthorViewModel, bool>();
-            //if (result)
-            //    await Refresh();
+            var result = await _navigation.Navigate<AddGenreViewModel, bool>();
+            if (result)
+                await Refresh();
         });
 
         #endregion

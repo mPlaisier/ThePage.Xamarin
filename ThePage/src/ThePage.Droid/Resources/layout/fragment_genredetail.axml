@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toTopOf="parent"
+        local:layout_constraintBottom_toTopOf="@+id/lblNameValue"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text LblName"/>
+
+    <TextView
+        android:id="@+id/lblNameValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        local:layout_constraintTop_toBottomOf="@+id/lblName"
+        local:layout_constraintBottom_toTopOf="@+id/txtName"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text TxtName;Visibility InvertedVisibility(IsEditing)"/>
+
+    <EditText
+        android:id="@+id/txtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        local:layout_constraintTop_toBottomOf="@+id/lblNameValue"
+        local:layout_constraintBottom_toTopOf="@+id/btnUpdate"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Text TxtName;Visibility Visibility(IsEditing)"/>
+
+    <TextView
+        style="@style/PrimaryBtnWarning"
+        android:id="@+id/btnDelete"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintTop_toBottomOf="@+id/txtName"
+        local:MvxBind="Text LblDeleteBtn;Click DeleteGenreCommand;Visibility InvertedVisibility(IsEditing)"/>
+
+    <TextView
+        style="@style/PrimaryBtn"
+        android:id="@+id/btnUpdate"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintTop_toBottomOf="@+id/txtName"
+        local:MvxBind="Text LblUpdateBtn;Click UpdateGenreCommand;Enabled IsValid;Visibility Visibility(IsEditing)"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit"
+        android:tint="@android:color/white"
+        android:layout_margin="10dp"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Click EditGenreCommand;Visibility InvertedVisibility(IsEditing)"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close"
+        android:tint="@android:color/white"
+        android:layout_margin="10dp"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Click EditGenreCommand;Visibility Visibility(IsEditing)"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        local:MvxBind="Visible IsLoading">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateOnly="true"
+            android:indeterminate="true" />
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

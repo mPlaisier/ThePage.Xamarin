@@ -104,7 +104,6 @@ namespace ThePage.Core.ViewModels.Main
             }
         }
 
-
         #endregion
     }
 }
