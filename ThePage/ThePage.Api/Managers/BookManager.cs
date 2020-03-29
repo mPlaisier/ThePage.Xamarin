@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Refit;
+using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -13,7 +9,7 @@ namespace ThePage.Api
     {
         #region Properties
 
-        static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Constants.ThePageAPI_Url);
+        static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Secrets.ThePageAPI_URL);
 
         #endregion
 
