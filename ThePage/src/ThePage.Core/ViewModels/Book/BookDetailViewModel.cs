@@ -32,6 +32,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -70,10 +71,22 @@ namespace ThePage.Core
         public Author SelectedAuthor
         {
             get => _selectedAuthor;
-            set => SetProperty(ref _selectedAuthor, value);
+            set
+            {
+                SetProperty(ref _selectedAuthor, value);
+                _device.HideKeyboard();
+            }
+
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
+        List<Genre> _genres;
+        public List<Genre> Genres
+        {
+            get => _genres;
+            set => SetProperty(ref _genres, value);
+        }
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
         public string LblUpdateBtn => "Update Book";
 
@@ -94,6 +107,7 @@ namespace ThePage.Core
         IMvxCommand _editbookCommand;
         public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(() =>
         {
+            _device.HideKeyboard();
             IsEditing = !IsEditing;
             if (IsEditing)
             {
@@ -112,11 +126,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -136,7 +151,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchAuthors().Forget();
+            FetchData().Forget();
         }
 
         #endregion
@@ -148,8 +163,10 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
+            _device.HideKeyboard();
             IsLoading = true;
 
+            TxtTitle = TxtTitle.Trim();
             Book.Title = TxtTitle;
             Book.Author = SelectedAuthor;
 
@@ -158,7 +175,7 @@ namespace ThePage.Core
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors);
+                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres);
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
             }
             else
@@ -194,7 +211,7 @@ namespace ThePage.Core
             }
         }
 
-        async Task FetchAuthors()
+        async Task FetchData()
         {
             if (IsLoading)
                 return;
@@ -202,6 +219,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
+            Genres = await _thePageService.GetAllGenres();
 
             SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
 

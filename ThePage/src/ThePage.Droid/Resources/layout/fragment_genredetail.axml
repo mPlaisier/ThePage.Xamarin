@@ -44,7 +44,7 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/txtName"
-        local:MvxBind="Text LblDeleteBtn;Click DeleteAuthorCommand;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Text LblDeleteBtn;Click DeleteGenreCommand;Visibility InvertedVisibility(IsEditing)"/>
 
     <TextView
         style="@style/PrimaryBtn"
@@ -52,7 +52,7 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/txtName"
-        local:MvxBind="Text LblUpdateBtn;Click UpdateAuthorCommand;Enabled IsValid;Visibility Visibility(IsEditing)"/>
+        local:MvxBind="Text LblUpdateBtn;Click UpdateGenreCommand;Enabled IsValid;Visibility Visibility(IsEditing)"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabEdit"
@@ -63,7 +63,7 @@
         android:layout_margin="10dp"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Click EditAuthorCommand;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Click EditGenreCommand;Visibility InvertedVisibility(IsEditing)"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabClose"
         android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_margin="10dp"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Click EditAuthorCommand;Visibility Visibility(IsEditing)"/>
+        local:MvxBind="Click EditGenreCommand;Visibility Visibility(IsEditing)"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

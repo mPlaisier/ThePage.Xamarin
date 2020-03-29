@@ -13,6 +13,7 @@ namespace ThePage.Core.ViewModels.Main
         {
             Books,
             Authors,
+            Genre,
             Debug
         }
 
@@ -65,14 +66,16 @@ namespace ThePage.Core.ViewModels.Main
                new CellMenuHeader("ThePage"),
                new CellMenuItem("Books",EMenu.Books),
                new CellMenuItem("Authors",EMenu.Authors),
+               new CellMenuItem("Genres", EMenu.Genre),
                new CellMenuHeader("Other"),
                new CellMenuItem("Debug",EMenu.Debug),
             };
 #else
             Items = new List<CellMenu>
             {
-               new CellMenuItem("Books",EMenu.Books),
-               new CellMenuItem("Authors",EMenu.Authors)
+                new CellMenuItem("Books",EMenu.Books),
+                new CellMenuItem("Authors",EMenu.Authors),
+                new CellMenuItem("Genres", EMenu.Genre)
             };
 #endif
         }
@@ -89,6 +92,9 @@ namespace ThePage.Core.ViewModels.Main
                     case EMenu.Authors:
                         _navigationService.Navigate<AuthorViewModel>();
                         break;
+                    case EMenu.Genre:
+                        _navigationService.Navigate<GenreViewModel>();
+                        break;
                     case EMenu.Debug:
                         _navigationService.Navigate<DebugViewModel>();
                         break;
@@ -97,7 +103,6 @@ namespace ThePage.Core.ViewModels.Main
                 }
             }
         }
-
 
         #endregion
     }

@@ -157,6 +157,65 @@ namespace ThePage.Core
 
         #endregion
 
+        #region Genres
+
+        public async Task<List<Genre>> GetAllGenres()
+        {
+            List<Genre> result = null;
+            try
+            {
+                result = await GenreManager.Get();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
+        public async Task<bool> AddGenre(Genre genre)
+        {
+            Genre result = null;
+            try
+            {
+                result = await GenreManager.Add(genre);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result != null;
+        }
+
+        public async Task<Genre> UpdateGenre(Genre genre)
+        {
+            Genre result = null;
+            try
+            {
+                result = await GenreManager.Update(genre);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
+        public async Task<bool> DeleteGenre(Genre genre)
+        {
+            try
+            {
+                return await GenreManager.Delete(genre);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return false;
+        }
+
+        #endregion
+
         #region Private
 
         //TODO perhaps move to a general Utils class/file

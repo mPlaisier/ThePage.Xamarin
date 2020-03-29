@@ -7,25 +7,25 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AuthorDetailParameter
+    public class GenreDetailParameter
     {
         #region Properties
 
-        public AuthorCell Author { get; }
+        public CellGenre Genre { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(AuthorCell author)
+        public GenreDetailParameter(CellGenre genre)
         {
-            Author = author;
+            Genre = genre;
         }
 
         #endregion
     }
 
-    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>, INotifyPropertyChanged
+    public class GenreDetailViewModel : BaseViewModel<GenreDetailParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -34,9 +34,9 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Author Detail";
+        public override string Title => "Genre Detail";
 
-        public AuthorCell Author { get; internal set; }
+        public CellGenre Genre { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -53,9 +53,9 @@ namespace ThePage.Core
 
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 
-        public string LblUpdateBtn => "Update Author";
+        public string LblUpdateBtn => "Update Genre";
 
-        public string LblDeleteBtn => "Delete Author";
+        public string LblDeleteBtn => "Delete Genre";
 
         bool _isEditing;
         public bool IsEditing
@@ -68,24 +68,24 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _editAuthorCommand;
-        public IMvxCommand EditAuthorCommand => _editAuthorCommand ??= new MvxCommand(() =>
+        IMvxCommand _editGenreCommand;
+        public IMvxCommand EditGenreCommand => _editGenreCommand ??= new MvxCommand(() =>
         {
             _device.HideKeyboard();
             IsEditing = !IsEditing;
         });
 
-        IMvxCommand _deleteAuthorCommand;
-        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(() => DeleteAuthor().Forget());
+        IMvxCommand _deleteGenreCommand;
+        public IMvxCommand DeleteGenreCommand => _deleteGenreCommand ??= new MvxCommand(() => DeleteGenre().Forget());
 
-        IMvxCommand _updateAuthorCommand;
-        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(() => UpdateAuthor().Forget());
+        IMvxCommand _updateGenreCommand;
+        public IMvxCommand UpdateGenreCommand => _updateGenreCommand ??= new MvxCommand(() => UpdateGenre().Forget());
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public GenreDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
@@ -97,17 +97,17 @@ namespace ThePage.Core
 
         #region LifeCycle
 
-        public override void Prepare(AuthorDetailParameter parameter)
+        public override void Prepare(GenreDetailParameter parameter)
         {
-            Author = parameter.Author;
+            Genre = parameter.Genre;
 
-            TxtName = Author.Name;
+            TxtName = Genre.Name;
             IsEditing = false;
         }
 
         public override Task Initialize()
         {
-            Analytics.TrackEvent($"Initialize {nameof(AuthorDetailViewModel)}");
+            Analytics.TrackEvent($"Initialize {nameof(GenreDetailViewModel)}");
 
             return base.Initialize();
         }
@@ -116,7 +116,7 @@ namespace ThePage.Core
 
         #region Private
 
-        async Task UpdateAuthor()
+        async Task UpdateGenre()
         {
             if (IsLoading)
                 return;
@@ -126,37 +126,37 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            Author.Name = TxtName;
+            Genre.Name = TxtName;
 
-            var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
-            if (author != null)
-                _userInteraction.ToastMessage("Author updated");
+            var genre = await _thePageService.UpdateGenre(GenreBusinessLogic.CellGenreToGenre(Genre));
+            if (genre != null)
+                _userInteraction.ToastMessage("Genre updated");
             else
-                _userInteraction.Alert("Failure updating author");
+                _userInteraction.Alert("Failure updating genre");
 
             IsEditing = false;
             IsLoading = false;
         }
 
-        async Task DeleteAuthor()
+        async Task DeleteGenre()
         {
             if (IsLoading)
                 return;
 
-            if (await _userInteraction.ConfirmAsync("Remove Author?", "Confirm", "DELETE"))
+            if (await _userInteraction.ConfirmAsync("Remove Genre?", "Confirm", "DELETE"))
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
+                var result = await _thePageService.DeleteGenre(GenreBusinessLogic.CellGenreToGenre(Genre));
 
                 if (result)
                 {
-                    _userInteraction.ToastMessage("Author removed");
+                    _userInteraction.ToastMessage("Genre removed");
                     await _navigation.Close(this, true);
                 }
                 else
                 {
-                    _userInteraction.Alert("Failure removing author");
+                    _userInteraction.Alert("Failure removing genre");
                     IsLoading = false;
                 }
             }

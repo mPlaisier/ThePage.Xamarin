@@ -8,11 +8,11 @@ using ThePage.Droid.Views;
 namespace ThePage.Droid
 {
     [MvxFragmentPresentation(typeof(MainContainerViewModel), Resource.Id.content_frame, addToBackStack: true)]
-    public class AddAuthorFragment : BaseFragment<AddAuthorViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
+    public class GenreDetailFragment : BaseFragment<GenreDetailViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
     {
         #region Properties
 
-        protected override int FragmentLayoutId => Resource.Layout.fragment_addauthor;
+        protected override int FragmentLayoutId => Resource.Layout.fragment_genredetail;
 
         #endregion
 

@@ -9,19 +9,23 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<BookCell> BooksToBookCells(List<Book> booksApi, List<Author> authorsApi)
+        public static List<BookCell> BooksToBookCells(List<Book> booksApi, List<Author> authorsApi, List<Genre> genresApi)
         {
-            return booksApi.Select(x => BookToBookCell(x, authorsApi)).ToList();
+            return booksApi.Select(x => BookToBookCell(x, authorsApi, genresApi)).ToList();
         }
 
-        public static BookCell BookToBookCell(Book book, List<Author> authorsApi)
+        public static BookCell BookToBookCell(Book book, List<Author> authorsApi, List<Genre> genresApi)
         {
-            return new BookCell(book.Id, book.Title, authorsApi.FirstOrDefault(a => a.Id == book.Author));
+            var genres = genresApi.Where(g => book.Genres.Contains(g.Id)).ToList();
+            var author = authorsApi.FirstOrDefault(a => a.Id == book.Author);
+
+            return new BookCell(book.Id, book.Title, author, genres);
         }
 
         public static Book BookCellToBook(BookCell bookCell)
         {
-            return new Book(bookCell.Id, bookCell.Title, bookCell.Author?.Id);
+            var genres = bookCell.Genres?.Select(g => g.Id).ToList();
+            return new Book(bookCell.Id, bookCell.Title, bookCell.Author?.Id, genres);
         }
 
         #endregion

@@ -15,6 +15,9 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
+
+        List<Genre> _genres;
 
         #region Properties
 
@@ -49,7 +52,14 @@ namespace ThePage.Core
             set => SetProperty(ref _selectedAuthor, value);
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtTitle) && SelectedAuthor != null;
+        List<Genre> _selectedGenres;
+        public List<Genre> SelectedGenres
+        {
+            get => _selectedGenres;
+            set => SetProperty(ref _selectedGenres, value);
+        }
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
         public string LblBtn => "Add Book";
 
@@ -63,6 +73,7 @@ namespace ThePage.Core
         IMvxCommand<AuthorCell> _itemSelectedCommand;
         public IMvxCommand<AuthorCell> ItemSelectedCommand => _itemSelectedCommand ??= new MvxCommand<AuthorCell>((authorCell) =>
         {
+            _device.HideKeyboard();
             SelectedAuthor = authorCell;
         });
 
@@ -70,11 +81,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -87,7 +99,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchAuthors().Forget();
+            FetchData().Forget();
         }
 
         #endregion
@@ -99,7 +111,9 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            var book = new Book(TxtTitle, SelectedAuthor.Id);
+            _device.HideKeyboard();
+
+            var book = new Book(TxtTitle.Trim(), SelectedAuthor.Id, SelectedGenres.GetIdAsStringList());
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -114,7 +128,7 @@ namespace ThePage.Core
             }
         }
 
-        async Task FetchAuthors()
+        async Task FetchData()
         {
             if (IsLoading)
                 return;
@@ -122,6 +136,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var authors = await _thePageService.GetAllAuthors();
+            _genres = await _thePageService.GetAllGenres();
 
             if (authors != null)
                 Authors = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
