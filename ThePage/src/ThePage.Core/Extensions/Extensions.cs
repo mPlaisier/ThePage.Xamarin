@@ -33,7 +33,7 @@ namespace ThePage.Core
 
         public static List<string> GetIdAsStringList(this List<Genre> genres)
         {
-            return genres.Select(g => g.Id).ToList();
+            return genres == null ? new List<string>() : genres.Select(g => g.Id).ToList();
         }
     }
 }
