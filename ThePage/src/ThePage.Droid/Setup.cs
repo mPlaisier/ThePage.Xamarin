@@ -11,6 +11,7 @@ namespace ThePage.Droid
             base.InitializeFirstChance();
 
             Mvx.IoCProvider.RegisterType<IUserInteraction, UserInteraction>();
+            Mvx.IoCProvider.RegisterType<IDevice, Device>();
         }
 
     }
