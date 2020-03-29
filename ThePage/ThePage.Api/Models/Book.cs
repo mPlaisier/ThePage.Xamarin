@@ -27,13 +27,14 @@ namespace ThePage.Api
         {
         }
 
-        public Book(string title, string author)
+        public Book(string title, string author, List<string> genres)
         {
             Title = title;
             Author = author;
+            Genres = genres;
         }
 
-        public Book(string id, string title, string author) : this(title, author)
+        public Book(string id, string title, string author, List<string> genres) : this(title, author, genres)
         {
             Id = id;
         }

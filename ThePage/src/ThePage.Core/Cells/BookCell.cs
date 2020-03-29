@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using MvvmCross.ViewModels;
 using ThePage.Api;
 
@@ -14,6 +14,8 @@ namespace ThePage.Core
 
         public Author Author { get; set; }
 
+        public List<Genre> Genres { get; set; }
+
         #endregion
 
         #region Constructor
@@ -23,11 +25,12 @@ namespace ThePage.Core
 
         }
 
-        public BookCell(string id, string title, Author author)
+        public BookCell(string id, string title, Author author, List<Genre> genres)
         {
             Id = id;
             Title = title;
             Author = author;
+            Genres = genres;
         }
 
         #endregion
