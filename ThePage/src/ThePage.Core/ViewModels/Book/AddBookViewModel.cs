@@ -17,6 +17,8 @@ namespace ThePage.Core
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
 
+        List<Genre> _genres;
+
         #region Properties
 
         public override string Title => "Add book";
@@ -48,6 +50,13 @@ namespace ThePage.Core
         {
             get => _selectedAuthor;
             set => SetProperty(ref _selectedAuthor, value);
+        }
+
+        List<Genre> _selectedGenres;
+        public List<Genre> SelectedGenres
+        {
+            get => _selectedGenres;
+            set => SetProperty(ref _selectedGenres, value);
         }
 
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
@@ -90,7 +99,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchAuthors().Forget();
+            FetchData().Forget();
         }
 
         #endregion
@@ -104,7 +113,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var book = new Book(TxtTitle.Trim(), SelectedAuthor.Id);
+            var book = new Book(TxtTitle.Trim(), SelectedAuthor.Id, SelectedGenres.GetIdAsStringList());
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -119,7 +128,7 @@ namespace ThePage.Core
             }
         }
 
-        async Task FetchAuthors()
+        async Task FetchData()
         {
             if (IsLoading)
                 return;
@@ -127,6 +136,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var authors = await _thePageService.GetAllAuthors();
+            _genres = await _thePageService.GetAllGenres();
 
             if (authors != null)
                 Authors = AuthorBusinessLogic.AuthorsToAuthorCells(authors);

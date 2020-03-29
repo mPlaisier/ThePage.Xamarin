@@ -32,5 +32,17 @@ namespace ThePage.Core
         Task<bool> DeleteAuthor(Author author);
 
         #endregion
+
+        #region Genre
+
+        Task<List<Genre>> GetAllGenres();
+
+        Task<bool> AddGenre(Genre author);
+
+        Task<Genre> UpdateGenre(Genre author);
+
+        Task<bool> DeleteGenre(Genre author);
+
+        #endregion
     }
 }

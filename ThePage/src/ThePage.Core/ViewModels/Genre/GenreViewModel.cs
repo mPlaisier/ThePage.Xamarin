@@ -3,32 +3,31 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookViewModel : BaseViewModel
+    public class GenreViewModel : BaseViewModel
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<BookCell> _books;
-        public List<BookCell> Books
+        List<CellGenre> _genres;
+        public List<CellGenre> Genres
         {
-            get => _books;
-            set => SetProperty(ref _books, value);
+            get => _genres;
+            set => SetProperty(ref _genres, value);
         }
 
-        public override string Title => "Books";
+        public override string Title => "Genres";
 
         #endregion
 
         #region Constructor
 
-        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public GenreViewModel(IMvxNavigationService navigation, IThePageService thePageService)
         {
             _navigation = navigation;
             _thePageService = thePageService;
@@ -38,19 +37,19 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<BookCell> _itemClickCommand;
-        public IMvxCommand<BookCell> ItemClickCommand => _itemClickCommand ??= new MvxCommand<BookCell>(async (item) =>
+        IMvxCommand<CellGenre> _itemClickCommand;
+        public IMvxCommand<CellGenre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellGenre>(async (item) =>
         {
-            var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
+            var result = await _navigation.Navigate<GenreDetailViewModel, GenreDetailParameter, bool>(new GenreDetailParameter(item));
             if (result)
                 await Refresh();
 
         });
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddBookViewModel, bool>();
+            var result = await _navigation.Navigate<AddGenreViewModel, bool>();
             if (result)
                 await Refresh();
         });
@@ -61,7 +60,7 @@ namespace ThePage.Core
 
         public override async Task Initialize()
         {
-            Analytics.TrackEvent($"Initialize {nameof(BookViewModel)}");
+            Analytics.TrackEvent($"Initialize {nameof(GenreViewModel)}");
 
             await base.Initialize();
 
@@ -76,11 +75,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var books = await _thePageService.GetAllBooks();
-            var authors = await _thePageService.GetAllAuthors();
             var genres = await _thePageService.GetAllGenres();
-
-            Books = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            Genres = GenreBusinessLogic.GenresToCellGenres(genres);
 
             IsLoading = false;
         }

@@ -79,6 +79,13 @@ namespace ThePage.Core
 
         }
 
+        List<Genre> _genres;
+        public List<Genre> Genres
+        {
+            get => _genres;
+            set => SetProperty(ref _genres, value);
+        }
+
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
         public string LblUpdateBtn => "Update Book";
@@ -144,7 +151,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchAuthors().Forget();
+            FetchData().Forget();
         }
 
         #endregion
@@ -168,7 +175,7 @@ namespace ThePage.Core
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors);
+                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres);
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
             }
             else
@@ -204,7 +211,7 @@ namespace ThePage.Core
             }
         }
 
-        async Task FetchAuthors()
+        async Task FetchData()
         {
             if (IsLoading)
                 return;
@@ -212,6 +219,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
+            Genres = await _thePageService.GetAllGenres();
 
             SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
 

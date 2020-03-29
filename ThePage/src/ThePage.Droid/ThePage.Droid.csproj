@@ -78,6 +78,9 @@
     <Compile Include="Services\UserInteraction.cs" />
     <Compile Include="Views\Debug\DebugFragment.cs" />
     <Compile Include="Adapters\DebugTemplateSelector.cs" />
+    <Compile Include="Views\Genre\GenreFragment.cs" />
+    <Compile Include="Views\Genre\GenreDetailFragment.cs" />
+    <Compile Include="Views\Genre\AddGenreFragment.cs" />
     <Compile Include="Utils\DroidUtils.cs" />
     <Compile Include="Services\Device.cs" />
   </ItemGroup>
@@ -251,6 +254,22 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_genre.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_genre_item.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_addgenre.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_genredetail.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -291,6 +310,7 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-mdpi\" />
+    <Folder Include="Views\Genre\" />
     <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

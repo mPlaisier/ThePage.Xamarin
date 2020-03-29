@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -27,6 +29,11 @@ namespace ThePage.Core
 
         public static void Forget(this Task task)
         {
+        }
+
+        public static List<string> GetIdAsStringList(this List<Genre> genres)
+        {
+            return genres.Select(g => g.Id).ToList();
         }
     }
 }
