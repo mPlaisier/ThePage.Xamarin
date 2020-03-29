@@ -30,6 +30,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -50,7 +51,7 @@ namespace ThePage.Core
             }
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtName);
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 
         public string LblUpdateBtn => "Update Genre";
 
@@ -70,6 +71,7 @@ namespace ThePage.Core
         IMvxCommand _editGenreCommand;
         public IMvxCommand EditGenreCommand => _editGenreCommand ??= new MvxCommand(() =>
         {
+            _device.HideKeyboard();
             IsEditing = !IsEditing;
         });
 
@@ -83,11 +85,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public GenreDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public GenreDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -118,8 +121,11 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
+            _device.HideKeyboard();
+
             IsLoading = true;
 
+            TxtName = TxtName.Trim();
             Genre.Name = TxtName;
 
             var genre = await _thePageService.UpdateGenre(GenreBusinessLogic.CellGenreToGenre(Genre));

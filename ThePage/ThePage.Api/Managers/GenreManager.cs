@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
+using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -8,7 +9,7 @@ namespace ThePage.Api
     {
         #region Properties
 
-        static readonly IGenreAPI _genreApi = RestService.For<IGenreAPI>(Constants.ThePageAPI_Url);
+        static readonly IGenreAPI _genreApi = RestService.For<IGenreAPI>(Secrets.ThePageAPI_URL);
 
         #endregion
 

@@ -14,6 +14,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -32,7 +33,7 @@ namespace ThePage.Core
             }
         }
 
-        public bool IsValid => !string.IsNullOrEmpty(TxtName);
+        public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 
         public string LblBtn => "Add genre";
 
@@ -43,6 +44,7 @@ namespace ThePage.Core
         IMvxCommand _addGenreCommand;
         public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
         {
+            _device.HideKeyboard();
             await AddGenre();
         });
 
@@ -50,11 +52,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddGenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public AddGenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -80,7 +83,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddGenre(new Genre(TxtName));
+            var result = await _thePageService.AddGenre(new Genre(TxtName.Trim()));
 
             if (result)
             {
