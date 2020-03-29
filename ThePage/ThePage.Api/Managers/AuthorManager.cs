@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
+using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -8,7 +9,7 @@ namespace ThePage.Api
     {
         #region Properties
 
-        static readonly IAuthorAPI _authorApi = RestService.For<IAuthorAPI>(Constants.ThePageAPI_Url);
+        static readonly IAuthorAPI _authorApi = RestService.For<IAuthorAPI>(Secrets.ThePageAPI_URL);
 
         #endregion
 

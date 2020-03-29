@@ -81,6 +81,8 @@
     <Compile Include="Views\Genre\GenreFragment.cs" />
     <Compile Include="Views\Genre\GenreDetailFragment.cs" />
     <Compile Include="Views\Genre\AddGenreFragment.cs" />
+    <Compile Include="Utils\DroidUtils.cs" />
+    <Compile Include="Services\Device.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -298,7 +300,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Author\" />
     <Folder Include="Views\Author\" />
     <Folder Include="Views\Book\" />
     <Folder Include="Adapters\" />
@@ -310,6 +311,7 @@
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-mdpi\" />
     <Folder Include="Views\Genre\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
