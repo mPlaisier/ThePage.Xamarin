@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -18,50 +21,18 @@ namespace ThePage.Core
         readonly IDevice _device;
 
         List<Genre> _genres;
+        List<Author> _authors;
 
         #region Properties
 
         public override string Title => "Add book";
 
-        public string LblTitle => "Title:";
-
-        public string LblAuthor => "Author:";
-
-        string _txtTitle;
-        public string TxtTitle
+        MvxObservableCollection<ICellBook> _items;
+        public MvxObservableCollection<ICellBook> Items
         {
-            get => _txtTitle;
-            set
-            {
-                SetProperty(ref _txtTitle, value);
-                RaisePropertyChanged(nameof(IsValid));
-            }
+            get => _items;
+            set => SetProperty(ref _items, value);
         }
-
-        List<AuthorCell> _authors;
-        public List<AuthorCell> Authors
-        {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
-        }
-
-        AuthorCell _selectedAuthor;
-        public AuthorCell SelectedAuthor
-        {
-            get => _selectedAuthor;
-            set => SetProperty(ref _selectedAuthor, value);
-        }
-
-        List<Genre> _selectedGenres;
-        public List<Genre> SelectedGenres
-        {
-            get => _selectedGenres;
-            set => SetProperty(ref _selectedGenres, value);
-        }
-
-        public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
-
-        public string LblBtn => "Add Book";
 
         #endregion
 
@@ -69,13 +40,6 @@ namespace ThePage.Core
 
         IMvxCommand _addbookCommand;
         public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(() => AddBook().Forget());
-
-        IMvxCommand<AuthorCell> _itemSelectedCommand;
-        public IMvxCommand<AuthorCell> ItemSelectedCommand => _itemSelectedCommand ??= new MvxCommand<AuthorCell>((authorCell) =>
-        {
-            _device.HideKeyboard();
-            SelectedAuthor = authorCell;
-        });
 
         #endregion
 
@@ -113,7 +77,10 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var book = new Book(TxtTitle.Trim(), SelectedAuthor.Id, SelectedGenres.GetIdAsStringList());
+            var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
+            var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
+
+            var book = new Book(title, author.Id, new List<string>());
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -135,21 +102,56 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var authors = await _thePageService.GetAllAuthors();
+            _authors = await _thePageService.GetAllAuthors();
             _genres = await _thePageService.GetAllGenres();
 
-            if (authors != null)
-                Authors = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
-            else
+            if (_authors == null || _genres == null)
             {
                 _userInteraction.Alert("Error retrieving data from Server", null, "Error");
                 await _navigation.Close(this, true);
             }
 
+            CreateCellBooks();
+
             IsLoading = false;
         }
 
-        #endregion
+        void CreateCellBooks()
+        {
+            Items = new MvxObservableCollection<ICellBook>
+            {
+                new CellBookTitle(UpdateValidation),
+                new CellBookAuthor(_device,_authors, UpdateValidation),
+                new CellBookAddGenre(AddGenreAction),
+                new CellBookButton(AddBook)
+            };
+        }
 
+        void UpdateValidation()
+        {
+            var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
+            var btn = Items.Where(b => b is CellBookButton).OfType<CellBookButton>().First();
+
+            btn.IsValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+        }
+
+        void AddGenreAction()
+        {
+            //TODO navigate to view with list of all genres
+            //=>_genres
+
+            //After await
+            var genreItem = new CellBookGenreItem(new Genre("Genre naam"), RemoveGenre);
+
+            var index = Items.FindIndex(x => x is CellBookAddGenre);
+            Items.Insert(index, genreItem);
+        }
+
+        private void RemoveGenre(CellBookGenreItem obj)
+        {
+            Items.Remove(obj);
+        }
+
+        #endregion
     }
 }

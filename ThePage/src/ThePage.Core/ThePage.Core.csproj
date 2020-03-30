@@ -22,6 +22,7 @@
     <Folder Include="ViewModels\Debug\" />
     <Folder Include="Cells\Debug\" />
     <Folder Include="ViewModels\Genre\" />
+    <Folder Include="Cells\Book\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />

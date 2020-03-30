@@ -5,58 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true" 
-    android:focusableInTouchMode="true"
-    android:padding="8dp">
-
-    <TextView
-        android:id="@+id/lblTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toTopOf="parent"
-        local:layout_constraintBottom_toTopOf="@+id/txtTitle"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblTitle"/>
-
-    <EditText
-        android:id="@+id/txtTitle"
+    android:focusableInTouchMode="true">
+    <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblTitle"
-        local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text TxtTitle"/>
-
-    <TextView
-        android:id="@+id/lblAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/txtTitle"
-        local:layout_constraintBottom_toTopOf="@+id/spnrAuthor"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblAuthor"/>
-
-    <mvvmcross.platforms.android.binding.views.MvxSpinner
-        android:id="@+id/spnrAuthor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
-        local:layout_constraintBottom_toTopOf="@+id/btnAdd"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxItemTemplate="@layout/author_spinner_template"
-        local:MvxDropDownItemTemplate="@layout/author_spinner_template"
-        local:MvxBind="ItemsSource Authors; SelectedItem SelectedAuthor; HandleItemSelected ItemSelectedCommand"/>
-    
-
-    <TextView
-        style="@style/PrimaryBtn"
-        android:id="@+id/btnAdd"
-        local:layout_constraintTop_toBottomOf="@+id/spnrAuthor"
-        local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text LblBtn;Click AddBookCommand;Enabled IsValid;"/>
-
-     <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        local:MvxTemplateSelector="ThePage.Droid.BookTemplateSelector, ThePage.Droid"
+        local:MvxBind="ItemsSource Items;" />
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
