@@ -70,20 +70,52 @@
         local:layout_constraintStart_toStartOf="parent"
         local:MvxBind="Text Book.Author.Name;Visibility InvertedVisibility(IsEditing)"/>
 
+     <TextView
+        android:id="@+id/lblGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        local:layout_constraintTop_toBottomOf="@+id/lblAuthorValue"
+        local:layout_constraintBottom_toTopOf="@+id/lstGenres"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text LblGenre"/>
+
+     <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
+        android:id="@+id/lstGenres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        local:layout_constraintTop_toBottomOf="@+id/lblGenre"
+        local:layout_constraintBottom_toTopOf="@+id/lblAddGenre"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxItemTemplate="@layout/cell_genre_item"
+        local:MvxBind="ItemsSource Genres;ItemClick GenreClickCommand;" />
+
+    <TextView
+        android:id="@+id/lblAddGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_margin="4dp"
+        local:layout_constraintTop_toBottomOf="@+id/lstGenres"
+        local:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text LblAddGenre;Click AddGenreCommand;Visibility Visibility(IsEditing)"/>
+
     <TextView
         style="@style/PrimaryBtnWarning"
         android:id="@+id/btnDelete"
-        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintTop_toBottomOf="@+id/lblAddGenre"
         local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthorValue"
+        local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Text LblDeleteBtn;Click DeleteBookCommand;Visibility InvertedVisibility(IsEditing)"/>
 
     <TextView
         style="@style/PrimaryBtn"
         android:id="@+id/btnUpdate"
-        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintTop_toBottomOf="@+id/lblAddGenre"
         local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthorValue"
+        local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Text LblUpdateBtn;Click UpdateBookCommand;Enabled IsValid;Visibility Visibility(IsEditing)"/>
 
     <android.support.design.widget.FloatingActionButton

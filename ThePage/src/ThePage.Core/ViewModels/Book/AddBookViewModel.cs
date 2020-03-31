@@ -137,7 +137,8 @@ namespace ThePage.Core
 
         async Task AddGenreAction()
         {
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, new List<Genre>()));
+            var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, selectedGenres));
 
             //After await
             var genreItem = new CellBookGenreItem(genre, RemoveGenre);
