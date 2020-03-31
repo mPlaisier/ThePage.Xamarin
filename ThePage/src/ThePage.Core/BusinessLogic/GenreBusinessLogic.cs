@@ -10,7 +10,7 @@ namespace ThePage.Core
 
         public static List<CellGenre> GenresToCellGenres(List<Genre> genreApi)
         {
-            return genreApi.Select(x => new CellGenre(x.Id, x.Name)).ToList();
+            return genreApi?.Select(x => new CellGenre(x.Id, x.Name)).ToList();
         }
 
         public static Genre CellGenreToGenre(CellGenre cellGenre)
