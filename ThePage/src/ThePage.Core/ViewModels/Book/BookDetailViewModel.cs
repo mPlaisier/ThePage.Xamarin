@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -5,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -49,6 +51,10 @@ namespace ThePage.Core
 
         public string LblAuthor => "Author:";
 
+        public string LblGenre => "Genres:";
+
+        public string LblAddGenre => "Voeg genre toe";
+
         string _txtTitle;
         public string TxtTitle
         {
@@ -79,8 +85,15 @@ namespace ThePage.Core
 
         }
 
-        List<Genre> _genres;
-        public List<Genre> Genres
+        List<Genre> _allGenres;
+        public List<Genre> AllGenres
+        {
+            get => _allGenres;
+            set => SetProperty(ref _allGenres, value);
+        }
+
+        MvxObservableCollection<Genre> _genres;
+        public MvxObservableCollection<Genre> Genres
         {
             get => _genres;
             set => SetProperty(ref _genres, value);
@@ -122,6 +135,12 @@ namespace ThePage.Core
         IMvxCommand _updateBookCommand;
         public IMvxCommand UpdateBookCommand => _updateBookCommand ??= new MvxCommand(() => UpdateBook().Forget());
 
+        IMvxCommand<Genre> _genreClickCommand;
+        public IMvxCommand<Genre> GenreClickCommand => _genreClickCommand ??= new MvxCommand<Genre>((genre) => RemoveGenre(genre));
+
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand = _addGenreCommand ?? new MvxCommand(() => AddGenreAction().Forget());
+
         #endregion
 
         #region Constructor
@@ -143,6 +162,7 @@ namespace ThePage.Core
             Book = parameter.Book;
 
             TxtTitle = Book.Title;
+            Genres = new MvxObservableCollection<Genre>(Book.Genres);
         }
 
         public override async Task Initialize()
@@ -169,13 +189,14 @@ namespace ThePage.Core
             TxtTitle = TxtTitle.Trim();
             Book.Title = TxtTitle;
             Book.Author = SelectedAuthor;
+            Book.Genres = Genres.ToList();
 
             var result = await _thePageService.UpdateBook(BookBusinessLogic.BookCellToBook(Book));
 
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres);
+                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres.ToList());
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
             }
             else
@@ -219,11 +240,26 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
-            Genres = await _thePageService.GetAllGenres();
+            AllGenres = await _thePageService.GetAllGenres();
 
             SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
 
             IsLoading = false;
+        }
+
+        void RemoveGenre(Genre genre)
+        {
+            if (IsEditing)
+                Genres.Remove(genre);
+        }
+
+        async Task AddGenreAction()
+        {
+            if (!IsEditing)
+                return;
+
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(AllGenres, Genres.ToList()));
+            Genres.Add(genre);
         }
 
         #endregion
