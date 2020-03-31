@@ -122,7 +122,7 @@ namespace ThePage.Core
             {
                 new CellBookTitle(UpdateValidation),
                 new CellBookAuthor(_device,_authors, UpdateValidation),
-                new CellBookAddGenre(AddGenreAction),
+                new CellBookAddGenre(() => AddGenreAction().Forget()),
                 new CellBookButton(AddBook)
             };
         }
@@ -135,13 +135,12 @@ namespace ThePage.Core
             btn.IsValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
         }
 
-        void AddGenreAction()
+        async Task AddGenreAction()
         {
-            //TODO navigate to view with list of all genres
-            //=>_genres
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, new List<Genre>()));
 
             //After await
-            var genreItem = new CellBookGenreItem(new Genre("Genre naam"), RemoveGenre);
+            var genreItem = new CellBookGenreItem(genre, RemoveGenre);
 
             var index = Items.FindIndex(x => x is CellBookAddGenre);
             Items.Insert(index, genreItem);

@@ -84,6 +84,7 @@
     <Compile Include="Utils\DroidUtils.cs" />
     <Compile Include="Services\Device.cs" />
     <Compile Include="Adapters\BookTemplateSelector.cs" />
+    <Compile Include="Views\Genre\SelectGenreFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -288,6 +289,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cell_book_genre_item.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_selectgenre.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
