@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -80,7 +78,9 @@ namespace ThePage.Core
             var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
             var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
 
-            var book = new Book(title, author.Id, new List<string>());
+            var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+
+            var book = new Book(title, author.Id, genres.GetIdAsStringList());
             var result = await _thePageService.AddBook(book);
 
             if (result)
