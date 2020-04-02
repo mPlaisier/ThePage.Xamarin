@@ -10,8 +10,13 @@ find $APPCENTER_SOURCE_DIRECTORY -regex '*.Tests*\.csproj' | xargs dotnet test -
 echo "XUnit tests result:"
 pathOfTestResults=$(find $APPCENTER_SOURCE_DIRECTORY -name 'testresult.trx')
 echo  "Fetched results"
+echo  "Path:"
+echo $pathOfTestResults
+echo "end of Path"
+
 
 grep ' \[FAIL\]' $pathOfTestResults
+echo "Done grep"
 failures=$(grep -o ' \[FAIL\]' $pathOfTestResults | wc -l)
 
 echo "checking for failures"
