@@ -25,8 +25,11 @@ namespace ThePage.Droid.Views.Main
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
+#if DEBUG
             AppCenter.Start("2a35d66f-7eb1-4a30-af70-44348de2e4b9", typeof(Analytics), typeof(Crashes), typeof(Distribute));
+#else
+            AppCenter.Start("1196e785-1345-401c-b733-583d7dd3afa0", typeof(Analytics), typeof(Crashes), typeof(Distribute));
+#endif
         }
 
         #endregion
