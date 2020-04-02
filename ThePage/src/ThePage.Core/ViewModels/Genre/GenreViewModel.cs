@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -7,21 +8,16 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class GenreViewModel : BaseViewModel
+    public class GenreViewModel : BaseViewModel, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<CellGenre> _genres;
-        public List<CellGenre> Genres
-        {
-            get => _genres;
-            set => SetProperty(ref _genres, value);
-        }
-
         public override string Title => "Genres";
+
+        public List<CellGenre> Genres { get; set; }
 
         #endregion
 

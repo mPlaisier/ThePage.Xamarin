@@ -1,26 +1,21 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookViewModel : BaseViewModel
+    public class BookViewModel : BaseViewModel, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<BookCell> _books;
-        public List<BookCell> Books
-        {
-            get => _books;
-            set => SetProperty(ref _books, value);
-        }
+        public List<BookCell> Books { get; set; }
 
         public override string Title => "Books";
 

@@ -25,12 +25,7 @@ namespace ThePage.Core
 
         public override string Title => "Add book";
 
-        MvxObservableCollection<ICellBook> _items;
-        public MvxObservableCollection<ICellBook> Items
-        {
-            get => _items;
-            set => SetProperty(ref _items, value);
-        }
+        public MvxObservableCollection<ICellBook> Items { get; set; }
 
         #endregion
 
