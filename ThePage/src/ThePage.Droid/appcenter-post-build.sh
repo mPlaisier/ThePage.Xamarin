@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
 
-directory = $APPCENTER_SOURCE_DIRECTORY -regex '/ThePage/src'
-for entry in "$directory"/ThePage/src/*
+for entry in "$APPCENTER_SOURCE_DIRECTORY"ThePage/src*
 do
   echo "$entry"
 done
 
 echo "Found Unit test projects"
-echo $directory
-find $directory -regex '.*Tests\*.csproj'
+echo "$APPCENTER_SOURCE_DIRECTORY"ThePage/src*
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*\ThePage\src\*Tests\*.csproj'
 
-find $directory -regex '.*Tests\*.csproj' -exec echo {} \;
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*\ThePage\src\*Tests\*.csproj' -exec echo {} \;
 
 echo "Run Unit test projects"
-find $directory -regex '.*Tests\*.csproj' | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*\ThePage\src\*Tests\*.csproj' | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
 
 #find file with results
 echo "XUnit tests result:"
-pathOfTestResults=$(find $directory -name 'testresult.trx')
+pathOfTestResults=$(find $APPCENTER_SOURCE_DIRECTORY.*\ThePage\src\*Tests\*.csproj -name 'testresult.trx')
 echo  "Fetched results"
 echo  "Path:"
 echo $pathOfTestResults
