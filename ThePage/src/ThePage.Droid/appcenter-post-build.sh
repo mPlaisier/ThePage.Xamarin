@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 echo "Found Unit test projects"
-find $APPCENTER_SOURCE_DIRECTORY -regex '*.Tests\.csproj' -exec echo {} \;
 echo $APPCENTER_SOURCE_DIRECTORY
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*Tests\*.csproj'
+
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*Tests\*.csproj' -exec echo {} \;
+
 echo "Run Unit test projects"
-find $APPCENTER_SOURCE_DIRECTORY -regex '*.Tests\.csproj' | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
+find $APPCENTER_SOURCE_DIRECTORY -regex '.*Tests\*.csproj' | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
 
 #find file with results
 echo "XUnit tests result:"
