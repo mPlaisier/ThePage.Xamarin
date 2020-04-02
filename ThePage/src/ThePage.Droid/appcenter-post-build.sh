@@ -18,12 +18,12 @@ find "$APPCENTER_SOURCE_DIRECTORY"/.*/ThePage/src/*Tests/*.csproj | xargs dotnet
 echo
 #find file with results
 echo "XUnit tests result:"
-for entry in "$APPCENTER_SOURCE_DIRECTORY"/ThePage/src/ThePage.UnitTests/*
+for entry in "$APPCENTER_SOURCE_DIRECTORY"/ThePage/src/*Tests/TestResults/*
 do
   echo "$entry"
 done
 
-pathOfTestResults=$(find $APPCENTER_SOURCE_DIRECTORY/.*ThePage/src/*Tests/* -name 'testresult.trx')
+pathOfTestResults=$(find "$APPCENTER_SOURCE_DIRECTORY"/.*/ThePage/src/*Tests/TestResults/* -name 'testresult.trx')
 echo  "Fetched results"
 echo  "Path:"
 echo $pathOfTestResults
