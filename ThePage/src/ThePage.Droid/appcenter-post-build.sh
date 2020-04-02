@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+
+for entry in "$APPCENTER_SOURCE_DIRECTORY"/*
+do
+  echo "$entry"
+done
+
 echo "Found Unit test projects"
 echo $APPCENTER_SOURCE_DIRECTORY
 find $APPCENTER_SOURCE_DIRECTORY -regex '.*Tests\*.csproj'
