@@ -14,7 +14,7 @@ namespace ThePage.UnitTests
         [Fact]
         public void TestFunction()
         {
-            Assert.True(true);
+            Assert.True(false);
         }
     }
 }
