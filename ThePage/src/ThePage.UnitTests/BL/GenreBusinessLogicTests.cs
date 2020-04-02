@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using ThePage.Api;
 using ThePage.Core;
@@ -8,10 +7,6 @@ namespace ThePage.UnitTests
 {
     public class GenreBusinessLogicTests
     {
-        public GenreBusinessLogicTests()
-        {
-        }
-
         [Fact]
         public void CheckFilledListGenreConvertedToCellGenres()
         {
