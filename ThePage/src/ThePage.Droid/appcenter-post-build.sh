@@ -10,15 +10,20 @@ echo "Found Unit test projects"
 echo "$APPCENTER_SOURCE_DIRECTORY"/ThePage/src
 find "$APPCENTER_SOURCE_DIRECTORY"/.*/ThePage/src/*Tests/*.csproj
 
-find $APPCENTER_SOURCE_DIRECTORY -regex '/.*ThePage/src/*Tests/*.csproj' -exec echo {} \;
+find "$APPCENTER_SOURCE_DIRECTORY"/.*/ThePage/src/*Tests/*.csproj -exec echo {} \;
 echo
 echo "Run Unit test projects"
-find $APPCENTER_SOURCE_DIRECTORY -regex '/.*ThePage/src/*Tests/*.csproj' | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
+find "$APPCENTER_SOURCE_DIRECTORY"/.*/ThePage/src/*Tests/*.csproj | xargs dotnet test --logger "trx;LogFileName=testresult.trx";
 
 echo
 #find file with results
 echo "XUnit tests result:"
-pathOfTestResults=$(find $APPCENTER_SOURCE_DIRECTORY/.*ThePage/src/*Tests/*.csproj -name 'testresult.trx')
+for entry in "$APPCENTER_SOURCE_DIRECTORY"/ThePage/src/ThePage.UnitTests/*
+do
+  echo "$entry"
+done
+
+pathOfTestResults=$(find $APPCENTER_SOURCE_DIRECTORY/.*ThePage/src/*Tests/* -name 'testresult.trx')
 echo  "Fetched results"
 echo  "Path:"
 echo $pathOfTestResults
