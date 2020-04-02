@@ -7,6 +7,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using PropertyChanged;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -29,7 +30,7 @@ namespace ThePage.Core
 
         #endregion
     }
-    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
+    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -40,12 +41,7 @@ namespace ThePage.Core
 
         public override string Title => "Book Detail";
 
-        BookCell _bookCell;
-        public BookCell Book
-        {
-            get => _bookCell;
-            internal set => SetProperty(ref _bookCell, value);
-        }
+        public BookCell Book { get; internal set; }
 
         public string LblTitle => "Title:";
 
@@ -55,23 +51,10 @@ namespace ThePage.Core
 
         public string LblAddGenre => "Voeg genre toe";
 
-        string _txtTitle;
-        public string TxtTitle
-        {
-            get => _txtTitle;
-            set
-            {
-                SetProperty(ref _txtTitle, value);
-                RaisePropertyChanged(nameof(IsValid));
-            }
-        }
+        [AlsoNotifyFor(nameof(IsValid))]
+        public string TxtTitle { get; set; }
 
-        List<Author> _authors;
-        public List<Author> Authors
-        {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
-        }
+        public List<Author> Authors { get; set; }
 
         Author _selectedAuthor;
         public Author SelectedAuthor
@@ -85,19 +68,9 @@ namespace ThePage.Core
 
         }
 
-        List<Genre> _allGenres;
-        public List<Genre> AllGenres
-        {
-            get => _allGenres;
-            set => SetProperty(ref _allGenres, value);
-        }
+        public List<Genre> AllGenres { get; set; }
 
-        MvxObservableCollection<Genre> _genres;
-        public MvxObservableCollection<Genre> Genres
-        {
-            get => _genres;
-            set => SetProperty(ref _genres, value);
-        }
+        public MvxObservableCollection<Genre> Genres { get; set; }
 
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
