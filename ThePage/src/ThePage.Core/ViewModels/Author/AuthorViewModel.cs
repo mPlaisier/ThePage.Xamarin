@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -7,21 +8,16 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AuthorViewModel : BaseViewModel
+    public class AuthorViewModel : BaseViewModel, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        List<AuthorCell> _authors;
-        public List<AuthorCell> Authors
-        {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
-        }
-
         public override string Title => "Authors";
+
+        public List<AuthorCell> Authors { get; set; }
 
         #endregion
 

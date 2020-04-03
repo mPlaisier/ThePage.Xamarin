@@ -16,6 +16,9 @@ namespace ThePage.Core
 
         public static BookCell BookToBookCell(Book book, List<Author> authorsApi, List<Genre> genresApi)
         {
+            if (book.Genres == null)
+                book.Genres = new List<string>();
+
             var genres = genresApi.Where(g => book.Genres.Contains(g.Id)).ToList();
             var author = authorsApi.FirstOrDefault(a => a.Id == book.Author);
 

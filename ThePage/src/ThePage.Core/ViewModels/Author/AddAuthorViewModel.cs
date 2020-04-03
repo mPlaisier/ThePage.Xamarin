@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using PropertyChanged;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -21,16 +22,8 @@ namespace ThePage.Core
 
         public string LblName => "Name:";
 
-        string _txtName;
-        public string TxtName
-        {
-            get => _txtName;
-            set
-            {
-                SetProperty(ref _txtName, value);
-                RaisePropertyChanged(nameof(IsValid));
-            }
-        }
+        [AlsoNotifyFor(nameof(IsValid))]
+        public string TxtName { get; set; }
 
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtName);
 

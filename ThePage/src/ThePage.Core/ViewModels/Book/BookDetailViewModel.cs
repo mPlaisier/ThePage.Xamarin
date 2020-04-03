@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -5,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
+using PropertyChanged;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -27,7 +30,7 @@ namespace ThePage.Core
 
         #endregion
     }
-    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
+    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -38,34 +41,20 @@ namespace ThePage.Core
 
         public override string Title => "Book Detail";
 
-        BookCell _bookCell;
-        public BookCell Book
-        {
-            get => _bookCell;
-            internal set => SetProperty(ref _bookCell, value);
-        }
+        public BookCell Book { get; internal set; }
 
         public string LblTitle => "Title:";
 
         public string LblAuthor => "Author:";
 
-        string _txtTitle;
-        public string TxtTitle
-        {
-            get => _txtTitle;
-            set
-            {
-                SetProperty(ref _txtTitle, value);
-                RaisePropertyChanged(nameof(IsValid));
-            }
-        }
+        public string LblGenre => "Genres:";
 
-        List<Author> _authors;
-        public List<Author> Authors
-        {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
-        }
+        public string LblAddGenre => "Voeg genre toe";
+
+        [AlsoNotifyFor(nameof(IsValid))]
+        public string TxtTitle { get; set; }
+
+        public List<Author> Authors { get; set; }
 
         Author _selectedAuthor;
         public Author SelectedAuthor
@@ -79,12 +68,9 @@ namespace ThePage.Core
 
         }
 
-        List<Genre> _genres;
-        public List<Genre> Genres
-        {
-            get => _genres;
-            set => SetProperty(ref _genres, value);
-        }
+        public List<Genre> AllGenres { get; set; }
+
+        public MvxObservableCollection<Genre> Genres { get; set; }
 
         public bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle) && SelectedAuthor != null;
 
@@ -122,6 +108,12 @@ namespace ThePage.Core
         IMvxCommand _updateBookCommand;
         public IMvxCommand UpdateBookCommand => _updateBookCommand ??= new MvxCommand(() => UpdateBook().Forget());
 
+        IMvxCommand<Genre> _genreClickCommand;
+        public IMvxCommand<Genre> GenreClickCommand => _genreClickCommand ??= new MvxCommand<Genre>((genre) => RemoveGenre(genre));
+
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand = _addGenreCommand ?? new MvxCommand(() => AddGenreAction().Forget());
+
         #endregion
 
         #region Constructor
@@ -143,6 +135,7 @@ namespace ThePage.Core
             Book = parameter.Book;
 
             TxtTitle = Book.Title;
+            Genres = new MvxObservableCollection<Genre>(Book.Genres);
         }
 
         public override async Task Initialize()
@@ -169,13 +162,14 @@ namespace ThePage.Core
             TxtTitle = TxtTitle.Trim();
             Book.Title = TxtTitle;
             Book.Author = SelectedAuthor;
+            Book.Genres = Genres.ToList();
 
             var result = await _thePageService.UpdateBook(BookBusinessLogic.BookCellToBook(Book));
 
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres);
+                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres.ToList());
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
             }
             else
@@ -219,11 +213,26 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
-            Genres = await _thePageService.GetAllGenres();
+            AllGenres = await _thePageService.GetAllGenres();
 
             SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
 
             IsLoading = false;
+        }
+
+        void RemoveGenre(Genre genre)
+        {
+            if (IsEditing)
+                Genres.Remove(genre);
+        }
+
+        async Task AddGenreAction()
+        {
+            if (!IsEditing)
+                return;
+
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(AllGenres, Genres.ToList()));
+            Genres.Add(genre);
         }
 
         #endregion
