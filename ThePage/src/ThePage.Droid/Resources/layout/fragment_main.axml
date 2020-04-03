@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
+    <MvxRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         local:MvxTemplateSelector="ThePage.Droid.MenuTemplateSelector, ThePage.Droid"
