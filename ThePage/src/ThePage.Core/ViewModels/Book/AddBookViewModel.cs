@@ -135,11 +135,13 @@ namespace ThePage.Core
             var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
             var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, selectedGenres));
 
-            //After await
-            var genreItem = new CellBookGenreItem(genre, RemoveGenre);
+            if (genre != null)
+            {
+                var genreItem = new CellBookGenreItem(genre, RemoveGenre);
 
-            var index = Items.FindIndex(x => x is CellBookAddGenre);
-            Items.Insert(index, genreItem);
+                var index = Items.FindIndex(x => x is CellBookAddGenre);
+                Items.Insert(index, genreItem);
+            }
         }
 
         private void RemoveGenre(CellBookGenreItem obj)

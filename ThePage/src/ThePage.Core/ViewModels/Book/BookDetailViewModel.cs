@@ -232,7 +232,8 @@ namespace ThePage.Core
                 return;
 
             var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(AllGenres, Genres.ToList()));
-            Genres.Add(genre);
+            if (genre != null)
+                Genres.Add(genre);
         }
 
         #endregion
