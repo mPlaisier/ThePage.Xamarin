@@ -19,7 +19,6 @@
 		<Folder Include="BL\" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />
 	</ItemGroup>
 </Project>
