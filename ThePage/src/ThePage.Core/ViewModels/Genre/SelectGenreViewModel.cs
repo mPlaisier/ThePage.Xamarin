@@ -30,7 +30,8 @@ namespace ThePage.Core
 
     public class SelectGenreViewModel : BaseViewModel<SelectedGenreParameters, Genre>
     {
-        readonly IMvxNavigationService _navigationService;
+        readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
@@ -45,15 +46,25 @@ namespace ThePage.Core
         #region Commands
 
         MvxCommand<Genre> _genreClickCommand;
-        public MvxCommand<Genre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<Genre>((item) => HandleGenreClick(item).Forget());
+        public MvxCommand<Genre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<Genre>(HandleGenreClick);
+
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
+       {
+           var result = await _navigation.Navigate<AddGenreViewModel, bool>();
+           if (result)
+               await Refresh();
+
+       });
 
         #endregion
 
         #region Constructor
 
-        public SelectGenreViewModel(IMvxNavigationService navigationService)
+        public SelectGenreViewModel(IMvxNavigationService navigationService, IThePageService thePageService)
         {
-            _navigationService = navigationService;
+            _navigation = navigationService;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -68,12 +79,25 @@ namespace ThePage.Core
 
         #endregion
 
-        async Task HandleGenreClick(Genre genre)
+        #region Private
+
+        void HandleGenreClick(Genre genre)
         {
             if (SelectedGenres.Contains(genre))
                 return;
 
-            await _navigationService.Close(this, genre);
+            _navigation.Close(this, genre);
         }
+
+        async Task Refresh()
+        {
+            IsLoading = true;
+
+            Genres = await _thePageService.GetAllGenres();
+
+            IsLoading = false;
+        }
+
+        #endregion
     }
 }
