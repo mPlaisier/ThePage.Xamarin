@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross;
@@ -32,13 +33,14 @@ namespace ThePage.Core
             try
             {
                 result = await BookManager.FetchBooks();
+                result = result.OrderBy(x => x.Title).ToList();
             }
             catch (Exception ex)
             {
                 HandleException(ex);
 
             }
-            return result;
+            return result.SortByTitle();
         }
 
         public async Task<Book> GetBook(string id)
@@ -111,7 +113,7 @@ namespace ThePage.Core
             {
                 HandleException(ex);
             }
-            return result;
+            return result.SortByName();
         }
 
         public async Task<bool> AddAuthor(Author author)
@@ -170,7 +172,7 @@ namespace ThePage.Core
             {
                 HandleException(ex);
             }
-            return result;
+            return result.SortByName();
         }
 
         public async Task<bool> AddGenre(Genre genre)
