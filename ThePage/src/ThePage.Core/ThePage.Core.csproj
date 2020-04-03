@@ -30,6 +30,6 @@
     <Folder Include="Cells\Book\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ThePage.Api\ThePage.Api.csproj" />
+    <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />
   </ItemGroup>
 </Project>

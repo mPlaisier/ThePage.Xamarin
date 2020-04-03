@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!Solution Items", "!Solutio
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePage.Api", "ThePage.Api\ThePage.Api.csproj", "{CF352E55-0E85-4F6B-8118-228B38667261}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePage.Api", "src\ThePage.Api\ThePage.Api.csproj", "{CF352E55-0E85-4F6B-8118-228B38667261}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePage.UnitTests", "src\ThePage.UnitTests\ThePage.UnitTests.csproj", "{088F1800-8587-453B-9164-1F391801137D}"
 EndProject
