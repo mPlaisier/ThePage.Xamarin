@@ -14,7 +14,7 @@
         local:MvxBind="Click AddGenreCommand"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent" />
-    <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
+    <MvxRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"

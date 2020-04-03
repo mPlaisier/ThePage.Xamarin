@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true" 
     android:focusableInTouchMode="true">
-    <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
+    <MvxRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
