@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using ThePage.Api;
 
@@ -27,7 +28,7 @@ namespace ThePage.Core
 
         #region Genre
 
-        public static List<string> GetIdAsStringList(this List<Genre> genres)
+        public static List<string> GetIdStrings(this IEnumerable<Genre> genres)
         {
             return genres == null ? new List<string>() : genres.Select(g => g.Id).ToList();
         }

@@ -15,7 +15,7 @@
 		android:textSize="20dp"
 		local:layout_constraintTop_toTopOf="parent"
 		local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
-		local:MvxBind="Text Title"/>
+		local:MvxBind="Text Book.Title"/>
 	<TextView
 		android:id="@+id/lblAuthor"
 		android:layout_width="match_parent"
