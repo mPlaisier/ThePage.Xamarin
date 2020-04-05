@@ -32,6 +32,8 @@ namespace ThePage.Core
     }
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
+        List<Genre> _allGenres;
+
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
@@ -67,8 +69,6 @@ namespace ThePage.Core
             }
 
         }
-
-        public List<Genre> AllGenres { get; set; }//TODO can probably be private
 
         public MvxObservableCollection<Genre> Genres { get; set; }
 
@@ -170,7 +170,7 @@ namespace ThePage.Core
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                BookCell = BookBusinessLogic.BookToBookCell(result, Authors, AllGenres.ToList());
+                BookCell = BookBusinessLogic.BookToBookCell(result, Authors, _allGenres.ToList());
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
             }
             else
@@ -214,7 +214,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
-            AllGenres = await _thePageService.GetAllGenres();
+            _allGenres = await _thePageService.GetAllGenres();
 
             SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author?.Id);
 
@@ -232,7 +232,7 @@ namespace ThePage.Core
             if (!IsEditing)
                 return;
 
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(AllGenres, Genres.ToList()));
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_allGenres, Genres.ToList()));
             if (genre != null)
                 Genres.Add(genre);
         }
