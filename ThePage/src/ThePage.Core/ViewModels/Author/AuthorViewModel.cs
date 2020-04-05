@@ -17,7 +17,7 @@ namespace ThePage.Core
 
         public override string Title => "Authors";
 
-        public List<AuthorCell> Authors { get; set; }
+        public List<CellAuthor> Authors { get; set; }
 
         #endregion
 
@@ -33,8 +33,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<AuthorCell> _itemClickCommand;
-        public IMvxCommand<AuthorCell> ItemClickCommand => _itemClickCommand ??= new MvxCommand<AuthorCell>(async (item) =>
+        IMvxCommand<CellAuthor> _itemClickCommand;
+        public IMvxCommand<CellAuthor> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellAuthor>(async (item) =>
         {
             var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
             if (result)

@@ -3,7 +3,7 @@ namespace ThePage.UnitTests
 {
     public partial class AuthorBusinessLogicTests
     {
-        const string AuthorDataComplete =
+        public const string AuthorDataComplete =
             @"[{
                 ""_id"":""5e80acc955926700174ef92c"",
                 ""name"":""J.R.R. Tolkien"",

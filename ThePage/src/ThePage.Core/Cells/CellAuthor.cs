@@ -2,7 +2,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class AuthorCell : BaseCell
+    public class CellAuthor : CellBase
     {
         #region Properties
 
@@ -12,12 +12,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorCell()
+        public CellAuthor()
         {
 
         }
 
-        public AuthorCell(Author author)
+        public CellAuthor(Author author)
         {
             Author = author;
         }

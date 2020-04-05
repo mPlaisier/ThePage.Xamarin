@@ -3,7 +3,7 @@ namespace ThePage.UnitTests
 {
     public partial class GenreBusinessLogicTests
     {
-        const string GenreDataComplete =
+        public const string GenreDataComplete =
             @"[{
                 ""_id"":""5e7fc0bbbc363c52e7d115ce"",
                 ""name"":""Fiction"",

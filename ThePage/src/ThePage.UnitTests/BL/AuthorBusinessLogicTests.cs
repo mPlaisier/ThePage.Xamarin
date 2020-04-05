@@ -22,7 +22,7 @@ namespace ThePage.UnitTests
             //Check
             Assert.NotNull(authorCells);
             Assert.NotEmpty(authorCells);
-            Assert.Equal(authorCells.Count, authorCells.Count);
+            Assert.Equal(authorCells.Count, authors.Count);
         }
 
         [Fact]

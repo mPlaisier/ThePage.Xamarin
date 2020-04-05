@@ -12,13 +12,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public AuthorCell Author { get; }
+        public CellAuthor Author { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(AuthorCell author)
+        public AuthorDetailParameter(CellAuthor author)
         {
             Author = author;
         }
@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         public override string Title => "Author Detail";
 
-        public AuthorCell AuthorCell { get; internal set; }
+        public CellAuthor AuthorCell { get; internal set; }
 
         public string LblName => "Name:";
 

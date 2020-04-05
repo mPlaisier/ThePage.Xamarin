@@ -17,13 +17,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public BookCell Book { get; }
+        public CellBook Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public BookDetailParameter(BookCell book)
+        public BookDetailParameter(CellBook book)
         {
             Book = book;
         }
@@ -41,7 +41,7 @@ namespace ThePage.Core
 
         public override string Title => "Book Detail";
 
-        public BookCell BookCell { get; internal set; }
+        public CellBook BookCell { get; internal set; }
 
         public string LblTitle => "Title:";
 

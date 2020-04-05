@@ -15,7 +15,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public List<BookCell> Books { get; set; }
+        public List<CellBook> Books { get; set; }
 
         public override string Title => "Books";
 
@@ -33,8 +33,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<BookCell> _itemClickCommand;
-        public IMvxCommand<BookCell> ItemClickCommand => _itemClickCommand ??= new MvxCommand<BookCell>(async (item) =>
+        IMvxCommand<CellBook> _itemClickCommand;
+        public IMvxCommand<CellBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellBook>(async (item) =>
         {
             var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)

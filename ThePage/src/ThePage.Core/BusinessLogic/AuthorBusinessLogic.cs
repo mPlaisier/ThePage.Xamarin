@@ -8,9 +8,9 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<AuthorCell> AuthorsToAuthorCells(List<Author> authorsApi)
+        public static List<CellAuthor> AuthorsToAuthorCells(List<Author> authorsApi)
         {
-            return authorsApi?.Select(author => new AuthorCell(author)).ToList();
+            return authorsApi?.Select(author => new CellAuthor(author)).ToList();
         }
 
         #endregion

@@ -34,6 +34,8 @@ namespace ThePage.Api
 
         #endregion
 
+        #region Equals and GetHasCode
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -46,5 +48,7 @@ namespace ThePage.Api
         {
             return HashCode.Combine(Id, Name);
         }
+
+        #endregion
     }
 }
