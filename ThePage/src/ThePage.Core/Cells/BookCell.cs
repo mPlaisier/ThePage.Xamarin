@@ -8,9 +8,7 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public string Id { get; set; }
-
-        public string Title { get; set; }
+        public Book Book { get; set; }
 
         public Author Author { get; set; }
 
@@ -25,10 +23,9 @@ namespace ThePage.Core
 
         }
 
-        public BookCell(string id, string title, Author author, List<Genre> genres)
+        public BookCell(Book book, Author author, List<Genre> genres)
         {
-            Id = id;
-            Title = title;
+            Book = book;
             Author = author;
             Genres = genres;
         }

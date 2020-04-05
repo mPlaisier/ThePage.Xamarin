@@ -1,13 +1,12 @@
-using System;
+using ThePage.Api;
+
 namespace ThePage.Core
 {
     public class AuthorCell : BaseCell
     {
         #region Properties
 
-        public string Id { get; set; }
-
-        public string Name { get; set; }
+        public Author Author { get; }
 
         #endregion
 
@@ -18,10 +17,9 @@ namespace ThePage.Core
 
         }
 
-        public AuthorCell(string id, string name)
+        public AuthorCell(Author author)
         {
-            Id = id;
-            Name = name;
+            Author = author;
         }
 
         #endregion

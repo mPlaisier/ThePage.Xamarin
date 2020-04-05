@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ThePage.Api;
@@ -22,13 +21,7 @@ namespace ThePage.Core
             var genres = genresApi.Where(g => book.Genres.Contains(g.Id)).ToList();
             var author = authorsApi.FirstOrDefault(a => a.Id == book.Author);
 
-            return new BookCell(book.Id, book.Title, author, genres);
-        }
-
-        public static Book BookCellToBook(BookCell bookCell)
-        {
-            var genres = bookCell.Genres?.Select(g => g.Id).ToList();
-            return new Book(bookCell.Id, bookCell.Title, bookCell.Author?.Id, genres);
+            return new BookCell(book, author, genres);
         }
 
         #endregion

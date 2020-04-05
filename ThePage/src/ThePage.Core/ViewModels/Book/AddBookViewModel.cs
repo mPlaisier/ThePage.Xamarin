@@ -73,9 +73,9 @@ namespace ThePage.Core
             var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
             var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
 
-            var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+            var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre);
 
-            var book = new Book(title, author.Id, genres.GetIdAsStringList());
+            var book = new Book(title, author.Id, genres.GetIdStrings());
             var result = await _thePageService.AddBook(book);
 
             if (result)

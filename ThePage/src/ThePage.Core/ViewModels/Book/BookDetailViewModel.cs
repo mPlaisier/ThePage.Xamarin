@@ -41,7 +41,7 @@ namespace ThePage.Core
 
         public override string Title => "Book Detail";
 
-        public BookCell Book { get; internal set; }
+        public BookCell BookCell { get; internal set; }
 
         public string LblTitle => "Title:";
 
@@ -68,7 +68,7 @@ namespace ThePage.Core
 
         }
 
-        public List<Genre> AllGenres { get; set; }
+        public List<Genre> AllGenres { get; set; }//TODO can probably be private
 
         public MvxObservableCollection<Genre> Genres { get; set; }
 
@@ -97,7 +97,7 @@ namespace ThePage.Core
             IsEditing = !IsEditing;
             if (IsEditing)
             {
-                SelectedAuthor = Book.Author != null ? Authors.FirstOrDefault(a => a.Id == Book.Author.Id) : Authors[0];
+                SelectedAuthor = BookCell.Author != null ? Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id) : Authors[0];
                 RaisePropertyChanged(nameof(IsValid));
             }
         });
@@ -132,10 +132,10 @@ namespace ThePage.Core
 
         public override void Prepare(BookDetailParameter parameter)
         {
-            Book = parameter.Book;
+            BookCell = parameter.Book;
 
-            TxtTitle = Book.Title;
-            Genres = new MvxObservableCollection<Genre>(Book.Genres);
+            TxtTitle = BookCell.Book.Title;
+            Genres = new MvxObservableCollection<Genre>(BookCell.Genres);
         }
 
         public override async Task Initialize()
@@ -160,17 +160,18 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtTitle = TxtTitle.Trim();
-            Book.Title = TxtTitle;
-            Book.Author = SelectedAuthor;
-            Book.Genres = Genres.ToList();
+            BookCell.Book.Title = TxtTitle;
+            BookCell.Book.Author = SelectedAuthor.Id;
+            BookCell.Book.Genres = Genres.GetIdStrings();
+            BookCell.Genres = Genres.ToList();
 
-            var result = await _thePageService.UpdateBook(BookBusinessLogic.BookCellToBook(Book));
+            var result = await _thePageService.UpdateBook(BookCell.Book);
 
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres.ToList());
-                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
+                BookCell = BookBusinessLogic.BookToBookCell(result, Authors, AllGenres.ToList());
+                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
             }
             else
                 _userInteraction.Alert("Failure updating book");
@@ -189,7 +190,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
+                var result = await _thePageService.DeleteBook(BookCell.Book);
 
                 if (result)
                 {
@@ -215,7 +216,7 @@ namespace ThePage.Core
             Authors = await _thePageService.GetAllAuthors();
             AllGenres = await _thePageService.GetAllGenres();
 
-            SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
+            SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author?.Id);
 
             IsLoading = false;
         }
