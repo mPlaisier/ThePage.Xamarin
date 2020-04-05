@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         public override string Title => "Genre Detail";
 
-        public CellGenre Genre { get; internal set; }
+        public CellGenre GenreCell { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -87,9 +87,9 @@ namespace ThePage.Core
 
         public override void Prepare(GenreDetailParameter parameter)
         {
-            Genre = parameter.Genre;
+            GenreCell = parameter.Genre;
 
-            TxtName = Genre.Name;
+            TxtName = GenreCell.Genre.Name;
             IsEditing = false;
         }
 
@@ -114,9 +114,9 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            Genre.Name = TxtName;
+            GenreCell.Genre.Name = TxtName;
 
-            var genre = await _thePageService.UpdateGenre(GenreBusinessLogic.CellGenreToGenre(Genre));
+            var genre = await _thePageService.UpdateGenre(GenreCell.Genre);
             if (genre != null)
                 _userInteraction.ToastMessage("Genre updated");
             else
@@ -135,7 +135,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteGenre(GenreBusinessLogic.CellGenreToGenre(Genre));
+                var result = await _thePageService.DeleteGenre(GenreCell.Genre);
 
                 if (result)
                 {

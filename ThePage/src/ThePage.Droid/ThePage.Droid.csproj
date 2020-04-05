@@ -166,10 +166,6 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\item_book.axml">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\fragment_addauthor.axml">
       <SubType></SubType>
       <Generator></Generator>
@@ -295,6 +291,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\fragment_selectgenre.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\item_book.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_book_detail_genre_item.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

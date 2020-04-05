@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         public override string Title => "Select Genre";
 
-        public List<Genre> Genres { get; internal set; }
+        public List<CellGenre> CellGenres { get; internal set; }
 
         public List<Genre> SelectedGenres { get; internal set; }
 
@@ -45,8 +45,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxCommand<Genre> _genreClickCommand;
-        public MvxCommand<Genre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<Genre>(HandleGenreClick);
+        MvxCommand<CellGenre> _genreClickCommand;
+        public MvxCommand<CellGenre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<CellGenre>(HandleGenreClick);
 
         IMvxCommand _addGenreCommand;
         public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
@@ -73,7 +73,7 @@ namespace ThePage.Core
 
         public override void Prepare(SelectedGenreParameters parameter)
         {
-            Genres = parameter.Genres;
+            CellGenres = GenreBusinessLogic.GenresToCellGenres(parameter.Genres);
             SelectedGenres = parameter.SelectedGenres;
         }
 
@@ -81,19 +81,19 @@ namespace ThePage.Core
 
         #region Private
 
-        void HandleGenreClick(Genre genre)
+        void HandleGenreClick(CellGenre genre)
         {
-            if (SelectedGenres.Contains(genre))
+            if (SelectedGenres.Contains(genre.Genre))
                 return;
 
-            _navigation.Close(this, genre);
+            _navigation.Close(this, genre.Genre);
         }
 
         async Task Refresh()
         {
             IsLoading = true;
 
-            Genres = await _thePageService.GetAllGenres();
+            CellGenres = GenreBusinessLogic.GenresToCellGenres(await _thePageService.GetAllGenres());
 
             IsLoading = false;
         }

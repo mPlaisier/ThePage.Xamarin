@@ -35,7 +35,7 @@
         local:layout_constraintTop_toBottomOf="@+id/txtTitle"
         local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text Book.Title;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Text BookCell.Book.Title;Visibility InvertedVisibility(IsEditing)"/>
 
     <TextView
         android:id="@+id/lblAuthor"
@@ -68,7 +68,7 @@
         local:layout_constraintTop_toBottomOf="@+id/spnrAuthor"
         local:layout_constraintBottom_toTopOf="@+id/PrimaryBtnWarning"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text Book.Author.Name;Visibility InvertedVisibility(IsEditing)"/>
+        local:MvxBind="Text BookCell.Author.Name;Visibility InvertedVisibility(IsEditing)"/>
 
      <TextView
         android:id="@+id/lblGenre"
@@ -88,7 +88,7 @@
         local:layout_constraintTop_toBottomOf="@+id/lblGenre"
         local:layout_constraintBottom_toTopOf="@+id/lblAddGenre"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxItemTemplate="@layout/cell_genre_item"
+        local:MvxItemTemplate="@layout/cell_book_detail_genre_item"
         local:MvxBind="ItemsSource Genres;ItemClick GenreClickCommand;" />
 
     <TextView

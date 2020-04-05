@@ -17,13 +17,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public BookCell Book { get; }
+        public CellBook Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public BookDetailParameter(BookCell book)
+        public BookDetailParameter(CellBook book)
         {
             Book = book;
         }
@@ -32,6 +32,8 @@ namespace ThePage.Core
     }
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
+        List<Genre> _allGenres;
+
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
@@ -41,7 +43,7 @@ namespace ThePage.Core
 
         public override string Title => "Book Detail";
 
-        public BookCell Book { get; internal set; }
+        public CellBook BookCell { get; internal set; }
 
         public string LblTitle => "Title:";
 
@@ -67,8 +69,6 @@ namespace ThePage.Core
             }
 
         }
-
-        public List<Genre> AllGenres { get; set; }
 
         public MvxObservableCollection<Genre> Genres { get; set; }
 
@@ -97,7 +97,7 @@ namespace ThePage.Core
             IsEditing = !IsEditing;
             if (IsEditing)
             {
-                SelectedAuthor = Book.Author != null ? Authors.FirstOrDefault(a => a.Id == Book.Author.Id) : Authors[0];
+                SelectedAuthor = BookCell.Author != null ? Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id) : Authors[0];
                 RaisePropertyChanged(nameof(IsValid));
             }
         });
@@ -132,10 +132,10 @@ namespace ThePage.Core
 
         public override void Prepare(BookDetailParameter parameter)
         {
-            Book = parameter.Book;
+            BookCell = parameter.Book;
 
-            TxtTitle = Book.Title;
-            Genres = new MvxObservableCollection<Genre>(Book.Genres);
+            TxtTitle = BookCell.Book.Title;
+            Genres = new MvxObservableCollection<Genre>(BookCell.Genres);
         }
 
         public override async Task Initialize()
@@ -160,17 +160,18 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtTitle = TxtTitle.Trim();
-            Book.Title = TxtTitle;
-            Book.Author = SelectedAuthor;
-            Book.Genres = Genres.ToList();
+            BookCell.Book.Title = TxtTitle;
+            BookCell.Book.Author = SelectedAuthor.Id;
+            BookCell.Book.Genres = Genres.GetIdStrings();
+            BookCell.Genres = Genres.ToList();
 
-            var result = await _thePageService.UpdateBook(BookBusinessLogic.BookCellToBook(Book));
+            var result = await _thePageService.UpdateBook(BookCell.Book);
 
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                Book = BookBusinessLogic.BookToBookCell(result, Authors, Genres.ToList());
-                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author.Id);
+                BookCell = BookBusinessLogic.BookToCellBook(result, Authors, _allGenres.ToList());
+                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
             }
             else
                 _userInteraction.Alert("Failure updating book");
@@ -189,7 +190,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookBusinessLogic.BookCellToBook(Book));
+                var result = await _thePageService.DeleteBook(BookCell.Book);
 
                 if (result)
                 {
@@ -213,9 +214,9 @@ namespace ThePage.Core
             IsLoading = true;
 
             Authors = await _thePageService.GetAllAuthors();
-            AllGenres = await _thePageService.GetAllGenres();
+            _allGenres = await _thePageService.GetAllGenres();
 
-            SelectedAuthor = Authors.FirstOrDefault(a => a.Id == Book.Author?.Id);
+            SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author?.Id);
 
             IsLoading = false;
         }
@@ -231,7 +232,7 @@ namespace ThePage.Core
             if (!IsEditing)
                 return;
 
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(AllGenres, Genres.ToList()));
+            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_allGenres, Genres.ToList()));
             if (genre != null)
                 Genres.Add(genre);
         }

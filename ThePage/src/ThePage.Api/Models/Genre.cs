@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace ThePage.Api
@@ -29,6 +30,23 @@ namespace ThePage.Api
         {
             Id = id;
             Name = name;
+        }
+
+        #endregion
+
+        #region Equals and GetHasCode
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            return !(obj is Genre genre) ? false : (Id == genre.Id) && Name.Equals(genre.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name);
         }
 
         #endregion

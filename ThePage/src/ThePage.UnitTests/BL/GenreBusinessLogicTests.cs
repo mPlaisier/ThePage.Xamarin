@@ -1,21 +1,18 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
 namespace ThePage.UnitTests
 {
-    public class GenreBusinessLogicTests
+    public partial class GenreBusinessLogicTests
     {
         [Fact]
         public void CheckFilledListGenreConvertedToCellGenres()
         {
             //Create List<Genre>
-            var genres = new List<Genre>
-            {
-                new Genre("1","Fiction"),
-                new Genre("2","Fantasy")
-            };
+            var genres = JsonConvert.DeserializeObject<List<Genre>>(GenreDataComplete);
 
             //Execute
             var cellGenres = GenreBusinessLogic.GenresToCellGenres(genres);
@@ -23,13 +20,14 @@ namespace ThePage.UnitTests
             //Check
             Assert.NotNull(cellGenres);
             Assert.NotEmpty(cellGenres);
+            Assert.Equal(genres.Count, cellGenres.Count);
         }
 
         [Fact]
         public void CheckEmptyListGenreConvertedToCellGenres()
         {
             //Create List<Genre>
-            var genres = new List<Genre>();
+            var genres = JsonConvert.DeserializeObject<List<Genre>>(GenreDataEmpty);
 
             //Execute
             var cellGenres = GenreBusinessLogic.GenresToCellGenres(genres);
