@@ -159,16 +159,20 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
+            //Get data for Book
             TxtTitle = TxtTitle.Trim();
             BookCell.Book.Title = TxtTitle;
             BookCell.Book.Author = SelectedAuthor.Id;
             BookCell.Book.Genres = Genres.GetIdStrings();
-            BookCell.Genres = Genres.ToList();
 
             var result = await _thePageService.UpdateBook(BookCell.Book);
 
             if (result != null)
             {
+                //Update view
+                BookCell.Genres = Genres.ToList();
+                BookCell.Author = SelectedAuthor;
+
                 _userInteraction.ToastMessage("Book updated");
                 BookCell = BookBusinessLogic.BookToCellBook(result, Authors, _allGenres.ToList());
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
