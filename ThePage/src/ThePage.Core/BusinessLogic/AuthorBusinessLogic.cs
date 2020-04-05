@@ -8,7 +8,7 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<CellAuthor> AuthorsToAuthorCells(List<Author> authorsApi)
+        public static List<CellAuthor> AuthorsToCellAuthors(List<Author> authorsApi)
         {
             return authorsApi?.Select(author => new CellAuthor(author)).ToList();
         }

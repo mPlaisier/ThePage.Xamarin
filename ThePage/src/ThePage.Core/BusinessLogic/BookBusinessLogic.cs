@@ -8,12 +8,12 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<CellBook> BooksToBookCells(List<Book> booksApi, List<Author> authorsApi, List<Genre> genresApi)
+        public static List<CellBook> BooksToCellBooks(List<Book> booksApi, List<Author> authorsApi, List<Genre> genresApi)
         {
-            return booksApi?.Select(x => BookToBookCell(x, authorsApi, genresApi)).ToList();
+            return booksApi?.Select(x => BookToCellBook(x, authorsApi, genresApi)).ToList();
         }
 
-        public static CellBook BookToBookCell(Book book, List<Author> authorsApi, List<Genre> genresApi)
+        public static CellBook BookToCellBook(Book book, List<Author> authorsApi, List<Genre> genresApi)
         {
             if (book.Genres == null)
                 book.Genres = new List<string>();

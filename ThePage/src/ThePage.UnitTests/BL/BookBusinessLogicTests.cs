@@ -18,7 +18,7 @@ namespace ThePage.UnitTests
             var genres = BookFactory.GetCompleteGenreList();
 
             //Execute
-            var bookCell = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.NotNull(bookCell);
@@ -35,7 +35,7 @@ namespace ThePage.UnitTests
             var genres = BookFactory.GetCompleteGenreList();
 
             //Execute
-            var bookCell = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.NotNull(bookCell);
@@ -51,7 +51,7 @@ namespace ThePage.UnitTests
             var genres = BookFactory.GetCompleteGenreList();
 
             //Execute
-            var bookCells = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCells = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.Null(bookCells);
@@ -66,7 +66,7 @@ namespace ThePage.UnitTests
             List<Genre> genres = null;
 
             //Execute
-            var bookCell = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.NotNull(bookCell);
@@ -83,7 +83,7 @@ namespace ThePage.UnitTests
             List<Genre> genres = null;
 
             //Execute
-            var bookCell = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.NotNull(bookCell);
@@ -100,7 +100,7 @@ namespace ThePage.UnitTests
             List<Genre> genres = null;
 
             //Execute
-            var bookCells = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            var bookCells = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             //Check
             Assert.Null(bookCells);

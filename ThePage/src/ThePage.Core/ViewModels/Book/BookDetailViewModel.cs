@@ -170,7 +170,7 @@ namespace ThePage.Core
             if (result != null)
             {
                 _userInteraction.ToastMessage("Book updated");
-                BookCell = BookBusinessLogic.BookToBookCell(result, Authors, _allGenres.ToList());
+                BookCell = BookBusinessLogic.BookToCellBook(result, Authors, _allGenres.ToList());
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
             }
             else

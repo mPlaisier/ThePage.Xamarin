@@ -75,7 +75,7 @@ namespace ThePage.Core
             var authors = await _thePageService.GetAllAuthors();
             var genres = await _thePageService.GetAllGenres();
 
-            Books = BookBusinessLogic.BooksToBookCells(books, authors, genres);
+            Books = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             IsLoading = false;
         }

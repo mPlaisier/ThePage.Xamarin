@@ -17,7 +17,7 @@ namespace ThePage.UnitTests
             var authors = JsonConvert.DeserializeObject<List<Author>>(AuthorDataComplete);
 
             //Execute
-            var authorCells = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
+            var authorCells = AuthorBusinessLogic.AuthorsToCellAuthors(authors);
 
             //Check
             Assert.NotNull(authorCells);
@@ -32,7 +32,7 @@ namespace ThePage.UnitTests
             var authors = JsonConvert.DeserializeObject<List<Author>>(AuthorDataEmpty);
 
             //Execute
-            var authorCells = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
+            var authorCells = AuthorBusinessLogic.AuthorsToCellAuthors(authors);
 
             //Check
             Assert.NotNull(authorCells);
@@ -46,7 +46,7 @@ namespace ThePage.UnitTests
             List<Author> authors = null;
 
             //Execute
-            var authorCells = AuthorBusinessLogic.AuthorsToAuthorCells(authors);
+            var authorCells = AuthorBusinessLogic.AuthorsToCellAuthors(authors);
 
             //Check
             Assert.Null(authorCells);
