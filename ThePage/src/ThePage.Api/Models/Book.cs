@@ -39,16 +39,15 @@ namespace ThePage.Api
         {
         }
 
-        public Book(string title, string author, List<string> genres)
+        public Book(string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages)
         {
             Title = title;
             Author = author;
             Genres = genres;
-        }
-
-        public Book(string id, string title, string author, List<string> genres) : this(title, author, genres)
-        {
-            Id = id;
+            ISBN = iSBN;
+            Owned = owned;
+            Read = read;
+            Pages = pages;
         }
 
         #endregion

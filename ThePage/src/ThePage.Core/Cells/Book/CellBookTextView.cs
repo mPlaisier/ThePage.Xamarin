@@ -20,6 +20,8 @@ namespace ThePage.Core
             }
         }
 
+        public int TxtNumberInput => ConvertToNumber();
+
         public override bool IsValid => CheckValidation();
 
         public override EBookInputType InputType { get; }
@@ -44,6 +46,12 @@ namespace ThePage.Core
         bool CheckValidation()
         {
             return !_isRequired ? true : !string.IsNullOrWhiteSpace(TxtInput);
+        }
+
+        int ConvertToNumber()
+        {
+            int.TryParse(TxtInput, out var number);
+            return number;
         }
 
         #endregion
