@@ -19,6 +19,18 @@ namespace ThePage.Api
         [JsonProperty("genres")]
         public List<string> Genres { get; set; }
 
+        [JsonProperty("isbn")]
+        public string ISBN { get; set; }
+
+        [JsonProperty("owned")]
+        public bool Owned { get; set; }
+
+        [JsonProperty("read")]
+        public bool Read { get; set; }
+
+        [JsonProperty("pages")]
+        public int Pages { get; set; }
+
         #endregion
 
         #region Constructor
