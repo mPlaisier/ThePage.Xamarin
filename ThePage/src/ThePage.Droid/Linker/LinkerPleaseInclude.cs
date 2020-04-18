@@ -161,5 +161,10 @@ namespace ThePage.Droid.Linker
             list.ItemsSource = null;
             list.Click += (sender, args) => { };
         }
+
+        public void Include(Switch @switch)
+        {
+            @switch.CheckedChange += (sender, args) => @switch.Checked = !@switch.Checked;
+        }
     }
 }
