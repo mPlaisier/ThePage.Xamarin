@@ -8,6 +8,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
+using static ThePage.Core.CellBookInput;
 
 namespace ThePage.Core
 {
@@ -70,7 +71,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
+            var title = Items.Where(t => t is CellBookTextView).OfType<CellBookTextView>().First().TxtInput.Trim();
             var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
 
             var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre);
@@ -115,9 +116,13 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
             {
-                new CellBookTitle(UpdateValidation),
+                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation),
                 new CellBookAuthor(_device,_authors, UpdateValidation),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
+                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, false),
+                new CellBookTextView("ISBN", EBookInputType.ISBN, UpdateValidation, false),
+                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation),
+                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation),
                 new CellBookButton(AddBook)
             };
         }

@@ -270,7 +270,7 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\cell_book_title.axml">
+    <AndroidResource Include="Resources\layout\cell_book_textview.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
@@ -299,6 +299,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cell_book_detail_genre_item.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_book_numbertextview.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_book_switch.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

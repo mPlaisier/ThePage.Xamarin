@@ -18,8 +18,10 @@ namespace ThePage.Droid
         {
             switch (forItemObject)
             {
-                case CellBookTitle c:
-                    return Resource.Layout.cell_book_title;
+                case CellBookNumberTextView c:
+                    return Resource.Layout.cell_book_numbertextview;
+                case CellBookTextView c:
+                    return Resource.Layout.cell_book_textview;
                 case CellBookAuthor c:
                     return Resource.Layout.cell_book_author;
                 case CellBookButton c:
@@ -28,6 +30,8 @@ namespace ThePage.Droid
                     return Resource.Layout.cell_book_addgenre_item;
                 case CellBookGenreItem c:
                     return Resource.Layout.cell_book_genre_item;
+                case CellBookSwitch c:
+                    return Resource.Layout.cell_book_switch;
                 default:
                     throw new NotSupportedException("Unknown cell type");
             }
