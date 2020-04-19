@@ -18,6 +18,8 @@ namespace ThePage.Droid
         {
             switch (forItemObject)
             {
+                case CellBookTitle c:
+                    return Resource.Layout.cell_book_title;
                 case CellBookNumberTextView c:
                     return Resource.Layout.cell_book_numbertextview;
                 case CellBookTextView c:

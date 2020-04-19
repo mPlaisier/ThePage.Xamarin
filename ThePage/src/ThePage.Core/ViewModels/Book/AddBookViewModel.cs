@@ -131,23 +131,26 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
             {
-                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation),
-                new CellBookAuthor(_device,_authors, UpdateValidation),
+                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
+                new CellBookAuthor(_device,_authors, UpdateValidation,true),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
-                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, false),
-                new CellBookTextView("ISBN", EBookInputType.ISBN, UpdateValidation, false),
-                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation),
-                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation),
-                new CellBookButton(AddBook)
+                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
+                new CellBookTextView("ISBN", EBookInputType.ISBN, UpdateValidation, false, true),
+                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
+                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
+                new CellBookButton("Add Book",AddBook)
             };
         }
 
         void UpdateValidation()
         {
             var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
-            var btn = Items.Where(b => b is CellBookButton).OfType<CellBookButton>().First();
+            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
-            btn.IsValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
+
+            foreach (var item in buttons)
+                item.IsValid = isValid;
         }
 
         async Task AddGenreAction()
@@ -164,7 +167,7 @@ namespace ThePage.Core
             }
         }
 
-        private void RemoveGenre(CellBookGenreItem obj)
+        void RemoveGenre(CellBookGenreItem obj)
         {
             Items.Remove(obj);
         }

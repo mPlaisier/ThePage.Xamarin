@@ -11,7 +11,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public string LblAuthor => "Author:";
+        public string LblAuthor => "Author";
 
         List<Author> _authors;
         public List<Author> Authors
@@ -42,17 +42,22 @@ namespace ThePage.Core
             SelectedAuthor = authorCell;
         });
 
-
-
         #endregion
 
         #region Constructor
 
-        public CellBookAuthor(IDevice device, List<Author> authors, Action updateValidation)
+        public CellBookAuthor(IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)
         {
             _device = device;
             Authors = authors;
             UpdateValidation = updateValidation;
+            IsEdit = IsEdit;
+        }
+
+        public CellBookAuthor(Author selectedAuthor, IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)
+            : this(device, authors, updateValidation, isEdit)
+        {
+            SelectedAuthor = selectedAuthor;
         }
 
         #endregion

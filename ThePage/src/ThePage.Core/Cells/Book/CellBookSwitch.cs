@@ -26,12 +26,18 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookSwitch(string lblTitle, EBookInputType inputType, Action updateValidation, bool isEdit = true)
+        public CellBookSwitch(string lblTitle, EBookInputType inputType, Action updateValidation, bool isEdit = false)
         {
             LblTitle = lblTitle;
             InputType = inputType;
             UpdateValidation = updateValidation;
             IsEdit = isEdit;
+        }
+
+        public CellBookSwitch(string lblTitle, bool value, EBookInputType inputType, Action updateValidation, bool isEdit = false)
+            : this(lblTitle, inputType, updateValidation, isEdit)
+        {
+            IsSelected = value;
         }
 
         #endregion

@@ -30,13 +30,19 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = true)
+        public CellBookTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
         {
             LblTitle = lblTitle;
             InputType = inputType;
             UpdateValidation = updateValidation;
             _isRequired = isRequired;
             IsEdit = isEdit;
+        }
+
+        public CellBookTextView(string lblTitle, string value, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
+            : this(lblTitle, inputType, updateValidation, isRequired, isEdit)
+        {
+            TxtInput = value;
         }
 
         #endregion
@@ -61,8 +67,13 @@ namespace ThePage.Core
     {
         #region Constructor
 
-        public CellBookNumberTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = true)
+        public CellBookNumberTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
             : base(lblTitle, inputType, updateValidation, isRequired, isEdit)
+        {
+        }
+
+        public CellBookNumberTextView(string lblTitle, string value, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
+            : base(lblTitle, value, inputType, updateValidation, isRequired, isEdit)
         {
         }
 

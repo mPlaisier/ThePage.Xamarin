@@ -24,9 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toBottomOf="@+id/lblTitle"
-        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintBottom_toTopOf="@+id/lblValue"
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text TxtInput"/>
+        local:MvxBind="Text TxtInput;Visibility Visibility(IsEdit)"/>
+
+    <TextView
+        android:id="@+id/lblValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toBottomOf="@+id/txtInput"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text TxtInput;Visibility InvertedVisibility(IsEdit)"/>
 
 </android.support.constraint.ConstraintLayout>

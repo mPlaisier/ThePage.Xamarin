@@ -8,115 +8,13 @@
     android:focusableInTouchMode="true"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/lblTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toTopOf="parent"
-        local:layout_constraintBottom_toTopOf="@+id/txtTitle"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblTitle"/>
-
-    <EditText
-        android:id="@+id/txtTitle"
+    <MvxRecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblTitle"
-        local:layout_constraintBottom_toTopOf="@+id/lblTitleValue"
-        local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text TxtTitle;Visibility Visibility(IsEditing)"/>
-
-     <TextView
-        android:id="@+id/lblTitleValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        local:layout_constraintTop_toBottomOf="@+id/txtTitle"
-        local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text BookCell.Book.Title;Visibility InvertedVisibility(IsEditing)"/>
-
-    <TextView
-        android:id="@+id/lblAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        local:layout_constraintTop_toBottomOf="@+id/lblTitleValue"
-        local:layout_constraintBottom_toTopOf="@+id/spnrAuthor"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblAuthor"/>
-
-
-    <mvvmcross.platforms.android.binding.views.MvxSpinner
-        android:id="@+id/spnrAuthor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
-        local:layout_constraintBottom_toTopOf="@+id/lblAuthorValue"
-        local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxItemTemplate="@layout/author_spinner_template"
-        local:MvxDropDownItemTemplate="@layout/author_spinner_template"
-        local:MvxBind="ItemsSource Authors; SelectedItem SelectedAuthor; HandleItemSelected ItemSelectedCommand;Visibility Visibility(IsEditing)"/>
-
-    <TextView
-        android:id="@+id/lblAuthorValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        local:layout_constraintTop_toBottomOf="@+id/spnrAuthor"
-        local:layout_constraintBottom_toTopOf="@+id/PrimaryBtnWarning"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text BookCell.Author.Name;Visibility InvertedVisibility(IsEditing)"/>
-
-     <TextView
-        android:id="@+id/lblGenre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthorValue"
-        local:layout_constraintBottom_toTopOf="@+id/lstGenres"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblGenre"/>
-
-     <mvvmcross.droid.support.v7.recyclerview.MvxRecyclerView
-        android:id="@+id/lstGenres"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
-        local:layout_constraintTop_toBottomOf="@+id/lblGenre"
-        local:layout_constraintBottom_toTopOf="@+id/lblAddGenre"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxItemTemplate="@layout/cell_book_detail_genre_item"
-        local:MvxBind="ItemsSource Genres;ItemClick GenreClickCommand;" />
-
-    <TextView
-        android:id="@+id/lblAddGenre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_margin="4dp"
-        local:layout_constraintTop_toBottomOf="@+id/lstGenres"
-        local:layout_constraintBottom_toTopOf="@+id/btnDelete"
-        local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblAddGenre;Click AddGenreCommand;Visibility Visibility(IsEditing)"/>
-
-    <TextView
-        style="@style/PrimaryBtnWarning"
-        android:id="@+id/btnDelete"
-        local:layout_constraintTop_toBottomOf="@+id/lblAddGenre"
-        local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text LblDeleteBtn;Click DeleteBookCommand;Visibility InvertedVisibility(IsEditing)"/>
-
-    <TextView
-        style="@style/PrimaryBtn"
-        android:id="@+id/btnUpdate"
-        local:layout_constraintTop_toBottomOf="@+id/lblAddGenre"
-        local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Text LblUpdateBtn;Click UpdateBookCommand;Enabled IsValid;Visibility Visibility(IsEditing)"/>
+        android:clickable="true"
+        local:MvxTemplateSelector="ThePage.Droid.BookTemplateSelector, ThePage.Droid"
+        local:MvxBind="ItemsSource Items;" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabEdit"
@@ -128,6 +26,8 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Click EditBookCommand;Visibility InvertedVisibility(IsEditing)"/>
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabClose"
         android:layout_width="wrap_content"
