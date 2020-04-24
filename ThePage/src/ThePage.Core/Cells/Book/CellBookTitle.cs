@@ -1,37 +1,18 @@
-using System;
 namespace ThePage.Core
 {
-    public class CellBookTitle : CellBookInput
+    public class CellBookTitle : ICellBook
     {
         #region Properties
 
-        public string LblTitle => "Title:";
-
-        string _txtTitle;
-        public string TxtTitle
-        {
-            get => _txtTitle;
-            set
-            {
-                if (SetProperty(ref _txtTitle, value))
-                {
-                    UpdateValidation?.Invoke();
-                }
-            }
-        }
-
-        public override bool IsValid => !string.IsNullOrWhiteSpace(TxtTitle);
-
-        public override EBookInputType InputType => EBookInputType.Title;
+        public string LblTitle { get; }
 
         #endregion
 
         #region Constructor
 
-        public CellBookTitle(Action updateValidation, bool isEdit = true)
+        public CellBookTitle(string lblTitle)
         {
-            UpdateValidation = updateValidation;
-            IsEdit = isEdit;
+            LblTitle = lblTitle;
         }
 
         #endregion

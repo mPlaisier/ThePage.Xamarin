@@ -3,7 +3,6 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textStyle="bold"
     android:layout_margin="4dp"
     android:clickable="true" 
     local:MvxBind="Text Genre.Name;Click DeleteCommand;"/>

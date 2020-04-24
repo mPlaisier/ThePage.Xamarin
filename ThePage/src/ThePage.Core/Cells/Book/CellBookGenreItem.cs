@@ -37,7 +37,7 @@ namespace ThePage.Core
         Action _addGenre;
         #region Properties
 
-        public string Label => "Voeg genre toe";
+        public string Label => "Add Genre";
 
         IMvxCommand _addGenreCommand;
         public IMvxCommand AddGenreCommand => _addGenreCommand = _addGenreCommand ?? new MvxCommand(() => _addGenre?.Invoke());

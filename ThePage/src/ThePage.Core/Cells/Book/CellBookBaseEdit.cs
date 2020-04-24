@@ -9,7 +9,11 @@ namespace ThePage.Core
         {
             Title,
             Author,
-            Genre
+            Genre,
+            ISBN,
+            Owned,
+            Read,
+            Pages
         }
 
         public Action UpdateValidation { get; internal set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,6 +9,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
+using static ThePage.Core.CellBookInput;
 
 namespace ThePage.Core
 {
@@ -70,12 +72,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
-            var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
-
-            var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre);
-
-            var book = new Book(title, author.Id, genres.GetIdStrings());
+            var book = BookBusinessLogic.CreateBookFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -115,19 +112,27 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
             {
-                new CellBookTitle(UpdateValidation),
-                new CellBookAuthor(_device,_authors, UpdateValidation),
+                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
+                new CellBookAuthor(_device,_authors, UpdateValidation,true),
+                new CellBookTitle("Genres"),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
-                new CellBookButton(AddBook)
+                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
+                new CellBookNumberTextView("ISBN", EBookInputType.ISBN, UpdateValidation, false, true),
+                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
+                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
+                new CellBookButton("Add Book",AddBook)
             };
         }
 
         void UpdateValidation()
         {
             var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
-            var btn = Items.Where(b => b is CellBookButton).OfType<CellBookButton>().First();
+            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
-            btn.IsValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
+
+            foreach (var item in buttons)
+                item.IsValid = isValid;
         }
 
         async Task AddGenreAction()
@@ -144,7 +149,7 @@ namespace ThePage.Core
             }
         }
 
-        private void RemoveGenre(CellBookGenreItem obj)
+        void RemoveGenre(CellBookGenreItem obj)
         {
             Items.Remove(obj);
         }
