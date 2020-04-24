@@ -104,15 +104,7 @@ namespace ThePage.Core
             var result = await _thePageService.UpdateBook(BookCell.Book);
 
             if (result != null)
-            {
-                //Update view
-                //BookCell.Genres = Genres.ToList();
-                //BookCell.Author = SelectedAuthor;
-
                 _userInteraction.ToastMessage("Book updated");
-                //BookCell = BookBusinessLogic.BookToCellBook(result, _allAuthors, _allGenres.ToList());
-                //SelectedAuthor = _allAuthors.FirstOrDefault(a => a.Id == BookCell.Author.Id);
-            }
             else
                 _userInteraction.Alert("Failure updating book");
 
