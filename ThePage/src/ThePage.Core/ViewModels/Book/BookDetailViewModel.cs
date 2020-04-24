@@ -193,7 +193,7 @@ namespace ThePage.Core
                 Items.Add(new CellBookGenreItem(item, RemoveGenre));
             }
 
-            Items.Add(new CellBookNumberTextView("Pages", BookCell.Book.Pages.ToString(), EBookInputType.Pages, UpdateValidation, false));
+            Items.Add(new CellBookNumberTextView("Pages", BookCell.Book.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true));
             Items.Add(new CellBookNumberTextView("ISBN", BookCell.Book.ISBN, EBookInputType.ISBN, UpdateValidation, false));
             Items.Add(new CellBookSwitch("Do you own this book?", BookCell.Book.Owned, EBookInputType.Owned, UpdateValidation));
             Items.Add(new CellBookSwitch("Have you read this book?", BookCell.Book.Read, EBookInputType.Read, UpdateValidation));

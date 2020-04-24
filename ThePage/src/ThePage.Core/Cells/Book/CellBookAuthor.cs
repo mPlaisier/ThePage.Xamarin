@@ -51,7 +51,7 @@ namespace ThePage.Core
             _device = device;
             Authors = authors;
             UpdateValidation = updateValidation;
-            IsEdit = IsEdit;
+            IsEdit = isEdit;
         }
 
         public CellBookAuthor(Author selectedAuthor, IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)
