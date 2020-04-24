@@ -72,7 +72,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var book = CreateBookFromInput();
+            var book = BookBusinessLogic.CreateBookFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -85,25 +85,6 @@ namespace ThePage.Core
                 _userInteraction.Alert("Failure adding book");
                 IsLoading = false;
             }
-        }
-
-        Book CreateBookFromInput()
-        {
-            var title = Items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
-
-            var author = Items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().SelectedAuthor;
-
-            var genres = Items.OfType<CellBookGenreItem>().Select(i => i.Genre);
-
-            var isbn = Items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtInput;
-
-            var owned = Items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Owned).First().IsSelected;
-
-            var read = Items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Read).First().IsSelected;
-
-            var pages = Items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
-
-            return new Book(title, author.Id, genres.GetIdStrings(), isbn, owned, read, pages);
         }
 
         async Task FetchData()

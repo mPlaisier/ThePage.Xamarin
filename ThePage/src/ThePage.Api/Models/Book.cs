@@ -50,6 +50,13 @@ namespace ThePage.Api
             Pages = pages;
         }
 
+        public Book(string id, string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages)
+            : this(title, author, genres, iSBN, owned, read, pages)
+        {
+            if (id != null)
+                Id = id;
+        }
+
         #endregion
     }
 }

@@ -24,8 +24,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toBottomOf="@+id/lblTitle"
+        local:layout_constraintBottom_toTopOf="@+id/lblValue"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Checked IsSelected;Visibility Visibility(IsEdit)" />
+
+    <TextView
+        android:id="@+id/lblValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toBottomOf="@+id/switchSelected"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Checked IsSelected" />
+        local:MvxBind="Text BoolToYesNoText(IsSelected);Visibility InvertedVisibility(IsEdit)"/>
 
 </android.support.constraint.ConstraintLayout>

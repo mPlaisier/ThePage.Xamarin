@@ -13,6 +13,11 @@ namespace ThePage.Core
             return genreApi?.Select(genre => new CellGenre(genre)).ToList();
         }
 
+        public static IEnumerable<Genre> GetGenresFromString(IEnumerable<string> bookGenres, IEnumerable<Genre> genres)
+        {
+            return genres?.Where(g => bookGenres.Contains(g.Id));
+        }
+
         #endregion
     }
 }
