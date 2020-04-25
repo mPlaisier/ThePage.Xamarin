@@ -17,7 +17,7 @@ namespace ThePage.Core
         public static CellBook BookToCellBook(Book book, List<Author> authors, List<Genre> genres)
         {
             var author = AuthorBusinessLogic.GetAuthorFromString(book.Author, authors);
-            var bookGenres = GenreBusinessLogic.GetGenresFromString(book.Genres ?? new List<string>(), genres).ToList();
+            var bookGenres = GenreBusinessLogic.GetGenresFromString(book.Genres ?? new List<string>(), genres)?.ToList();
 
             return new CellBook(book, author, bookGenres);
         }
