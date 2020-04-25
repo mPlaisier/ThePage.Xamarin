@@ -12,6 +12,7 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IOpenLibraryService _openLibraryService;
 
         #region Properties
 
@@ -23,10 +24,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IOpenLibraryService openLibraryService)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _openLibraryService = openLibraryService;
         }
 
         #endregion
@@ -78,6 +80,17 @@ namespace ThePage.Core
             Books = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
 
             IsLoading = false;
+        }
+
+        async Task AddBookWithOLBook(string isbn)
+        {
+            //Couple to Barcode Scanner in #62
+            //test isbn: "9780062286925"
+            var olBook = await _openLibraryService.GetBookByISBN(isbn);
+
+            var result = await _navigation.Navigate<AddBookViewModel, AddBookParameter, bool>(new AddBookParameter(isbn, olBook));
+            if (result)
+                await Refresh();
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace ThePage.Core
         #region Properties
 
         bool _isEdit;
-        public bool IsEdit
+        public virtual bool IsEdit
         {
             get => _isEdit;
             set => SetProperty(ref _isEdit, value);
