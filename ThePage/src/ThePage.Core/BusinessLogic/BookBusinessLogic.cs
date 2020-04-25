@@ -41,7 +41,6 @@ namespace ThePage.Core
             return new Book(id, title, author.Id, genres.GetIdStrings(), isbn, owned, read, pages);
         }
 
-
         #endregion
     }
 }
