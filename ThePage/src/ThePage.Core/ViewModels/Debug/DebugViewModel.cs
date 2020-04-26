@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
-using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Core.ViewModels;
 
@@ -170,14 +169,13 @@ namespace ThePage.Core
 
         #region BarcodeScanner
 
-
         void StartBarcodeScanner()
         {
             var request = new GetIsbnCode
             {
                 ISBNCallback = (isbn) =>
                 {
-                    if (isbn.IsNullOrEmpty())
+                    if (isbn == null)
                         _userInteraction.Confirm("ISBN:" + isbn, OkAction, "Error");
                     else
                         _userInteraction.Confirm("ISBN:" + isbn, OkAction, "Success");
@@ -186,6 +184,7 @@ namespace ThePage.Core
 
             _isbnInteraction.Raise(request);
         }
+
         #endregion
 
         public class GetIsbnCode

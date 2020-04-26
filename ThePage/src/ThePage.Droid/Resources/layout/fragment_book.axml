@@ -5,15 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white"
         android:layout_margin="8dp"
-        local:MvxBind="Click AddBookCommand"
+        local:MvxBind="Click AddBookCommand;Visibility InvertedVisibility(IsLoading)"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent" />
+
+       <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabBarcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_barcode"
+        android:tint="@android:color/white"
+        android:layout_margin="8dp"
+        local:MvxBind="Click ScanBarcodeCommand;Visibility InvertedVisibility(IsLoading)"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintEnd_toStartOf="@id/fabAdd" />
     <MvxRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

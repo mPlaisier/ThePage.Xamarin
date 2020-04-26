@@ -23,6 +23,16 @@ namespace ThePage.Core
             return enumerable is ICollection<T> collection ? collection.Count < 1 : !enumerable.Any();
         }
 
+        public static bool IsNotNullAndHasItems<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null)
+                return false;
+
+            /* If this is a list, use the Count property for efficiency. 
+            * The Count property is O(1) while IEnumerable.Count() is O(N). */
+            return enumerable is ICollection<T> collection ? collection.Count > 0 : enumerable.Any();
+        }
+
         /// <summary>
         /// Find the Index of a certain item with a predicate.
         /// </summary>
