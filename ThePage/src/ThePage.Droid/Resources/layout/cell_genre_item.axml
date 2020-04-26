@@ -15,7 +15,7 @@
         android:textSize="20dp"
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toBottomOf="parent"
-        local:MvxBind="Text Name"/>
+        local:MvxBind="Text Genre.Name"/>
 
     <ImageView
         android:layout_width="30dp"

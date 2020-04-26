@@ -6,36 +6,35 @@
     android:layout_height="wrap_content"
     android:clickable="true" 
     android:focusableInTouchMode="true"
+    android:layout_marginTop="10dp"
     android:padding="4dp">
 
     <TextView
-        android:id="@+id/lblAuthor"
+        android:id="@+id/lblTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         local:layout_constraintTop_toTopOf="parent"
-        local:layout_constraintBottom_toTopOf="@+id/spnrAuthor"
+        local:layout_constraintBottom_toTopOf="@+id/switchSelected"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text LblAuthor"/>
+        local:MvxBind="Text LblTitle"/>
 
-    <mvvmcross.platforms.android.binding.views.MvxSpinner
-        android:id="@+id/spnrAuthor"
-        android:layout_width="match_parent"
+    <Switch
+        android:id="@+id/switchSelected"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
+        local:layout_constraintTop_toBottomOf="@+id/lblTitle"
         local:layout_constraintBottom_toTopOf="@+id/lblValue"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxItemTemplate="@layout/author_spinner_template"
-        local:MvxDropDownItemTemplate="@layout/author_spinner_template"
-        local:MvxBind="ItemsSource Authors; SelectedItem SelectedAuthor; HandleItemSelected ItemSelectedCommand; Visibility Visibility(IsEdit)"/>
+        local:MvxBind="Checked IsSelected;Visibility Visibility(IsEdit)" />
 
     <TextView
         android:id="@+id/lblValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        local:layout_constraintTop_toBottomOf="@+id/spnrAuthor"
+        local:layout_constraintTop_toBottomOf="@+id/switchSelected"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintStart_toStartOf="parent"
-        local:MvxBind="Text SelectedAuthor.Name;Visibility InvertedVisibility(IsEdit)"/>
-    
+        local:MvxBind="Text BoolToYesNoText(IsSelected);Visibility InvertedVisibility(IsEdit)"/>
+
 </android.support.constraint.ConstraintLayout>

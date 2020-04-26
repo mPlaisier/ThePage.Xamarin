@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,15 +9,40 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
+using static ThePage.Core.CellBookInput;
 
 namespace ThePage.Core
 {
-    public class AddBookViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
+    public class AddBookParameter
+    {
+        #region Properties
+
+        public string ISBN { get; }
+
+        public OLObject Book { get; }
+
+        #endregion
+
+        #region Constructor
+
+        public AddBookParameter(string isbn, OLObject book)
+        {
+            ISBN = isbn;
+            Book = book;
+        }
+
+        #endregion
+    }
+
+    public class AddBookViewModel : BaseViewModel<AddBookParameter, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+
+        OLObject _olBook;
+        string _isbn;
 
         List<Genre> _genres;
         List<Author> _authors;
@@ -50,6 +76,12 @@ namespace ThePage.Core
 
         #region LifeCycle
 
+        public override void Prepare(AddBookParameter parameter)
+        {
+            _isbn = parameter.ISBN;
+            _olBook = parameter.Book;
+        }
+
         public override async Task Initialize()
         {
             Analytics.TrackEvent($"Initialize {nameof(AddBookViewModel)}");
@@ -70,12 +102,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var title = Items.Where(t => t is CellBookTitle).OfType<CellBookTitle>().First().TxtTitle.Trim();
-            var author = Items.Where(a => a is CellBookAuthor).OfType<CellBookAuthor>().First().SelectedAuthor;
-
-            var genres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-
-            var book = new Book(title, author.Id, genres.GetIdAsStringList());
+            var book = BookBusinessLogic.CreateBookFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
             if (result)
@@ -106,28 +133,87 @@ namespace ThePage.Core
                 await _navigation.Close(this, true);
             }
 
-            CreateCellBooks();
+            if (_olBook != null)
+                await CreateCellBooksFromOlData();
+            else
+                CreateCellBooks();
 
             IsLoading = false;
+            UpdateValidation();
         }
 
         void CreateCellBooks()
         {
             Items = new MvxObservableCollection<ICellBook>
             {
-                new CellBookTitle(UpdateValidation),
-                new CellBookAuthor(_device,_authors, UpdateValidation),
+                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
+                new CellBookAuthor(_device,_authors, UpdateValidation,true),
+                new CellBookTitle("Genres"),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
-                new CellBookButton(AddBook)
+                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
+                new CellBookNumberTextView("ISBN", _isbn, EBookInputType.ISBN, UpdateValidation, false, true),
+                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
+                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
+                new CellBookButton("Add Book",AddBook)
             };
+        }
+
+        async Task CreateCellBooksFromOlData()
+        {
+            var olAuthor = _olBook.Authors.First();
+            var olkey = GetAuthorKey(olAuthor?.Url.ToString());
+
+            Author author = null;
+
+            author = _authors.FirstOrDefault(a => a.OLKey != null && a.OLKey.Equals(olkey));
+
+            if (author == null)
+            {
+                var result = await _userInteraction.ConfirmAsync($"{olAuthor.Name} is not found in your author list. Would you like to add it?");
+                if (!result)
+                    return;
+
+                author = new Author
+                {
+                    Name = olAuthor.Name,
+                    OLKey = olkey
+                };
+                var isAdded = await _navigation.Navigate<AddAuthorViewModel, Author, bool>(author);
+
+                if (!isAdded)
+                    return;
+
+                _authors = await _thePageService.GetAllAuthors();
+                author = _authors.FirstOrDefault(a => a.OLKey != null && a.OLKey.Equals(olkey));
+            }
+
+            Items = new MvxObservableCollection<ICellBook>
+                {
+                    new CellBookTextView("Title",_olBook.Title, EBookInputType.Title,UpdateValidation,true, true),
+                    new CellBookAuthor(author, _device,_authors, UpdateValidation,true),
+                    new CellBookTitle("Genres"),
+                    new CellBookAddGenre(() => AddGenreAction().Forget()),
+                    new CellBookNumberTextView("Pages", _olBook.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true,true),
+                    new CellBookNumberTextView("ISBN",_isbn, EBookInputType.ISBN, UpdateValidation, false, true),
+                    new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
+                    new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
+                    new CellBookButton("Add Book",AddBook)
+                };
+
         }
 
         void UpdateValidation()
         {
-            var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
-            var btn = Items.Where(b => b is CellBookButton).OfType<CellBookButton>().First();
+            if (IsLoading)
+                return;
 
-            btn.IsValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
+            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+
+            var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
+
+            foreach (var item in buttons)
+                item.IsValid = isValid;
         }
 
         async Task AddGenreAction()
@@ -144,9 +230,19 @@ namespace ThePage.Core
             }
         }
 
-        private void RemoveGenre(CellBookGenreItem obj)
+        void RemoveGenre(CellBookGenreItem obj)
         {
             Items.Remove(obj);
+        }
+
+        string GetAuthorKey(string key)
+        {
+            if (key != null)
+            {
+                var split = key.Split('/');
+                return split[4];
+            }
+            return string.Empty;
         }
 
         #endregion

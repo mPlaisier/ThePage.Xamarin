@@ -19,6 +19,18 @@ namespace ThePage.Api
         [JsonProperty("genres")]
         public List<string> Genres { get; set; }
 
+        [JsonProperty("isbn")]
+        public string ISBN { get; set; }
+
+        [JsonProperty("owned")]
+        public bool Owned { get; set; }
+
+        [JsonProperty("read")]
+        public bool Read { get; set; }
+
+        [JsonProperty("pages")]
+        public int Pages { get; set; }
+
         #endregion
 
         #region Constructor
@@ -27,16 +39,22 @@ namespace ThePage.Api
         {
         }
 
-        public Book(string title, string author, List<string> genres)
+        public Book(string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages)
         {
             Title = title;
             Author = author;
             Genres = genres;
+            ISBN = iSBN;
+            Owned = owned;
+            Read = read;
+            Pages = pages;
         }
 
-        public Book(string id, string title, string author, List<string> genres) : this(title, author, genres)
+        public Book(string id, string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages)
+            : this(title, author, genres, iSBN, owned, read, pages)
         {
-            Id = id;
+            if (id != null)
+                Id = id;
         }
 
         #endregion

@@ -9,12 +9,14 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddAuthorViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
+    public class AddAuthorViewModel : BaseViewModel<Author, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+
+        string _olkey;
 
         #region Properties
 
@@ -56,6 +58,12 @@ namespace ThePage.Core
 
         #region LifeCycle
 
+        public override void Prepare(Author parameter)
+        {
+            _olkey = parameter.OLKey;
+            TxtName = parameter.Name;
+        }
+
         public override Task Initialize()
         {
             Analytics.TrackEvent($"Initialize {nameof(AddAuthorViewModel)}");
@@ -75,7 +83,11 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddAuthor(new Author(TxtName.Trim()));
+            var author = new Author(TxtName.Trim());
+            if (_olkey != null)
+                author.OLKey = _olkey;
+
+            var result = await _thePageService.AddAuthor(author);
 
             if (result)
             {

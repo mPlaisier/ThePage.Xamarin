@@ -30,13 +30,14 @@ namespace ThePage.Core
 
     public class SelectGenreViewModel : BaseViewModel<SelectedGenreParameters, Genre>
     {
-        readonly IMvxNavigationService _navigationService;
+        readonly IMvxNavigationService _navigation;
+        readonly IThePageService _thePageService;
 
         #region Properties
 
         public override string Title => "Select Genre";
 
-        public List<Genre> Genres { get; internal set; }
+        public List<CellGenre> CellGenres { get; internal set; }
 
         public List<Genre> SelectedGenres { get; internal set; }
 
@@ -44,16 +45,26 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxCommand<Genre> _genreClickCommand;
-        public MvxCommand<Genre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<Genre>((item) => HandleGenreClick(item).Forget());
+        MvxCommand<CellGenre> _genreClickCommand;
+        public MvxCommand<CellGenre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<CellGenre>(HandleGenreClick);
+
+        IMvxCommand _addGenreCommand;
+        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
+       {
+           var result = await _navigation.Navigate<AddGenreViewModel, bool>();
+           if (result)
+               await Refresh();
+
+       });
 
         #endregion
 
         #region Constructor
 
-        public SelectGenreViewModel(IMvxNavigationService navigationService)
+        public SelectGenreViewModel(IMvxNavigationService navigationService, IThePageService thePageService)
         {
-            _navigationService = navigationService;
+            _navigation = navigationService;
+            _thePageService = thePageService;
         }
 
         #endregion
@@ -62,18 +73,31 @@ namespace ThePage.Core
 
         public override void Prepare(SelectedGenreParameters parameter)
         {
-            Genres = parameter.Genres;
+            CellGenres = GenreBusinessLogic.GenresToCellGenres(parameter.Genres);
             SelectedGenres = parameter.SelectedGenres;
         }
 
         #endregion
 
-        async Task HandleGenreClick(Genre genre)
+        #region Private
+
+        void HandleGenreClick(CellGenre genre)
         {
-            if (SelectedGenres.Contains(genre))
+            if (SelectedGenres.Contains(genre.Genre))
                 return;
 
-            await _navigationService.Close(this, genre);
+            _navigation.Close(this, genre.Genre);
         }
+
+        async Task Refresh()
+        {
+            IsLoading = true;
+
+            CellGenres = GenreBusinessLogic.GenresToCellGenres(await _thePageService.GetAllGenres());
+
+            IsLoading = false;
+        }
+
+        #endregion
     }
 }

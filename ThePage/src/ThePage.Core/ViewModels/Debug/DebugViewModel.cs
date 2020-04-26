@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
-using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -19,6 +19,9 @@ namespace ThePage.Core
 
         public List<CellDebug> Items { get; internal set; }
 
+        MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
+        public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
+
         #endregion
 
         #region Commands
@@ -30,7 +33,7 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public DebugViewModel(IMvxNavigationService navigation, IUserInteraction userInteraction, IThePageService thePageService)
+        public DebugViewModel(IUserInteraction userInteraction, IThePageService thePageService)
         {
             _userInteraction = userInteraction;
             _thePageService = thePageService;
@@ -75,8 +78,10 @@ namespace ThePage.Core
                new CellDebugItem("Toast message", EDebugType.Toast,EDebugItemType.Toast),
 
                new CellDebugHeader("Data", EDebugType.Data),
-               new CellDebugItem("Book not found error", EDebugType.Data,EDebugItemType.BookNotFound)
+               new CellDebugItem("Book not found error", EDebugType.Data,EDebugItemType.BookNotFound),
 
+                new CellDebugHeader("BarCode",EDebugType.BarcodeScanner),
+                new CellDebugItem("Open Scanner", EDebugType.BarcodeScanner,EDebugItemType.BarcodeScanner),
             };
         }
 
@@ -111,6 +116,9 @@ namespace ThePage.Core
                         break;
                     case EDebugItemType.BookNotFound:
                         BookNotFoundCall().Forget();
+                        break;
+                    case EDebugItemType.BarcodeScanner:
+                        StartBarcodeScanner();
                         break;
                     default:
                         break;
@@ -158,5 +166,30 @@ namespace ThePage.Core
         }
 
         #endregion
+
+        #region BarcodeScanner
+
+        void StartBarcodeScanner()
+        {
+            var request = new GetIsbnCode
+            {
+                ISBNCallback = (isbn) =>
+                {
+                    if (isbn == null)
+                        _userInteraction.Confirm("ISBN:" + isbn, OkAction, "Error");
+                    else
+                        _userInteraction.Confirm("ISBN:" + isbn, OkAction, "Success");
+                }
+            };
+
+            _isbnInteraction.Raise(request);
+        }
+
+        #endregion
+
+        public class GetIsbnCode
+        {
+            public Action<string> ISBNCallback { get; set; }
+        }
     }
 }

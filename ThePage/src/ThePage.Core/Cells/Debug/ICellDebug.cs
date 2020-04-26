@@ -13,6 +13,7 @@ namespace ThePage.Core
     {
         Alert,
         Toast,
-        Data
+        Data,
+        BarcodeScanner
     }
 }

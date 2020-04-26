@@ -1,12 +1,12 @@
+using ThePage.Api;
+
 namespace ThePage.Core
 {
     public class CellGenre
     {
         #region Properties
 
-        public string Id { get; set; }
-
-        public string Name { get; set; }
+        public Genre Genre { get; }
 
         #endregion
 
@@ -17,10 +17,9 @@ namespace ThePage.Core
 
         }
 
-        public CellGenre(string id, string name)
+        public CellGenre(Genre genre)
         {
-            Id = id;
-            Name = name;
+            Genre = genre;
         }
 
         #endregion

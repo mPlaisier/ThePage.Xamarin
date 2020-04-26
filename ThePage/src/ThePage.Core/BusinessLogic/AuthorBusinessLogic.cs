@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ThePage.Api;
@@ -9,14 +8,14 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<AuthorCell> AuthorsToAuthorCells(List<Author> authorsApi)
+        public static List<CellAuthor> AuthorsToCellAuthors(List<Author> authorsApi)
         {
-            return authorsApi.Select(x => new AuthorCell(x.Id, x.Name)).ToList();
+            return authorsApi?.Select(author => new CellAuthor(author)).ToList();
         }
 
-        public static Author AuthorCellToAuthor(AuthorCell authorCell)
+        public static Author GetAuthorFromString(string author, IEnumerable<Author> authors)
         {
-            return new Author(authorCell.Id, authorCell.Name);
+            return authors?.FirstOrDefault(a => a.Id.Equals(author));
         }
 
         #endregion

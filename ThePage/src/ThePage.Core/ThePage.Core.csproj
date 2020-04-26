@@ -28,6 +28,7 @@
     <Folder Include="Cells\Debug\" />
     <Folder Include="ViewModels\Genre\" />
     <Folder Include="Cells\Book\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

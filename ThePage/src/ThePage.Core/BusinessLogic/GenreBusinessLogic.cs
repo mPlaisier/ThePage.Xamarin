@@ -10,12 +10,12 @@ namespace ThePage.Core
 
         public static List<CellGenre> GenresToCellGenres(List<Genre> genreApi)
         {
-            return genreApi?.Select(x => new CellGenre(x.Id, x.Name)).ToList();
+            return genreApi?.Select(genre => new CellGenre(genre)).ToList();
         }
 
-        public static Genre CellGenreToGenre(CellGenre cellGenre)
+        public static IEnumerable<Genre> GetGenresFromString(IEnumerable<string> bookGenres, IEnumerable<Genre> genres)
         {
-            return new Genre(cellGenre.Id, cellGenre.Name);
+            return genres?.Where(g => bookGenres.Contains(g.Id));
         }
 
         #endregion

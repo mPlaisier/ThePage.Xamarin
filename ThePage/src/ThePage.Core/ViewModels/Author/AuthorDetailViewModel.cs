@@ -12,13 +12,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public AuthorCell Author { get; }
+        public CellAuthor Author { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(AuthorCell author)
+        public AuthorDetailParameter(CellAuthor author)
         {
             Author = author;
         }
@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         public override string Title => "Author Detail";
 
-        public AuthorCell Author { get; internal set; }
+        public CellAuthor AuthorCell { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -87,9 +87,9 @@ namespace ThePage.Core
 
         public override void Prepare(AuthorDetailParameter parameter)
         {
-            Author = parameter.Author;
+            AuthorCell = parameter.Author;
 
-            TxtName = Author.Name;
+            TxtName = AuthorCell.Author.Name;
             IsEditing = false;
         }
 
@@ -114,9 +114,9 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            Author.Name = TxtName;
+            AuthorCell.Author.Name = TxtName;
 
-            var author = await _thePageService.UpdateAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
+            var author = await _thePageService.UpdateAuthor(AuthorCell.Author);
             if (author != null)
                 _userInteraction.ToastMessage("Author updated");
             else
@@ -135,7 +135,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteAuthor(AuthorBusinessLogic.AuthorCellToAuthor(Author));
+                var result = await _thePageService.DeleteAuthor(AuthorCell.Author);
 
                 if (result)
                 {

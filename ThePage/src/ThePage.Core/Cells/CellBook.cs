@@ -4,13 +4,11 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class BookCell : MvxNotifyPropertyChanged, IBaseCell
+    public class CellBook : MvxNotifyPropertyChanged, ICellBase
     {
         #region Properties
 
-        public string Id { get; set; }
-
-        public string Title { get; set; }
+        public Book Book { get; set; }
 
         public Author Author { get; set; }
 
@@ -20,15 +18,14 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookCell()
+        public CellBook()
         {
 
         }
 
-        public BookCell(string id, string title, Author author, List<Genre> genres)
+        public CellBook(Book book, Author author, List<Genre> genres)
         {
-            Id = id;
-            Title = title;
+            Book = book;
             Author = author;
             Genres = genres;
         }

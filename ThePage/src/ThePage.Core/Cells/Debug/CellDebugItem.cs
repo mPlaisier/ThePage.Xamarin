@@ -38,6 +38,7 @@ namespace ThePage.Core
         ConfirmThreeButtons,
         ConfirmThreeButtonsAsync,
         Toast,
-        BookNotFound
+        BookNotFound,
+        BarcodeScanner
     }
 }
