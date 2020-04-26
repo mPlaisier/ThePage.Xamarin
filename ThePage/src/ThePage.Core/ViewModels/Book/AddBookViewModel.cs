@@ -151,7 +151,7 @@ namespace ThePage.Core
                 new CellBookTitle("Genres"),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
                 new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
-                new CellBookNumberTextView("ISBN", EBookInputType.ISBN, UpdateValidation, false, true),
+                new CellBookNumberTextView("ISBN", _isbn, EBookInputType.ISBN, UpdateValidation, false, true),
                 new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
                 new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
                 new CellBookButton("Add Book",AddBook)

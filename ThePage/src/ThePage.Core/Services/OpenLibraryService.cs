@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
@@ -29,6 +30,10 @@ namespace ThePage.Core
             {
                 result = await OpenLibraryManager.Get(isbn);
             }
+            catch (KeyNotFoundException ex)
+            {
+                HandleKeyNotFoundException(ex, isbn);
+            }
             catch (Exception ex)
             {
                 HandleException(ex);
@@ -46,6 +51,14 @@ namespace ThePage.Core
             Crashes.TrackError(ex);
 
             _userInteraction.Alert(ex.Message, null, "Error");
+        }
+
+        void HandleKeyNotFoundException(KeyNotFoundException ex, string isbn)
+        {
+            Crashes.TrackError(ex);
+
+            var message = $"{isbn} is not found in the library. Please add the book manually";
+            _userInteraction.Alert(message, null, "Error");
         }
 
         #endregion
