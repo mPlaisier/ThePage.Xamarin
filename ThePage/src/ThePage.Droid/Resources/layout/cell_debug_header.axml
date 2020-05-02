@@ -9,4 +9,4 @@
     android:textColor="@color/white"
     android:textStyle="bold"
     android:background="@color/accentColor"
-    local:MvxBind="Text Title;" />
+    local:MvxBind="Text Title;Click ItemClickCommand" />
