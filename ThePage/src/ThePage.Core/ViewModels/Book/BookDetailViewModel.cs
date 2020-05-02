@@ -29,6 +29,7 @@ namespace ThePage.Core
 
         #endregion
     }
+
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
         List<Genre> _allGenres;

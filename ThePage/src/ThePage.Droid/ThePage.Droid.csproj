@@ -50,7 +50,7 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <EnableProguard>true</EnableProguard>
     <AndroidLinkMode>Full</AndroidLinkMode>
-    <AndroidLinkSkip>ThePage.Core;ThePage.Api</AndroidLinkSkip>
+    <AndroidLinkSkip>ThePage.Core;ThePage.Api;MvvmCross;MvvmCross.Plugins.Color;MvvmCross.Plugins.Color.Droid;MvvmCross.Plugins.Visibility;MvvmCross.Plugins.Visibility.Droid;MvvmCross.Droid.Support.V7.RecyclerView;MvvmCross.Droid.Support.V7.AppCompat;Newtonsoft.Json</AndroidLinkSkip>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
