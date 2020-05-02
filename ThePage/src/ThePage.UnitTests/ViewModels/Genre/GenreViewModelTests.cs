@@ -30,6 +30,8 @@ namespace ThePage.UnitTests.ViewModels.Genre
 
         #endregion
 
+        #region Genre check Genre items
+
         [Fact]
         public void ShowGenresWhenDataAvailable()
         {
@@ -66,16 +68,22 @@ namespace ThePage.UnitTests.ViewModels.Genre
         [Fact]
         public void ShowNullGenresNoDataAvailable()
         {
-            //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => null);
-
             //Setup
             var vm = LoadViewModel();
 
             //Check
             Assert.Null(vm.Genres);
         }
+
+        [Fact]
+        public void StopLoadingAfterRefresh()
+        {
+            //Setup
+            var vm = LoadViewModel();
+
+            Assert.False(vm.IsLoading);
+        }
+
+        #endregion
     }
 }

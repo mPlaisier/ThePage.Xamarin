@@ -21,6 +21,9 @@
 		<Folder Include="BL\Data\" />
 		<Folder Include="ViewModels\Genre\" />
 		<Folder Include="TestData\" />
+		<Folder Include="Mock\" />
+		<Folder Include="Mock\ViewModel\" />
+		<Folder Include="ViewModels\Author\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

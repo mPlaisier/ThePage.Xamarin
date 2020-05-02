@@ -26,6 +26,12 @@ namespace ThePage.UnitTests
 
             MockThePageService = new Mock<IThePageService>();
             Ioc.RegisterSingleton(MockThePageService.Object);
+
+            var mockUserInteraction = new Mock<IUserInteraction>();
+            Ioc.RegisterSingleton(mockUserInteraction.Object);
+
+            var mockDevice = new Mock<IDevice>();
+            Ioc.RegisterSingleton(mockDevice.Object);
         }
 
         #endregion
