@@ -1,10 +1,10 @@
 using System;
 namespace ThePage.UnitTests
 {
-    public partial class GenreBusinessLogicTests
+    public static partial class GenreDataFactory
     {
-        public const string GenreDataComplete =
-            @"[{
+        const string Genre4ElementsComplete =
+           @"[{
                 ""_id"":""5e7fc0bbbc363c52e7d115ce"",
                 ""name"":""Fiction"",
                 ""__v"":0},

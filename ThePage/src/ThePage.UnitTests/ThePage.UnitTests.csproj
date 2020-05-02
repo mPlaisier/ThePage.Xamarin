@@ -17,6 +17,10 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="BL\" />
+		<Folder Include="ViewModels\" />
+		<Folder Include="BL\Data\" />
+		<Folder Include="ViewModels\Genre\" />
+		<Folder Include="TestData\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

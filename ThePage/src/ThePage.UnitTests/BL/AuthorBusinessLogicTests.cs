@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests
+namespace ThePage.UnitTests.BusinessLogic
 {
     public partial class AuthorBusinessLogicTests
     {
