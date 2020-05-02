@@ -36,7 +36,7 @@ namespace ThePage.Core
             List<Book> result = null;
             try
             {
-                result = await BookManager.FetchBooks();
+                result = await BookManager.Get();
                 result = result.OrderBy(x => x.Title).ToList();
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace ThePage.Core
             Book result = null;
             try
             {
-                result = await BookManager.FetchBook(id);
+                result = await BookManager.Get(id);
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace ThePage.Core
             Book result = null;
             try
             {
-                result = await BookManager.AddBook(book);
+                result = await BookManager.Add(book);
             }
             catch (Exception ex)
             {
@@ -80,7 +80,7 @@ namespace ThePage.Core
             Book result = null;
             try
             {
-                result = await BookManager.UpdateBook(book);
+                result = await BookManager.Update(book);
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace ThePage.Core
         {
             try
             {
-                return await BookManager.DeleteBook(content);
+                return await BookManager.Delete(content);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace ThePage.Core
             List<Author> result = null;
             try
             {
-                result = await AuthorManager.FetchAuthors();
+                result = await AuthorManager.Get();
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace ThePage.Core
             Author result = null;
             try
             {
-                result = await AuthorManager.AddAuthor(author);
+                result = await AuthorManager.Add(author);
             }
             catch (Exception ex)
             {
@@ -139,7 +139,7 @@ namespace ThePage.Core
             Author result = null;
             try
             {
-                result = await AuthorManager.UpdateAuthor(author);
+                result = await AuthorManager.Update(author);
             }
             catch (Exception ex)
             {
@@ -152,7 +152,7 @@ namespace ThePage.Core
         {
             try
             {
-                return await AuthorManager.DeleteAuthor(author);
+                return await AuthorManager.Delete(author);
             }
             catch (Exception ex)
             {

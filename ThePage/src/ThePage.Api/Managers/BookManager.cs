@@ -11,7 +11,7 @@ namespace ThePage.Api
     {
         #region CachingKeys
 
-        const string FetchBooksKey = "FetchBooksKey";
+        const string FetchBooksKey = "GetBooksKey";
         const string GetSingleBookKey = "GetBookKey";
 
         #endregion
@@ -24,7 +24,7 @@ namespace ThePage.Api
 
         #region FETCH
 
-        public static async Task<List<Book>> FetchBooks(bool forceRefresh = false)
+        public static async Task<List<Book>> Get(bool forceRefresh = false)
         {
             List<Book> result = null;
             if (!forceRefresh && !Barrel.Current.Exists(FetchBooksKey) && !Barrel.Current.IsExpired(FetchBooksKey))
@@ -39,7 +39,7 @@ namespace ThePage.Api
             return result;
         }
 
-        public static async Task<Book> FetchBook(string id, bool forceRefresh = false)
+        public static async Task<Book> Get(string id, bool forceRefresh = false)
         {
             var bookKey = GetSingleBookKey + id;
             Book result = null;
@@ -60,7 +60,7 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<Book> AddBook(Book book)
+        public static async Task<Book> Add(Book book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
@@ -72,7 +72,7 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<Book> UpdateBook(Book book)
+        public static async Task<Book> Update(Book book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
@@ -84,7 +84,7 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> DeleteBook(Book book)
+        public static async Task<bool> Delete(Book book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);

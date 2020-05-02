@@ -20,7 +20,7 @@ namespace ThePage.Api
 
         #region FETCH
 
-        public static async Task<List<Author>> FetchAuthors(bool forceRefresh = false)
+        public static async Task<List<Author>> Get(bool forceRefresh = false)
         {
             List<Author> result = null;
             if (!forceRefresh && Barrel.Current.Exists(GetAuthorsKey) && !Barrel.Current.IsExpired(GetAuthorsKey))
@@ -34,7 +34,7 @@ namespace ThePage.Api
             return result;
         }
 
-        public static async Task<Author> FetchAuthor(string id, bool forceRefresh = false)
+        public static async Task<Author> Get(string id, bool forceRefresh = false)
         {
             var authorKey = GetSingleAuthorKey + id;
             Author result = null;
@@ -55,7 +55,7 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<Author> AddAuthor(Author author)
+        public static async Task<Author> Add(Author author)
         {
             //Clear cache
             Barrel.Current.Empty(GetAuthorsKey);
@@ -67,7 +67,7 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<Author> UpdateAuthor(Author author)
+        public static async Task<Author> Update(Author author)
         {
             //Clear cache
             Barrel.Current.Empty(GetAuthorsKey);
@@ -79,7 +79,7 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> DeleteAuthor(Author author)
+        public static async Task<bool> Delete(Author author)
         {
             //Clear cache
             Barrel.Current.Empty(GetAuthorsKey);
