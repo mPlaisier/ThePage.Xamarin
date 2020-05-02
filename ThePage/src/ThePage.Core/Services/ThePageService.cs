@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
+using MonkeyCache.LiteDB;
 using MvvmCross;
 using Refit;
 using ThePage.Api;
@@ -23,17 +24,19 @@ namespace ThePage.Core
         public ThePageService(IUserInteraction userInteraction)
         {
             _userInteraction = userInteraction;
+            Barrel.ApplicationId = "thepageapplication";
+
         }
 
         #endregion
         #region Public(Books)
 
-        public async Task<List<Book>> GetAllBooks()
+        public async Task<List<Book>> GetAllBooks(bool forceRefresh = false)
         {
             List<Book> result = null;
             try
             {
-                result = await BookManager.FetchBooks();
+                result = await BookManager.FetchBooks(forceRefresh);
                 result = result.OrderBy(x => x.Title).ToList();
             }
             catch (Exception ex)

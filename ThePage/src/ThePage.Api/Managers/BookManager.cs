@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MonkeyCache.LiteDB;
 using Refit;
 using ThePage.Api.Helpers;
 
@@ -15,9 +17,30 @@ namespace ThePage.Api
 
         #region FETCH
 
-        public static async Task<List<Book>> FetchBooks()
+        public static async Task<List<Book>> FetchBooks(bool forceRefresh = false)
         {
-            return await _bookAPI.GetBooks();
+            Barrel.EncryptionKey = "encryptionKey";
+            var fetchBookKey = "FetchBookKey";
+
+            //check internet
+            List<Book> result = null;
+            var exists = Barrel.Current.Exists(fetchBookKey);
+            var expired = Barrel.Current.GetExpiration("doesnt exists");
+            var isexpired = Barrel.Current.IsExpired(fetchBookKey);
+
+
+            if (!forceRefresh && !Barrel.Current.Exists(fetchBookKey) && !Barrel.Current.IsExpired(key: fetchBookKey))
+            {
+                result = Barrel.Current.Get<List<Book>>(key: fetchBookKey);
+            }
+
+            if (result == null)
+            {
+                result = await _bookAPI.GetBooks();
+                Barrel.Current.Add(fetchBookKey, result, TimeSpan.FromMinutes(5));
+            }
+
+            return result;
         }
 
         public static async Task<Book> FetchBook(string id)
