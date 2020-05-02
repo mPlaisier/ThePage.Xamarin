@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MonkeyCache.LiteDB;
 using Refit;
 using ThePage.Api.Helpers;
 
@@ -7,6 +9,13 @@ namespace ThePage.Api
 {
     public class BookManager
     {
+        #region CachingKeys
+
+        const string FetchBooksKey = "GetBooksKey";
+        const string GetSingleBookKey = "GetBookKey";
+
+        #endregion
+
         #region Properties
 
         static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Secrets.ThePageAPI_URL);
@@ -15,22 +24,47 @@ namespace ThePage.Api
 
         #region FETCH
 
-        public static async Task<List<Book>> FetchBooks()
+        public static async Task<List<Book>> Get(bool forceRefresh = false)
         {
-            return await _bookAPI.GetBooks();
+            List<Book> result = null;
+            if (!forceRefresh && !Barrel.Current.Exists(FetchBooksKey) && !Barrel.Current.IsExpired(FetchBooksKey))
+                result = Barrel.Current.Get<List<Book>>(FetchBooksKey);
+
+            if (result == null)
+            {
+                result = await _bookAPI.GetBooks();
+                Barrel.Current.Add(FetchBooksKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+            }
+
+            return result;
         }
 
-        public static async Task<Book> FetchBook(string id)
+        public static async Task<Book> Get(string id, bool forceRefresh = false)
         {
-            return await _bookAPI.GetBook(id);
+            var bookKey = GetSingleBookKey + id;
+            Book result = null;
+
+            if (!forceRefresh && Barrel.Current.Exists(bookKey) && !Barrel.Current.IsExpired(bookKey))
+                result = Barrel.Current.Get<Book>(bookKey);
+
+            if (result == null)
+            {
+                result = await _bookAPI.GetBook(id);
+                Barrel.Current.Add(bookKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+            }
+
+            return result;
         }
 
         #endregion
 
         #region ADD
 
-        public static async Task<Book> AddBook(Book book)
+        public static async Task<Book> Add(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             return await _bookAPI.AddBook(book);
         }
 
@@ -38,8 +72,11 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<Book> UpdateBook(Book book)
+        public static async Task<Book> Update(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             return await _bookAPI.UpdateBook(book);
         }
 
@@ -47,8 +84,11 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> DeleteBook(Book book)
+        public static async Task<bool> Delete(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             await _bookAPI.DeleteBook(book);
             return true;
         }
