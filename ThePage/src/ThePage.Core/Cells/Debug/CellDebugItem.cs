@@ -27,6 +27,7 @@ namespace ThePage.Core
 
     public enum EDebugItemType
     {
+        //Alert
         ConfirmOk,
         ConfirmAnswer,
         ConfirmAsync,
@@ -37,8 +38,15 @@ namespace ThePage.Core
         InputAsync,
         ConfirmThreeButtons,
         ConfirmThreeButtonsAsync,
+
+        //Toast
         Toast,
+
+        //Data
         BookNotFound,
+        RemoveAllData,
+
+        //BarcodeScanner
         BarcodeScanner
     }
 }

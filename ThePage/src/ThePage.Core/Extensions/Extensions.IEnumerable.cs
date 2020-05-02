@@ -49,6 +49,39 @@ namespace ThePage.Core
             return collection.IndexOf(item);
         }
 
+        /// <summary>
+        /// Adds the elements at index of the collection. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="index"></param>
+        /// <param name="enumerable"></param>
+        public static void InsertRange<T>(this Collection<T> collection, int index, IEnumerable<T> enumerable)
+        {
+            int currentIndex = index;
+            var changedItems = collection is List<T> ? (List<T>)enumerable : new List<T>(enumerable);
+            foreach (var i in changedItems)
+            {
+                collection.Insert(currentIndex, i);
+                currentIndex++;
+            }
+        }
 
+        /// <summary>
+        /// Removes the first occurence of each item in the collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="enumerable"></param>
+        public static void RemoveRange<T>(this Collection<T> collection, IEnumerable<T> enumerable)
+        {
+            if (enumerable.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(enumerable));
+
+            //fix error when enumerable is from the Collection
+            //Error: Collection was modified; enumeration operation may not execute
+            foreach (var item in enumerable.ToList())
+                collection.Remove(item);
+        }
     }
 }
