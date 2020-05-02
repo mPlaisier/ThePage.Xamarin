@@ -9,6 +9,13 @@ namespace ThePage.Api
 {
     public class BookManager
     {
+        #region CachingKeys
+
+        const string FetchBooksKey = "FetchBooksKey";
+        const string GetSingleBookKey = "GetBookKey";
+
+        #endregion
+
         #region Properties
 
         static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Secrets.ThePageAPI_URL);
@@ -19,33 +26,34 @@ namespace ThePage.Api
 
         public static async Task<List<Book>> FetchBooks(bool forceRefresh = false)
         {
-            Barrel.EncryptionKey = "encryptionKey";
-            var fetchBookKey = "FetchBookKey";
-
-            //check internet
             List<Book> result = null;
-            var exists = Barrel.Current.Exists(fetchBookKey);
-            var expired = Barrel.Current.GetExpiration("doesnt exists");
-            var isexpired = Barrel.Current.IsExpired(fetchBookKey);
-
-
-            if (!forceRefresh && !Barrel.Current.Exists(fetchBookKey) && !Barrel.Current.IsExpired(key: fetchBookKey))
-            {
-                result = Barrel.Current.Get<List<Book>>(key: fetchBookKey);
-            }
+            if (!forceRefresh && !Barrel.Current.Exists(FetchBooksKey) && !Barrel.Current.IsExpired(FetchBooksKey))
+                result = Barrel.Current.Get<List<Book>>(FetchBooksKey);
 
             if (result == null)
             {
                 result = await _bookAPI.GetBooks();
-                Barrel.Current.Add(fetchBookKey, result, TimeSpan.FromMinutes(5));
+                Barrel.Current.Add(FetchBooksKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
             }
 
             return result;
         }
 
-        public static async Task<Book> FetchBook(string id)
+        public static async Task<Book> FetchBook(string id, bool forceRefresh = false)
         {
-            return await _bookAPI.GetBook(id);
+            var bookKey = GetSingleBookKey + id;
+            Book result = null;
+
+            if (!forceRefresh && Barrel.Current.Exists(bookKey) && !Barrel.Current.IsExpired(bookKey))
+                result = Barrel.Current.Get<Book>(bookKey);
+
+            if (result == null)
+            {
+                result = await _bookAPI.GetBook(id);
+                Barrel.Current.Add(bookKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+            }
+
+            return result;
         }
 
         #endregion
@@ -54,6 +62,9 @@ namespace ThePage.Api
 
         public static async Task<Book> AddBook(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             return await _bookAPI.AddBook(book);
         }
 
@@ -63,6 +74,9 @@ namespace ThePage.Api
 
         public static async Task<Book> UpdateBook(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             return await _bookAPI.UpdateBook(book);
         }
 
@@ -72,6 +86,9 @@ namespace ThePage.Api
 
         public static async Task<bool> DeleteBook(Book book)
         {
+            //Clear cache
+            Barrel.Current.Empty(FetchBooksKey);
+
             await _bookAPI.DeleteBook(book);
             return true;
         }

@@ -25,18 +25,18 @@ namespace ThePage.Core
         {
             _userInteraction = userInteraction;
             Barrel.ApplicationId = "thepageapplication";
-
+            Barrel.EncryptionKey = "encryptionKey";
         }
 
         #endregion
         #region Public(Books)
 
-        public async Task<List<Book>> GetAllBooks(bool forceRefresh = false)
+        public async Task<List<Book>> GetAllBooks()
         {
             List<Book> result = null;
             try
             {
-                result = await BookManager.FetchBooks(forceRefresh);
+                result = await BookManager.FetchBooks();
                 result = result.OrderBy(x => x.Title).ToList();
             }
             catch (Exception ex)
