@@ -5,10 +5,6 @@ namespace ThePage.Core
     {
     }
 
-    public class CellDebug : ICellDebug
-    {
-    }
-
     public enum EDebugType
     {
         Alert,

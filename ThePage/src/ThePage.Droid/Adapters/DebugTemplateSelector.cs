@@ -4,7 +4,7 @@ using ThePage.Core;
 
 namespace ThePage.Droid
 {
-    public class DebugTemplateSelector : MvxTemplateSelector<CellDebug>
+    public class DebugTemplateSelector : MvxTemplateSelector<ICellDebug>
     {
         #region Properties
 
@@ -14,7 +14,7 @@ namespace ThePage.Droid
 
         #region Protected
 
-        protected override int SelectItemViewType(CellDebug forItemObject)
+        protected override int SelectItemViewType(ICellDebug forItemObject)
         {
             switch (forItemObject)
             {

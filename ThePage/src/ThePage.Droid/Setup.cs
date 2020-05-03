@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Android.Widget;
 using MvvmCross;
+using MvvmCross.Binding.Bindings.Target.Construction;
 using MvvmCross.Droid.Support.V7.AppCompat;
 using ThePage.Core;
 
@@ -20,5 +22,13 @@ namespace ThePage.Droid
         {
             typeof(MvvmCross.Droid.Support.V7.RecyclerView.MvxRecyclerView).Assembly
         };
+
+        protected override void FillTargetFactories(IMvxTargetBindingFactoryRegistry registry)
+        {
+            base.FillTargetFactories(registry);
+
+            registry.RegisterCustomBindingFactory<TextView>("DrawableRight",
+               view => new TextViewDrawableRightBinding(view));
+        }
     }
 }
