@@ -1,7 +1,7 @@
 using System;
 namespace ThePage.Core
 {
-    public class CellDebugItem : CellDebug
+    public class CellDebugItem : ICellDebug
     {
         #region Properties
 

@@ -9,4 +9,5 @@
     android:textColor="@color/white"
     android:textStyle="bold"
     android:background="@color/accentColor"
-    local:MvxBind="Text Title;Click ItemClickCommand" />
+    android:drawableTint="@color/white"
+    local:MvxBind="Text Title;DrawableRight If(IsOpen, OpenIcon, CloseIcon)" />

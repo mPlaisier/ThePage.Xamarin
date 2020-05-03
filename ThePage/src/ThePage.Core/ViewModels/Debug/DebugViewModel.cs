@@ -27,8 +27,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxCommand<CellDebug> _itemClickCommand;
-        public MvxCommand<CellDebug> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<CellDebug>(OnItemClick);
+        MvxCommand<ICellDebug> _itemClickCommand;
+        public MvxCommand<ICellDebug> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<ICellDebug>(OnItemClick);
 
         #endregion
 
@@ -61,27 +61,27 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellDebug>
             {
-                new CellDebugHeader("Alerts",EDebugType.Alert,HandleHeaderClick, false),
-                new CellDebugHeader("Toast",EDebugType.Toast,HandleHeaderClick)
+                new CellDebugHeader("Alerts",EDebugType.Alert, false),
+                new CellDebugHeader("Toast",EDebugType.Toast)
             };
 
             Items.AddRange(GetToastDebugItems());
 
-            Items.Add(new CellDebugHeader("Data", EDebugType.Data, HandleHeaderClick));
+            Items.Add(new CellDebugHeader("Data", EDebugType.Data));
             Items.AddRange(GetDataDebugItems());
 
-            Items.Add(new CellDebugHeader("BarCode", EDebugType.BarcodeScanner, HandleHeaderClick));
+            Items.Add(new CellDebugHeader("BarCode", EDebugType.BarcodeScanner));
             Items.AddRange(GetBarcodeDebugItems());
 
         }
 
-        void OnItemClick(CellDebug obj)
+        void OnItemClick(ICellDebug obj)
         {
-            //TODO add logic to open en close section
-            if (obj is CellDebugHeader)
-                return;
-
-            if (obj is CellDebugItem debug)
+            if (obj is CellDebugHeader cellHeader)
+            {
+                HandleHeaderClick(cellHeader);
+            }
+            else if (obj is CellDebugItem debug)
             {
                 switch (debug.ItemType)
                 {
@@ -104,12 +104,14 @@ namespace ThePage.Core
                     case EDebugItemType.Toast:
                         _userInteraction.ToastMessage("Custom message");
                         break;
+
                     case EDebugItemType.BookNotFound:
                         BookNotFoundCall().Forget();
                         break;
                     case EDebugItemType.RemoveAllData:
                         RemoveAllData().Forget();
                         break;
+
                     case EDebugItemType.BarcodeScanner:
                         StartBarcodeScanner();
                         break;
@@ -117,7 +119,6 @@ namespace ThePage.Core
                         break;
                 }
             }
-
         }
 
         #endregion
@@ -214,19 +215,19 @@ namespace ThePage.Core
 
         #region Private
 
-        void HandleHeaderClick(EDebugType debugType, bool isOpen)
+        void HandleHeaderClick(CellDebugHeader cell)
         {
             //Close section
-            if (isOpen)
+            if (cell.IsOpen)
             {
-                var removeItems = Items.OfType<CellDebugItem>().Where(x => x.Type == debugType);
+                var removeItems = Items.OfType<CellDebugItem>().Where(x => x.Type == cell.DebugType);
                 Items.RemoveRange(removeItems);
             }
             else
             {
                 IEnumerable<ICellDebug> newItems = null;
 
-                switch (debugType)
+                switch (cell.DebugType)
                 {
                     case EDebugType.Alert:
                         newItems = GetAlertDebugItems();
@@ -244,9 +245,11 @@ namespace ThePage.Core
                         break;
                 }
 
-                var index = Items.FindIndex(x => x is CellDebugHeader y && y.DebugType == debugType);
+                var index = Items.FindIndex(x => x is CellDebugHeader y && y.DebugType == cell.DebugType);
                 Items.InsertRange(index + 1, newItems);
             }
+
+            cell.IsOpen = !cell.IsOpen;
         }
 
         IEnumerable<ICellDebug> GetAlertDebugItems()
