@@ -3,12 +3,41 @@ namespace ThePage.UnitTests
 {
     public static partial class BookDataFactory
     {
-        const string SingleBook =
+        const string SingleBookWithGenres =
             @"{
                 ""genres"": [
                     ""5eaeaf3940d0030017be787d"",
                     ""5eaeaf3940d0030017be7879""
                 ],
+                ""_id"": ""5eaeaf3c40d0030017be788c"",
+                ""title"": ""Book 1"",
+                ""author"": ""5eaeaf3c40d0030017be788b"",
+                ""isbn"": ""123456789"",
+                ""owned"": false,
+                ""read"": true,
+                ""pages"": 279
+            }";
+
+        const string SingleBookAuthor =
+            @"{
+                ""_id"":""5eaeaf3c40d0030017be788b"",
+                ""name"":""William Shakespeare""
+            }";
+
+        const string SingleBookGenres =
+            @"[{
+                ""_id"":""5eaeaf3940d0030017be787d"",
+                ""name"":""Fiction"",
+                ""__v"":0},
+            {
+                ""_id"":""5eaeaf3940d0030017be7879"",
+                ""name"":""Non-Fiction"",
+                ""__v"":0}
+            ]";
+
+        const string SingleBookWithoutGenres =
+            @"{
+                ""genres"": [],
                 ""_id"": ""5eaeaf3c40d0030017be788c"",
                 ""title"": ""Book 1"",
                 ""author"": ""5eaeaf3c40d0030017be788b"",

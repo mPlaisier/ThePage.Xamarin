@@ -20,14 +20,22 @@ namespace ThePage.UnitTests
 
         public static Book GetSingleBook()
         {
-            return JsonConvert.DeserializeObject<Book>(SingleBook);
+            return JsonConvert.DeserializeObject<Book>(SingleBookWithGenres);
         }
 
-        public static CellBook GetSingleCellBook()
+        public static CellBook GetSingleCellBookWith2Genres()
         {
             var book = GetSingleBook();
-            var author = AuthorDataFactory.GetSingleAuthor();
-            var genres = GenreDataFactory.GetListGenre4ElementsComplete();
+            var author = JsonConvert.DeserializeObject<Author>(SingleBookAuthor);
+            var genres = JsonConvert.DeserializeObject<List<Genre>>(SingleBookGenres);
+            return new CellBook(book, author, genres);
+        }
+
+        public static CellBook GetSingleCellBookWithoutGenres()
+        {
+            var book = GetSingleBook();
+            var author = JsonConvert.DeserializeObject<Author>(SingleBookAuthor);
+            var genres = new List<Genre>();
             return new CellBook(book, author, genres);
         }
 
