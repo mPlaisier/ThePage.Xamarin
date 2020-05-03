@@ -44,6 +44,7 @@ namespace ThePage.Core
 
         //Data
         BookNotFound,
+        CreateData,
         RemoveAllData,
 
         //BarcodeScanner

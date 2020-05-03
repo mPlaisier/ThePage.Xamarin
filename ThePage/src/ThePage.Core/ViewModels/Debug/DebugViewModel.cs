@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -108,6 +109,9 @@ namespace ThePage.Core
                     case EDebugItemType.BookNotFound:
                         BookNotFoundCall().Forget();
                         break;
+                    case EDebugItemType.CreateData:
+                        CreateTestData().Forget();
+                        break;
                     case EDebugItemType.RemoveAllData:
                         RemoveAllData().Forget();
                         break;
@@ -165,6 +169,8 @@ namespace ThePage.Core
 
             if (confirm)
             {
+                IsLoading = true;
+
                 var authors = await _thePageService.GetAllAuthors();
                 var genres = await _thePageService.GetAllGenres();
                 var books = await _thePageService.GetAllBooks();
@@ -183,6 +189,79 @@ namespace ThePage.Core
                 {
                     await _thePageService.DeleteBook(book);
                 }
+
+                IsLoading = false;
+            }
+        }
+
+        async Task CreateTestData()
+        {
+            var confirm = await _userInteraction.ConfirmAsync("This will remove all current data and create new data?");
+            if (confirm)
+            {
+                IsLoading = true;
+
+                //Remove all current data
+                await RemoveAllData();
+
+                //Create Genres and Authors
+                await CreateGenres();
+                await CreateAuthors();
+
+                //Fetch Data
+                var genres = await _thePageService.GetAllGenres();
+                var authors = await _thePageService.GetAllAuthors();
+
+                //Create books
+                await CreateBooks(genres, authors);
+
+                IsLoading = false;
+            }
+
+        }
+
+        async Task CreateGenres()
+        {
+            int amountOfGenres = 10;
+
+            for (int i = 0; i < amountOfGenres; i++)
+            {
+                await _thePageService.AddGenre(new Genre($"Genre {i + 1}"));
+            }
+        }
+
+        async Task CreateAuthors()
+        {
+            int amountOfAuthors = 10;
+            for (int i = 0; i < amountOfAuthors; i++)
+            {
+                await _thePageService.AddAuthor(new Author($"Author {i + 1}"));
+            }
+        }
+
+        async Task CreateBooks(List<Genre> genres, List<Author> authors)
+        {
+            var random = new Random();
+            int amountOfBooks = 25;
+            int minGenres = 0;
+            int maxGenres = 4;
+
+            for (int i = 0; i < amountOfBooks; i++)
+            {
+                var amountGenres = random.Next(minGenres, maxGenres);
+                var selectedgenres = new List<Genre>();
+                while (selectedgenres.Count < amountGenres)
+                {
+                    var genre = genres[random.Next(0, genres.Count() - 1)];
+                    if (!selectedgenres.Contains(genre))
+                        selectedgenres.Add(genre);
+                }
+
+                var author = authors[random.Next(0, authors.Count() - 1)];
+
+                var book = new Book($"Book {i + 1}", author.Id, selectedgenres.GetIdStrings(), "", false, true, random.Next(50, 500));
+
+                await _thePageService.AddBook(book);
             }
         }
 
@@ -283,6 +362,7 @@ namespace ThePage.Core
             return new List<ICellDebug>
             {
                new CellDebugItem("Book not found error", EDebugType.Data,EDebugItemType.BookNotFound),
+               new CellDebugItem("Create test data", EDebugType.Data, EDebugItemType.CreateData),
                new CellDebugItem("Remove all data", EDebugType.Data, EDebugItemType.RemoveAllData)
             };
         }
