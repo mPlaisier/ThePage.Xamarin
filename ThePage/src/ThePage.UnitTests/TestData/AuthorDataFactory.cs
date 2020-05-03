@@ -25,8 +25,8 @@ namespace ThePage.UnitTests
 
         public static CellAuthor GetSingleCellAuthor()
         {
-            var Author = GetSingleAuthor();
-            return new CellAuthor(Author);
+            var author = GetSingleAuthor();
+            return new CellAuthor(author);
         }
     }
 }

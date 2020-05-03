@@ -100,6 +100,8 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
+            IsLoading = true;
+
             _device.HideKeyboard();
 
             var book = BookBusinessLogic.CreateBookFromInput(Items);

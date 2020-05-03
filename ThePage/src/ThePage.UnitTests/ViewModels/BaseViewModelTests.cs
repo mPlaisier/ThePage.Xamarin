@@ -1,7 +1,9 @@
 using System;
 using Moq;
+using MvvmCross.Base;
 using MvvmCross.Navigation;
 using MvvmCross.Tests;
+using MvvmCross.Views;
 using ThePage.Core;
 
 namespace ThePage.UnitTests
@@ -21,6 +23,11 @@ namespace ThePage.UnitTests
         {
             base.AdditionalSetup();
 
+            //IMvxMainThreadAsyncDispatcher:
+            //Required creating MvxObservableCollection in the VM Initialize
+            var mockMainThreadAsyncDispatcher = new Mock<IMvxMainThreadAsyncDispatcher>();
+            Ioc.RegisterSingleton(mockMainThreadAsyncDispatcher.Object);
+
             MockNavigation = new Mock<IMvxNavigationService>();
             Ioc.RegisterSingleton(MockNavigation.Object);
 
@@ -32,6 +39,9 @@ namespace ThePage.UnitTests
 
             var mockDevice = new Mock<IDevice>();
             Ioc.RegisterSingleton(mockDevice.Object);
+
+            var mockOpenLibrary = new Mock<IOpenLibraryService>();
+            Ioc.RegisterSingleton(mockOpenLibrary.Object);
         }
 
         #endregion
