@@ -14,6 +14,7 @@ namespace ThePage.UnitTests
 
         protected Mock<IMvxNavigationService> MockNavigation { get; private set; }
         protected Mock<IThePageService> MockThePageService { get; private set; }
+        protected Mock<IUserInteraction> MockUserInteraction { get; private set; }
 
         #endregion
 
@@ -34,8 +35,8 @@ namespace ThePage.UnitTests
             MockThePageService = new Mock<IThePageService>();
             Ioc.RegisterSingleton(MockThePageService.Object);
 
-            var mockUserInteraction = new Mock<IUserInteraction>();
-            Ioc.RegisterSingleton(mockUserInteraction.Object);
+            MockUserInteraction = new Mock<IUserInteraction>();
+            Ioc.RegisterSingleton(MockUserInteraction.Object);
 
             var mockDevice = new Mock<IDevice>();
             Ioc.RegisterSingleton(mockDevice.Object);

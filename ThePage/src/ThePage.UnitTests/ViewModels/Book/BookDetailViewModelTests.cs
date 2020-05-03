@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Moq;
 using ThePage.Core;
 using Xunit;
 using static ThePage.Core.CellBookInput;
@@ -237,5 +238,56 @@ namespace ThePage.UnitTests.ViewModels.Book
                 Assert.Equal(isValid, item.IsValid);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void LoadingAndEditingToFalseAfterEdit(bool result)
+        {
+            //Arrange
+            PrepareAuthorAndGenreData();
+            MockThePageService
+               .Setup(x => x.UpdateBook(It.IsAny<Api.Book>()))
+               .Returns(() => result ? Task.FromResult(new Api.Book()) : Task.FromResult<Api.Book>(null));
+
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            _vm.Initialize();
+
+            //Set view as Edit so we get the Update button
+            _vm.EditBookCommand.Execute();
+
+            var cellBtn = _vm.Items.OfType<CellBookButton>().First();
+            cellBtn.ClickCommand.Execute();
+
+            //Assert
+            Assert.False(_vm.IsEditing);
+            Assert.False(_vm.IsLoading);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CheckLoadingAndEditingValueAfterDeleteCommand(bool result)
+        {
+            //Arrange
+            PrepareAuthorAndGenreData();
+            MockThePageService
+               .Setup(x => x.DeleteBook(It.IsAny<Api.Book>()))
+               .Returns(() => Task.FromResult(result));
+            MockUserInteraction
+                 .Setup(x => x.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                 .Returns(() => Task.FromResult(true));
+
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            _vm.Initialize();
+
+
+            //Delete btn
+            var cellBtn = _vm.Items.OfType<CellBookButton>().First();
+            cellBtn.ClickCommand.Execute();
+
+            //Assert
+            Assert.False(_vm.IsEditing);
+            Assert.Equal(result, _vm.IsLoading);
+        }
     }
 }
