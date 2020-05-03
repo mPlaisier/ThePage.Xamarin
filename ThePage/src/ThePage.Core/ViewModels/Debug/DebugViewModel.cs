@@ -163,9 +163,11 @@ namespace ThePage.Core
             await _thePageService.GetBook("5e4eca767f80d86dd7865ee8");
         }
 
-        async Task RemoveAllData()
+        async Task RemoveAllData(bool shouldConfirm = true)
         {
-            var confirm = await _userInteraction.ConfirmAsync("Remove all test data?");
+            var confirm = true;
+            if (shouldConfirm)
+                confirm = await _userInteraction.ConfirmAsync("Remove all test data?");
 
             if (confirm)
             {
@@ -202,7 +204,7 @@ namespace ThePage.Core
                 IsLoading = true;
 
                 //Remove all current data
-                await RemoveAllData();
+                await RemoveAllData(false);
 
                 //Create Genres and Authors
                 await CreateGenres();
