@@ -50,7 +50,7 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <EnableProguard>true</EnableProguard>
     <AndroidLinkMode>Full</AndroidLinkMode>
-    <AndroidLinkSkip>ThePage.Core;ThePage.Api</AndroidLinkSkip>
+    <AndroidLinkSkip>ThePage.Core;ThePage.Api;MvvmCross;MvvmCross.Plugins.Color;MvvmCross.Plugins.Color.Droid;MvvmCross.Plugins.Visibility;MvvmCross.Plugins.Visibility.Droid;MvvmCross.Droid.Support.V7.RecyclerView;MvvmCross.Droid.Support.V7.AppCompat;Newtonsoft.Json</AndroidLinkSkip>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
@@ -87,6 +87,7 @@
     <Compile Include="Services\Device.cs" />
     <Compile Include="Adapters\BookTemplateSelector.cs" />
     <Compile Include="Views\Genre\SelectGenreFragment.cs" />
+    <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -357,6 +358,22 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_chevron_down.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_chevron_left.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_chevron_right.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_chevron_up.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -399,6 +416,7 @@
     <Folder Include="Resources\drawable-mdpi\" />
     <Folder Include="Views\Genre\" />
     <Folder Include="Utils\" />
+    <Folder Include="Bindings\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -17,7 +19,7 @@ namespace ThePage.Core
 
         public override string Title => "Debug Menu";
 
-        public List<CellDebug> Items { get; internal set; }
+        public MvxObservableCollection<ICellDebug> Items { get; internal set; }
 
         MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
@@ -26,8 +28,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        private MvxCommand<CellDebug> _itemClickCommand;
-        public MvxCommand<CellDebug> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<CellDebug>(OnItemClick);
+        MvxCommand<ICellDebug> _itemClickCommand;
+        public MvxCommand<ICellDebug> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<ICellDebug>(OnItemClick);
 
         #endregion
 
@@ -58,40 +60,29 @@ namespace ThePage.Core
 
         void CreateMenuItems()
         {
-            //Alert
-            var debugTypeAlert = EDebugType.Alert;
-            Items = new List<CellDebug>
+            Items = new MvxObservableCollection<ICellDebug>
             {
-                new CellDebugHeader("Alerts",debugTypeAlert),
-                new CellDebugItem("Confirm OK", debugTypeAlert,EDebugItemType.ConfirmOk),
-                new CellDebugItem("Confirm answer", debugTypeAlert, EDebugItemType.ConfirmAnswer),
-                //new CellDebugItem("Confirm async", debugTypeAlert, EDebugItemType.ConfirmAsync),
-                new CellDebugItem("Alert",debugTypeAlert, EDebugItemType.Alert),
-                //new CellDebugItem("Alert async", debugTypeAlert, EDebugItemType.AlerAsync),
-                new CellDebugItem("Input ok", debugTypeAlert, EDebugItemType.InputOk),
-                //new CellDebugItem("Input Answer", debugTypeAlert, EDebugItemType.InputAnwser),
-                //new CellDebugItem("Input Async", debugTypeAlert, EDebugItemType.InputAsync),
-                new CellDebugItem("Confirm three buttons", debugTypeAlert, EDebugItemType.ConfirmThreeButtons),
-               // new CellDebugItem("Confirm three buttons async", debugTypeAlert, EDebugItemType.ConfirmThreeButtonsAsync),
-
-                new CellDebugHeader("Toast",EDebugType.Toast),
-               new CellDebugItem("Toast message", EDebugType.Toast,EDebugItemType.Toast),
-
-               new CellDebugHeader("Data", EDebugType.Data),
-               new CellDebugItem("Book not found error", EDebugType.Data,EDebugItemType.BookNotFound),
-
-                new CellDebugHeader("BarCode",EDebugType.BarcodeScanner),
-                new CellDebugItem("Open Scanner", EDebugType.BarcodeScanner,EDebugItemType.BarcodeScanner),
+                new CellDebugHeader("Alerts",EDebugType.Alert, false),
+                new CellDebugHeader("Toast",EDebugType.Toast)
             };
+
+            Items.AddRange(GetToastDebugItems());
+
+            Items.Add(new CellDebugHeader("Data", EDebugType.Data));
+            Items.AddRange(GetDataDebugItems());
+
+            Items.Add(new CellDebugHeader("BarCode", EDebugType.BarcodeScanner));
+            Items.AddRange(GetBarcodeDebugItems());
+
         }
 
-        void OnItemClick(CellDebug obj)
+        void OnItemClick(ICellDebug obj)
         {
-            //TODO add logic to open en close section
-            if (obj is CellDebugHeader)
-                return;
-
-            if (obj is CellDebugItem debug)
+            if (obj is CellDebugHeader cellHeader)
+            {
+                HandleHeaderClick(cellHeader);
+            }
+            else if (obj is CellDebugItem debug)
             {
                 switch (debug.ItemType)
                 {
@@ -114,9 +105,17 @@ namespace ThePage.Core
                     case EDebugItemType.Toast:
                         _userInteraction.ToastMessage("Custom message");
                         break;
+
                     case EDebugItemType.BookNotFound:
                         BookNotFoundCall().Forget();
                         break;
+                    case EDebugItemType.CreateData:
+                        CreateTestData().Forget();
+                        break;
+                    case EDebugItemType.RemoveAllData:
+                        RemoveAllData().Forget();
+                        break;
+
                     case EDebugItemType.BarcodeScanner:
                         StartBarcodeScanner();
                         break;
@@ -124,7 +123,6 @@ namespace ThePage.Core
                         break;
                 }
             }
-
         }
 
         #endregion
@@ -165,6 +163,110 @@ namespace ThePage.Core
             await _thePageService.GetBook("5e4eca767f80d86dd7865ee8");
         }
 
+        async Task RemoveAllData(bool shouldConfirm = true)
+        {
+            var confirm = true;
+            if (shouldConfirm)
+                confirm = await _userInteraction.ConfirmAsync("Remove all test data?");
+
+            if (confirm)
+            {
+                IsLoading = true;
+
+                var authors = await _thePageService.GetAllAuthors();
+                var genres = await _thePageService.GetAllGenres();
+                var books = await _thePageService.GetAllBooks();
+
+                foreach (var author in authors)
+                {
+                    await _thePageService.DeleteAuthor(author);
+                }
+
+                foreach (var genre in genres)
+                {
+                    await _thePageService.DeleteGenre(genre);
+                }
+
+                foreach (var book in books)
+                {
+                    await _thePageService.DeleteBook(book);
+                }
+
+                IsLoading = false;
+            }
+        }
+
+        async Task CreateTestData()
+        {
+            var confirm = await _userInteraction.ConfirmAsync("This will remove all current data and create new data?");
+            if (confirm)
+            {
+                IsLoading = true;
+
+                //Remove all current data
+                await RemoveAllData(false);
+
+                //Create Genres and Authors
+                await CreateGenres();
+                await CreateAuthors();
+
+                //Fetch Data
+                var genres = await _thePageService.GetAllGenres();
+                var authors = await _thePageService.GetAllAuthors();
+
+                //Create books
+                await CreateBooks(genres, authors);
+
+                IsLoading = false;
+            }
+
+        }
+
+        async Task CreateGenres()
+        {
+            int amountOfGenres = 10;
+
+            for (int i = 0; i < amountOfGenres; i++)
+            {
+                await _thePageService.AddGenre(new Genre($"Genre {i + 1}"));
+            }
+        }
+
+        async Task CreateAuthors()
+        {
+            int amountOfAuthors = 10;
+            for (int i = 0; i < amountOfAuthors; i++)
+            {
+                await _thePageService.AddAuthor(new Author($"Author {i + 1}"));
+            }
+        }
+
+        async Task CreateBooks(List<Genre> genres, List<Author> authors)
+        {
+            var random = new Random();
+            int amountOfBooks = 25;
+            int minGenres = 0;
+            int maxGenres = 4;
+
+            for (int i = 0; i < amountOfBooks; i++)
+            {
+                var amountGenres = random.Next(minGenres, maxGenres);
+                var selectedgenres = new List<Genre>();
+                while (selectedgenres.Count < amountGenres)
+                {
+                    var genre = genres[random.Next(0, genres.Count() - 1)];
+                    if (!selectedgenres.Contains(genre))
+                        selectedgenres.Add(genre);
+                }
+
+                var author = authors[random.Next(0, authors.Count() - 1)];
+
+                var book = new Book($"Book {i + 1}", author.Id, selectedgenres.GetIdStrings(), "", false, true, random.Next(50, 500));
+
+                await _thePageService.AddBook(book);
+            }
+        }
+
         #endregion
 
         #region BarcodeScanner
@@ -185,11 +287,96 @@ namespace ThePage.Core
             _isbnInteraction.Raise(request);
         }
 
-        #endregion
-
         public class GetIsbnCode
         {
             public Action<string> ISBNCallback { get; set; }
         }
+
+        #endregion
+
+        #region Private
+
+        void HandleHeaderClick(CellDebugHeader cell)
+        {
+            //Close section
+            if (cell.IsOpen)
+            {
+                var removeItems = Items.OfType<CellDebugItem>().Where(x => x.Type == cell.DebugType);
+                Items.RemoveRange(removeItems);
+            }
+            else
+            {
+                IEnumerable<ICellDebug> newItems = null;
+
+                switch (cell.DebugType)
+                {
+                    case EDebugType.Alert:
+                        newItems = GetAlertDebugItems();
+                        break;
+                    case EDebugType.Toast:
+                        newItems = GetToastDebugItems();
+                        break;
+                    case EDebugType.Data:
+                        newItems = GetDataDebugItems();
+                        break;
+                    case EDebugType.BarcodeScanner:
+                        newItems = GetBarcodeDebugItems();
+                        break;
+                    default:
+                        break;
+                }
+
+                var index = Items.FindIndex(x => x is CellDebugHeader y && y.DebugType == cell.DebugType);
+                Items.InsertRange(index + 1, newItems);
+            }
+
+            cell.IsOpen = !cell.IsOpen;
+        }
+
+        IEnumerable<ICellDebug> GetAlertDebugItems()
+        {
+            var list = new List<ICellDebug>(){
+                new CellDebugItem("Confirm OK", EDebugType.Alert, EDebugItemType.ConfirmOk),
+                new CellDebugItem("Confirm answer", EDebugType.Alert, EDebugItemType.ConfirmAnswer),
+                //new CellDebugItem("Confirm async", EDebugType.Alert, EDebugItemType.ConfirmAsync),
+                new CellDebugItem("Alert", EDebugType.Alert, EDebugItemType.Alert),
+                //new CellDebugItem("Alert async", EDebugType.Alert, EDebugItemType.AlerAsync),
+                new CellDebugItem("Input ok", EDebugType.Alert, EDebugItemType.InputOk),
+                //new CellDebugItem("Input Answer", EDebugType.Alert, EDebugItemType.InputAnwser),
+                //new CellDebugItem("Input Async", EDebugType.Alert, EDebugItemType.InputAsync),
+                new CellDebugItem("Confirm three buttons", EDebugType.Alert, EDebugItemType.ConfirmThreeButtons),
+               // new CellDebugItem("Confirm three buttons async", debugTypeAlert, EDebugItemType.ConfirmThreeButtonsAsync),
+            };
+
+            return list;
+        }
+
+        IEnumerable<ICellDebug> GetBarcodeDebugItems()
+        {
+            return new List<ICellDebug>
+            {
+               new CellDebugItem("Open Scanner", EDebugType.BarcodeScanner,EDebugItemType.BarcodeScanner)
+            };
+        }
+
+        IEnumerable<ICellDebug> GetDataDebugItems()
+        {
+            return new List<ICellDebug>
+            {
+               new CellDebugItem("Book not found error", EDebugType.Data,EDebugItemType.BookNotFound),
+               new CellDebugItem("Create test data", EDebugType.Data, EDebugItemType.CreateData),
+               new CellDebugItem("Remove all data", EDebugType.Data, EDebugItemType.RemoveAllData)
+            };
+        }
+
+        IEnumerable<ICellDebug> GetToastDebugItems()
+        {
+            return new List<ICellDebug>
+            {
+               new CellDebugItem("Toast message", EDebugType.Toast,EDebugItemType.Toast)
+            };
+        }
+
+        #endregion
     }
 }

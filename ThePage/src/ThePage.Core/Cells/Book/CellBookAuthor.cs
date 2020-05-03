@@ -52,6 +52,9 @@ namespace ThePage.Core
             Authors = authors;
             UpdateValidation = updateValidation;
             IsEdit = isEdit;
+
+            if (authors.IsNotNullAndHasItems())
+                SelectedAuthor = authors[0];
         }
 
         public CellBookAuthor(Author selectedAuthor, IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)

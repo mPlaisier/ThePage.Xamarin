@@ -1,7 +1,7 @@
 using System;
 namespace ThePage.Core
 {
-    public class CellDebugItem : CellDebug
+    public class CellDebugItem : ICellDebug
     {
         #region Properties
 
@@ -27,6 +27,7 @@ namespace ThePage.Core
 
     public enum EDebugItemType
     {
+        //Alert
         ConfirmOk,
         ConfirmAnswer,
         ConfirmAsync,
@@ -37,8 +38,16 @@ namespace ThePage.Core
         InputAsync,
         ConfirmThreeButtons,
         ConfirmThreeButtonsAsync,
+
+        //Toast
         Toast,
+
+        //Data
         BookNotFound,
+        CreateData,
+        RemoveAllData,
+
+        //BarcodeScanner
         BarcodeScanner
     }
 }

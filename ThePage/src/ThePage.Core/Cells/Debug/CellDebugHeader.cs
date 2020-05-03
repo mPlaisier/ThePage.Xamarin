@@ -1,15 +1,14 @@
 using System;
+using MvvmCross.Commands;
+using MvvmCross.ViewModels;
+
 namespace ThePage.Core
 {
-    public class CellDebugHeader : CellDebug
+    public class CellDebugHeader : BaseHeaderCell, ICellDebug
     {
         #region Properties
 
-        public string Title { get; }
-
         public EDebugType DebugType { get; }
-
-        public bool IsOpen { get; }
 
         #endregion
 

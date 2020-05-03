@@ -1,5 +1,5 @@
 using System;
-namespace ThePage.UnitTests
+namespace ThePage.UnitTests.BusinessLogic
 {
     public partial class BookBusinessLogicTests
     {
