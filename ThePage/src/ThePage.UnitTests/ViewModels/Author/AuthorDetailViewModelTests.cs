@@ -4,26 +4,26 @@ using Moq;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels.Author
 {
-    public class GenreDetailViewModelTests : BaseViewModelTests
+    public class AuthorDetailViewModelTests : BaseViewModelTests
     {
-        GenreDetailViewModel _vm;
+        AuthorDetailViewModel _vm;
 
         #region Constructor
 
-        public GenreDetailViewModelTests()
+        public AuthorDetailViewModelTests()
         {
             Setup();
 
-            _vm = Ioc.IoCConstruct<GenreDetailViewModel>();
+            _vm = Ioc.IoCConstruct<AuthorDetailViewModel>();
         }
 
         #endregion
 
         #region Setup
 
-        void LoadGenreDetailViewModel(GenreDetailParameter parameter)
+        void LoadViewModel(AuthorDetailParameter parameter)
         {
             _vm.Prepare(parameter);
             _vm.Initialize();
@@ -35,10 +35,10 @@ namespace ThePage.UnitTests.ViewModels.Genre
         [InlineData("Valid name", true)]
         [InlineData("", false)]
         [InlineData(null, false)]
-        public void GenreValidationOK(string name, bool isValid)
+        public void AuthorValidationOK(string name, bool isValid)
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
 
             //Execute
             _vm.TxtName = name;
@@ -48,10 +48,10 @@ namespace ThePage.UnitTests.ViewModels.Genre
         }
 
         [Fact]
-        public void GenreIsValidPropertyChangedTest()
+        public void AuthorIsValidPropertyChangedTest()
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
 
             //Execute
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
@@ -59,10 +59,10 @@ namespace ThePage.UnitTests.ViewModels.Genre
         }
 
         [Fact]
-        public void GenreViewEditIsDisabledAStart()
+        public void AuthorViewEditIsDisabledAStart()
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
 
             //Assert
             Assert.False(_vm.IsEditing);
@@ -75,12 +75,12 @@ namespace ThePage.UnitTests.ViewModels.Genre
         {
             //Arrange
             MockThePageService
-                .Setup(x => x.UpdateGenre(It.IsAny<Api.Genre>()))
-                .Returns(() => result ? Task.FromResult(new Api.Genre()) : Task.FromResult<Api.Genre>(null));
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+                .Setup(x => x.UpdateAuthor(It.IsAny<Api.Author>()))
+                .Returns(() => result ? Task.FromResult(new Api.Author()) : Task.FromResult<Api.Author>(null));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
 
             //Execute
-            _vm.UpdateGenreCommand.Execute();
+            _vm.UpdateAuthorCommand.Execute();
 
             //Assert
             Assert.False(_vm.IsLoading);

@@ -3,19 +3,19 @@ using Moq;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels.Author
 {
-    public class AddGenreViewModelTests : BaseViewModelTests
+    public class AddAuthorViewModelTests : BaseViewModelTests
     {
-        AddGenreViewModel _vm;
+        AddAuthorViewModel _vm;
 
         #region Constructor
 
-        public AddGenreViewModelTests()
+        public AddAuthorViewModelTests()
         {
             Setup();
 
-            _vm = Ioc.IoCConstruct<AddGenreViewModel>();
+            _vm = Ioc.IoCConstruct<AddAuthorViewModel>();
         }
 
         #endregion
@@ -24,7 +24,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         [InlineData("Valid name", true)]
         [InlineData("", false)]
         [InlineData(null, false)]
-        public void GenreValidationOK(string name, bool isValid)
+        public void AuthorValidationOK(string name, bool isValid)
         {
             //Setup
             _vm.TxtName = name;
@@ -34,7 +34,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         }
 
         [Fact]
-        public void GenreIsValidPropertyChangedTest()
+        public void AuthorIsValidPropertyChangedTest()
         {
             //Execute
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
@@ -44,14 +44,14 @@ namespace ThePage.UnitTests.ViewModels.Genre
         [Theory]
         [InlineData(true, true)]
         [InlineData(false, false)]
-        public void LoadingAddGenreSuccessful(bool result, bool isLoading)
+        public void LoadingAddAuthorSuccessful(bool result, bool isLoading)
         {
             MockThePageService
-                .Setup(x => x.AddGenre(It.IsAny<Api.Genre>()))
+                .Setup(x => x.AddAuthor(It.IsAny<Api.Author>()))
                 .Returns(() => Task.FromResult(result));
 
             _vm.TxtName = "";
-            _vm.AddGenreCommand.Execute();
+            _vm.AddAuthorCommand.Execute();
 
             //Execute
             Assert.Equal(isLoading, _vm.IsLoading);

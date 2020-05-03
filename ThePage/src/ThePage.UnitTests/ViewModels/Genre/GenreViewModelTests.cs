@@ -1,7 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Moq;
-using MvvmCross.Tests;
 using ThePage.Core;
 using Xunit;
 
@@ -9,23 +6,24 @@ namespace ThePage.UnitTests.ViewModels.Genre
 {
     public class GenreViewModelTests : BaseViewModelTests
     {
+        GenreViewModel _vm;
+
         #region Constructor
 
         public GenreViewModelTests()
         {
             Setup();
+
+            _vm = Ioc.IoCConstruct<GenreViewModel>();
         }
 
         #endregion
 
         #region Setup
 
-        GenreViewModel LoadViewModel()
+        void LoadViewModel()
         {
-            var vm = Ioc.IoCConstruct<GenreViewModel>();
-            vm.Refresh();
-
-            return vm;
+            _vm.Initialize();
         }
 
         #endregion
@@ -41,12 +39,12 @@ namespace ThePage.UnitTests.ViewModels.Genre
                 .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
 
             //Setup
-            var vm = LoadViewModel();
+            LoadViewModel();
 
             //Check
-            Assert.NotNull(vm.Genres);
-            Assert.NotEmpty(vm.Genres);
-            Assert.Equal(4, vm.Genres.Count);
+            Assert.NotNull(_vm.Genres);
+            Assert.NotEmpty(_vm.Genres);
+            Assert.Equal(4, _vm.Genres.Count);
         }
 
         [Fact]
@@ -58,30 +56,30 @@ namespace ThePage.UnitTests.ViewModels.Genre
                 .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
 
             //Setup
-            var vm = LoadViewModel();
+            LoadViewModel();
 
             //Check
-            Assert.NotNull(vm.Genres);
-            Assert.Empty(vm.Genres);
+            Assert.NotNull(_vm.Genres);
+            Assert.Empty(_vm.Genres);
         }
 
         [Fact]
         public void ShowNullGenresNoDataAvailable()
         {
             //Setup
-            var vm = LoadViewModel();
+            LoadViewModel();
 
             //Check
-            Assert.Null(vm.Genres);
+            Assert.Null(_vm.Genres);
         }
 
         [Fact]
         public void StopLoadingAfterRefresh()
         {
             //Setup
-            var vm = LoadViewModel();
+            LoadViewModel();
 
-            Assert.False(vm.IsLoading);
+            Assert.False(_vm.IsLoading);
         }
 
         #endregion

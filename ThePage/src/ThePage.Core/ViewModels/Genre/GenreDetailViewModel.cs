@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         public override string Title => "Genre Detail";
 
-        public CellGenre GenreCell { get; set; }
+        public CellGenre GenreCell { get; internal set; }
 
         public string LblName => "Name:";
 
