@@ -14,7 +14,7 @@ namespace ThePage.UnitTests.BusinessLogic
             //Setup
             var books = JsonConvert.DeserializeObject<List<Book>>(BookDataComplete);
             var authors = BookFactory.GetCompleteAuthorList();
-            var genres = GenreDataFactory.GetGenre4ElementsComplete();
+            var genres = GenreDataFactory.GetListGenre4ElementsComplete();
 
             //Execute
             var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
@@ -31,7 +31,7 @@ namespace ThePage.UnitTests.BusinessLogic
             //Setup
             var books = JsonConvert.DeserializeObject<List<Book>>(BookDataEmpty);
             var authors = BookFactory.GetCompleteAuthorList();
-            var genres = GenreDataFactory.GetGenre4ElementsComplete();
+            var genres = GenreDataFactory.GetListGenre4ElementsComplete();
 
             //Execute
             var bookCell = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
@@ -47,7 +47,7 @@ namespace ThePage.UnitTests.BusinessLogic
             //Setup
             List<Book> books = null;
             var authors = BookFactory.GetCompleteAuthorList();
-            var genres = GenreDataFactory.GetGenre4ElementsComplete();
+            var genres = GenreDataFactory.GetListGenre4ElementsComplete();
 
             //Execute
             var bookCells = BookBusinessLogic.BooksToCellBooks(books, authors, genres);

@@ -8,22 +8,25 @@ namespace ThePage.UnitTests.ViewModels.Genre
 {
     public class GenreDetailViewModelTests : BaseViewModelTests
     {
+        GenreDetailViewModel _vm;
+
         #region Constructor
 
         public GenreDetailViewModelTests()
         {
             Setup();
+
+            _vm = Ioc.IoCConstruct<GenreDetailViewModel>();
         }
 
         #endregion
 
         #region Setup
 
-        GenreDetailViewModel LoadViewModel()
+        void LoadGenreDetailViewModel(GenreDetailParameter parameter)
         {
-            var vm = Ioc.IoCConstruct<GenreDetailViewModel>();
-
-            return vm;
+            _vm.Prepare(parameter);
+            _vm.Initialize();
         }
 
         #endregion
@@ -35,34 +38,34 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void GenreValidationOK(string name, bool isValid)
         {
             //Arrange
-            var vm = LoadViewModel();
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
 
             //Execute
-            vm.TxtName = name;
+            _vm.TxtName = name;
 
             //Check
-            Assert.Equal(isValid, vm.IsValid);
+            Assert.Equal(isValid, _vm.IsValid);
         }
 
         [Fact]
         public void GenreIsValidPropertyChangedTest()
         {
             //Arrange
-            var vm = LoadViewModel();
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
 
             //Execute
-            Assert.PropertyChanged(vm, nameof(vm.IsValid),
-                () => vm.TxtName = "input");
+            Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
+                () => _vm.TxtName = "input");
         }
 
         [Fact]
-        public void GenreViewEditIsDisabledAtInit()
+        public void GenreViewEditIsDisabledAStart()
         {
             //Arrange
-            var vm = LoadViewModel();
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
 
             //Assert
-            Assert.False(vm.IsEditing);
+            Assert.False(_vm.IsEditing);
         }
 
         [Theory]
@@ -74,16 +77,16 @@ namespace ThePage.UnitTests.ViewModels.Genre
             MockThePageService
                 .Setup(x => x.UpdateGenre(It.IsAny<Api.Genre>()))
                 .Returns(() => result ? Task.FromResult(new Api.Genre()) : Task.FromResult<Api.Genre>(null));
-            var vm = LoadViewModel();
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
 
             //Execute
-            vm.TxtName = "";
-            vm.GenreCell = new CellGenre(new Api.Genre());
-            vm.UpdateGenreCommand.Execute();
+            _vm.TxtName = "";
+            _vm.GenreCell = new CellGenre(new Api.Genre());
+            _vm.UpdateGenreCommand.Execute();
 
             //Assert
-            Assert.False(vm.IsLoading);
-            Assert.False(vm.IsEditing);
+            Assert.False(_vm.IsLoading);
+            Assert.False(_vm.IsEditing);
         }
     }
 }

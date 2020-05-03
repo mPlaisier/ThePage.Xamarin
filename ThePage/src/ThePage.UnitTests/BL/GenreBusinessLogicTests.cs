@@ -11,7 +11,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void CheckFilledListGenreConvertedToCellGenres()
         {
             //Create List<Genre>
-            var genres = GenreDataFactory.GetGenre4ElementsComplete();
+            var genres = GenreDataFactory.GetListGenre4ElementsComplete();
 
             //Execute
             var cellGenres = GenreBusinessLogic.GenresToCellGenres(genres);
@@ -26,7 +26,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void CheckEmptyListGenreConvertedToCellGenres()
         {
             //Create List<Genre>
-            var genres = GenreDataFactory.GetGenreEmpty();
+            var genres = GenreDataFactory.GetListGenreEmpty();
 
             //Execute
             var cellGenres = GenreBusinessLogic.GenresToCellGenres(genres);

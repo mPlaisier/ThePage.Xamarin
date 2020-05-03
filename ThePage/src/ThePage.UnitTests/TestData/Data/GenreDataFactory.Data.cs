@@ -3,7 +3,13 @@ namespace ThePage.UnitTests
 {
     public static partial class GenreDataFactory
     {
-        const string Genre4ElementsComplete =
+        const string SingleGenre =
+            @"{
+                ""_id"":""5e7fc0bbbc363c52e7d115ce"",
+                ""name"":""Fiction""
+            }";
+
+        const string ListGenre4ElementsComplete =
            @"[{
                 ""_id"":""5e7fc0bbbc363c52e7d115ce"",
                 ""name"":""Fiction"",
@@ -23,6 +29,6 @@ namespace ThePage.UnitTests
                 ""__v"":0}
             ]";
 
-        const string GenreDataEmpty = @"[]";
+        const string ListGenreDataEmpty = @"[]";
     }
 }

@@ -38,7 +38,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
             //Arrange
             MockThePageService
                 .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetGenre4ElementsComplete()));
+                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
 
             //Setup
             var vm = LoadViewModel();
@@ -55,7 +55,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
             //Arrange
             MockThePageService
                 .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetGenreEmpty()));
+                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
 
             //Setup
             var vm = LoadViewModel();
