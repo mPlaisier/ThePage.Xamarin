@@ -65,9 +65,9 @@ namespace ThePage.Core
 
         #endregion
 
-        #region Public
+        #region Private
 
-        public async Task Refresh()
+        async Task Refresh()
         {
             IsLoading = true;
 
