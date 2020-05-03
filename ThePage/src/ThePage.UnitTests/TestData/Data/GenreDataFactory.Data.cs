@@ -1,10 +1,16 @@
 using System;
 namespace ThePage.UnitTests
 {
-    public partial class GenreBusinessLogicTests
+    public static partial class GenreDataFactory
     {
-        public const string GenreDataComplete =
-            @"[{
+        const string SingleGenre =
+            @"{
+                ""_id"":""5e7fc0bbbc363c52e7d115ce"",
+                ""name"":""Fiction""
+            }";
+
+        const string ListGenre4ElementsComplete =
+           @"[{
                 ""_id"":""5e7fc0bbbc363c52e7d115ce"",
                 ""name"":""Fiction"",
                 ""__v"":0},
@@ -23,6 +29,6 @@ namespace ThePage.UnitTests
                 ""__v"":0}
             ]";
 
-        const string GenreDataEmpty = @"[]";
+        const string ListGenreDataEmpty = @"[]";
     }
 }
