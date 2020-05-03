@@ -1,0 +1,6 @@
+---
+  dataSource: "issues"
+  prefix: "Release"
+  onlyMilestones: false
+  groupBy: "label"
+  changelogFilename: "CHANGELOG.md"
