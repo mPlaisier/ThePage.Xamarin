@@ -8,9 +8,9 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<CellGenre> GenresToCellGenres(List<Genre> genreApi)
+        public static List<CellGenreSelect> GenresToCellGenres(List<Genre> genreApi)
         {
-            return genreApi?.Select(genre => new CellGenre(genre)).ToList();
+            return genreApi?.Select(genre => new CellGenreSelect(genre)).ToList();
         }
 
         public static IEnumerable<Genre> GetGenresFromString(IEnumerable<string> bookGenres, IEnumerable<Genre> genres)

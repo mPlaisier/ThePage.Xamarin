@@ -213,22 +213,24 @@ namespace ThePage.Core
             var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
             var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
-
-            foreach (var item in buttons)
-                item.IsValid = isValid;
+            buttons.ForEach(x => x.IsValid = isValid);
         }
 
         async Task AddGenreAction()
         {
             var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
 
-            if (genre != null)
+            if (genres != null)
             {
-                var genreItem = new CellBookGenreItem(genre, RemoveGenre);
+                //Remove all old genres:
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
+
+                var genreItems = new List<CellBookGenreItem>();
+                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre)));
 
                 var index = Items.FindIndex(x => x is CellBookAddGenre);
-                Items.Insert(index, genreItem);
+                Items.InsertRange(index, genreItems);
             }
         }
 

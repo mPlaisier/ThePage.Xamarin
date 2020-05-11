@@ -7,7 +7,14 @@ using ThePage.Droid.Views;
 
 namespace ThePage.Droid
 {
-    [MvxFragmentPresentation(typeof(MainContainerViewModel), Resource.Id.content_frame, addToBackStack: true)]
+    [MvxFragmentPresentation(typeof(MainContainerViewModel),
+        Resource.Id.content_frame,
+        AddToBackStack = true,
+        EnterAnimation = Resource.Animation.pull_in_down,
+        ExitAnimation = Resource.Animation.push_out_up,
+        PopEnterAnimation = Resource.Animation.pull_in_up,
+        PopExitAnimation = Resource.Animation.push_out_down
+    )]
     public class AddAuthorFragment : BaseFragment<AddAuthorViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
     {
         #region Properties

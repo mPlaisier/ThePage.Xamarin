@@ -4,6 +4,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using PropertyChanged;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public CellGenre Genre { get; }
+        public Genre Genre { get; }
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailParameter(CellGenre genre)
+        public GenreDetailParameter(Genre genre)
         {
             Genre = genre;
         }
@@ -37,7 +38,7 @@ namespace ThePage.Core
 
         public override string Title => "Genre Detail";
 
-        public CellGenre GenreCell { get; internal set; }
+        public Genre Genre { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -87,9 +88,9 @@ namespace ThePage.Core
 
         public override void Prepare(GenreDetailParameter parameter)
         {
-            GenreCell = parameter.Genre;
+            Genre = parameter.Genre;
 
-            TxtName = GenreCell.Genre.Name;
+            TxtName = Genre.Name;
             IsEditing = false;
         }
 
@@ -114,9 +115,9 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            GenreCell.Genre.Name = TxtName;
+            Genre.Name = TxtName;
 
-            var genre = await _thePageService.UpdateGenre(GenreCell.Genre);
+            var genre = await _thePageService.UpdateGenre(Genre);
             if (genre != null)
                 _userInteraction.ToastMessage("Genre updated");
             else
@@ -135,7 +136,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteGenre(GenreCell.Genre);
+                var result = await _thePageService.DeleteGenre(Genre);
 
                 if (result)
                 {

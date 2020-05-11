@@ -1,4 +1,3 @@
-using System;
 using MvvmCross.Base;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using MvvmCross.ViewModels;
@@ -12,7 +11,14 @@ namespace ThePage.Droid
 {
     public class BookFragment
     {
-        [MvxFragmentPresentation(typeof(MainContainerViewModel), Resource.Id.content_frame, AddToBackStack = true)]
+        [MvxFragmentPresentation(typeof(MainContainerViewModel),
+            Resource.Id.content_frame,
+            AddToBackStack = true,
+            EnterAnimation = Resource.Animation.pull_in_right,
+            ExitAnimation = Resource.Animation.push_out_left,
+            PopEnterAnimation = Resource.Animation.pull_in_left,
+            PopExitAnimation = Resource.Animation.push_out_right
+        )]
         public class AuthorFragment : BaseFragment<BookViewModel>
         {
             GetIsbnCode _getIsbnCode;
