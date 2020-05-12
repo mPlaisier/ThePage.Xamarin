@@ -88,6 +88,7 @@
     <Compile Include="Adapters\BookTemplateSelector.cs" />
     <Compile Include="Views\Genre\SelectGenreFragment.cs" />
     <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
+    <Compile Include="Views\Author\AuthorSelectFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -423,6 +424,18 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\anim\push_out_up.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_delete.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_author_select.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_author_select_item.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

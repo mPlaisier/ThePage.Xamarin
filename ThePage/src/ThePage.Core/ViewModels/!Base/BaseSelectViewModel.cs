@@ -76,23 +76,13 @@ namespace ThePage.Core
 
         public virtual IMvxCommand CommandAddItem { get; }
 
+        public abstract IMvxCommand CommandConfirm { get; }
+
         #endregion
 
         #region Public
 
         public abstract Task LoadData();
-
-        #endregion
-
-        #region Properties
-
-
-
-        #endregion
-
-        #region Commands
-
-        public abstract IMvxCommand CommandConfirm { get; }
 
         #endregion
     }

@@ -47,6 +47,15 @@ namespace ThePage.Core
             _navigationService.Close(this, cell.Item);
         });
 
+        IMvxCommand _commandAddItem;
+        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        {
+            var result = await _navigationService.Navigate<AddAuthorViewModel, bool>();
+            if (result)
+                await LoadData();
+
+        });
+
         #endregion
 
         #region Constructor
@@ -83,8 +92,8 @@ namespace ThePage.Core
 
             var authors = await _thePageService.GetAllAuthors();
 
-            var list = new List<CellAuthorSelect>();
-            authors.ForEach(x => list.Add(new CellAuthorSelect(x, x == SelectedItem)));
+            Items = new List<CellAuthorSelect>();
+            authors.ForEach(x => Items.Add(new CellAuthorSelect(x, x == SelectedItem)));
 
             IsLoading = false;
         }

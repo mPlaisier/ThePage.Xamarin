@@ -54,7 +54,6 @@ namespace ThePage.Core
 
         #region Commands
 
-        //EditBookCommand
         IMvxCommand _editbookCommand;
         public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(ToggleEditValue);
 
@@ -165,14 +164,12 @@ namespace ThePage.Core
 
             if (genres != null)
             {
-                //Remove all old genres:
                 Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
 
                 var genreItems = new List<CellBookGenreItem>();
-                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre)));
+                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
 
                 var index = Items.FindIndex(x => x is CellBookAddGenre);
-
                 Items.InsertRange(index, genreItems);
             }
         }
@@ -182,7 +179,7 @@ namespace ThePage.Core
             Items = new MvxObservableCollection<ICellBook>
             {
                 new CellBookTextView("Title",BookCell.Book.Title, EBookInputType.Title,UpdateValidation),
-                new CellBookAuthor(BookCell.Author, _device,_allAuthors, UpdateValidation),
+                new CellBookAuthor(BookCell.Author,_navigation, _device, UpdateValidation),
                 new CellBookTitle("Genres")
             };
 

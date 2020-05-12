@@ -1,10 +1,11 @@
 using System;
 using MvvmCross.Commands;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class CellBookGenreItem : ICellBook
+    public class CellBookGenreItem : CellBookInput, ICellBook
     {
         Action<CellBookGenreItem> _removeGenre;
 
@@ -19,14 +20,19 @@ namespace ThePage.Core
         IMvxCommand _DeleteCommand;
         public IMvxCommand DeleteCommand => _DeleteCommand = _DeleteCommand ?? new MvxCommand(() => _removeGenre?.Invoke(this));
 
+        public override bool IsValid => true;
+
+        public override EBookInputType InputType => EBookInputType.Genre;
+
         #endregion
 
         #region Constructor
 
-        public CellBookGenreItem(Genre genre, Action<CellBookGenreItem> removeGenre)
+        public CellBookGenreItem(Genre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
         {
             Genre = genre;
             _removeGenre = removeGenre;
+            IsEdit = isEdit;
         }
 
         #endregion
