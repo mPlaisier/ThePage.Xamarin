@@ -33,18 +33,4 @@ namespace ThePage.Core
 
         #endregion
     }
-
-    public class CellBookBaseEdit : MvxNotifyPropertyChanged, ICellBook
-    {
-        #region Properties
-
-        bool _isEdit;
-        public bool IsEdit
-        {
-            get => _isEdit;
-            set => SetProperty(ref _isEdit, value);
-        }
-
-        #endregion
-    }
 }

@@ -3,7 +3,7 @@ namespace ThePage.Core
 {
     public class CellBookTextView : CellBookInput
     {
-        bool _isRequired;
+        protected bool _isRequired;
 
         #region Properties
 
@@ -19,8 +19,6 @@ namespace ThePage.Core
                     UpdateValidation?.Invoke();
             }
         }
-
-        public int TxtNumberInput => ConvertToNumber();
 
         public override bool IsValid => CheckValidation();
 
@@ -54,27 +52,45 @@ namespace ThePage.Core
             return !_isRequired ? true : !string.IsNullOrWhiteSpace(TxtInput);
         }
 
-        int ConvertToNumber()
-        {
-            int.TryParse(TxtInput, out var number);
-            return number;
-        }
-
         #endregion
     }
 
     public class CellBookNumberTextView : CellBookTextView
     {
+        #region Properties
+
+        public int TxtNumberInput => ConvertToNumber();
+
+        public override bool IsValid => CheckValidation();
+
+        #endregion
         #region Constructor
 
         public CellBookNumberTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
             : base(lblTitle, inputType, updateValidation, isRequired, isEdit)
         {
+            _isRequired = isRequired;
         }
 
         public CellBookNumberTextView(string lblTitle, string value, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
             : base(lblTitle, value, inputType, updateValidation, isRequired, isEdit)
         {
+        }
+
+        #endregion
+
+        #region Private
+
+        int ConvertToNumber()
+        {
+            var parseOk = int.TryParse(TxtInput, out var number);
+
+            return parseOk ? number : -1;
+        }
+
+        bool CheckValidation()
+        {
+            return !_isRequired ? true : TxtNumberInput > -1;
         }
 
         #endregion
