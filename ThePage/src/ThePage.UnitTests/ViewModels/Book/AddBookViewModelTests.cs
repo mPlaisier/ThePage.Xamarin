@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using ThePage.Core;
 using Xunit;
+using Xunit.Extensions;
 using static ThePage.Core.CellBookInput;
 
 namespace ThePage.UnitTests.ViewModels.Book
@@ -164,15 +166,8 @@ namespace ThePage.UnitTests.ViewModels.Book
                 Assert.False(item.IsValid);
         }
 
-        [Theory]
-        [InlineData("Valid name", "100", true)]
-        [InlineData("", "", false)]
-        [InlineData(null, null, false)]
-        [InlineData("Valid name", "", false)]
-        [InlineData("", "100", false)]
-        [InlineData(null, "100", false)]
-        [InlineData("Valid name", null, false)]
-        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, string pages, bool isValid)
+        [Theory, MemberData(nameof(InputDataForBooks))]
+        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Api.Author author, string pages, bool isValid)
         {
             //Setup
             PrepareAuthorAndGenreData();
@@ -181,6 +176,9 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Execute
             var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
             cellTitle.TxtInput = title;
+
+            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
+            cellAuthor.Item = author;
 
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = pages;
@@ -208,6 +206,9 @@ namespace ThePage.UnitTests.ViewModels.Book
             var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
             cellTitle.TxtInput = "Valid Name";
 
+            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
+            cellAuthor.Item = AuthorDataFactory.GetSingleAuthor();
+
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = "500";
 
@@ -218,5 +219,20 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Assert
             Assert.Equal(result, _vm.IsLoading);
         }
+
+        public static IEnumerable<object[]> InputDataForBooks =>
+               new[]
+               {
+                new object[] {"Valid name",  AuthorDataFactory.GetSingleAuthor(), "100", true },
+                new object[] { "", null, "", false },
+                new object[] { null, null, null, false },
+                new object[] { "Valid name", null, "", false },
+                new object[] { "", null, "100", false },
+                new object[] { null, null, "100", false },
+                new object[] { "Valid name", null, null, false },
+                new object[] { null, AuthorDataFactory.GetSingleAuthor(), null, false },
+                new object[] { "Valid name", AuthorDataFactory.GetSingleAuthor(), null, false },
+                new object[] { null, AuthorDataFactory.GetSingleAuthor(), "100", false }
+        };
     }
 }
