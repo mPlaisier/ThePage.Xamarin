@@ -30,6 +30,9 @@
     <Folder Include="Cells\Book\" />
     <Folder Include="Converters\" />
     <Folder Include="Cells\Base\" />
+    <Folder Include="Cells\Author\" />
+    <Folder Include="Cells\Genre\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

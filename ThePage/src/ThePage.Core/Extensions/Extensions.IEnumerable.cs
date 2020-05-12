@@ -8,7 +8,7 @@ namespace ThePage.Core
     public static class ExtensionsIEnumerable
     {
         /// <summary>
-        /// Determines whether is collection is null or contains no elements.
+        /// Determines whether the <paramref name="enumerable"/> is null or contains no elements.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerable"></param>
@@ -23,6 +23,12 @@ namespace ThePage.Core
             return enumerable is ICollection<T> collection ? collection.Count < 1 : !enumerable.Any();
         }
 
+        /// <summary>
+        /// Determines whether the collection is not null and contains elements.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <returns></returns>
         public static bool IsNotNullAndHasItems<T>(this IEnumerable<T> enumerable)
         {
             if (enumerable == null)
@@ -31,6 +37,25 @@ namespace ThePage.Core
             /* If this is a list, use the Count property for efficiency. 
             * The Count property is O(1) while IEnumerable.Count() is O(N). */
             return enumerable is ICollection<T> collection ? collection.Count > 0 : enumerable.Any();
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> @enumerable, Action<T> mapFunction)
+        {
+            if (enumerable.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(enumerable));
+
+            if (enumerable is List<T> collection)
+                collection.ForEach(mapFunction);
+            else
+            {
+                foreach (var item in @enumerable)
+                    mapFunction(item);
+            }
+        }
+
+        public static void ForEachType<T, S>(this IEnumerable<T> @enumerable, Action<S> mapFunction) where S : T
+        {
+            enumerable.OfType<S>().ForEach(mapFunction);
         }
 
         /// <summary>
@@ -82,6 +107,18 @@ namespace ThePage.Core
             //Error: Collection was modified; enumeration operation may not execute
             foreach (var item in enumerable.ToList())
                 collection.Remove(item);
+        }
+
+
+        public static void InsertRange<T>(this ObservableCollection<T> collection, int index, IEnumerable<T> enumerable)
+        {
+            int currentIndex = index;
+            var changedItems = collection is List<T> ? (List<T>)enumerable : new List<T>(enumerable);
+            foreach (var i in changedItems)
+            {
+                collection.Insert(currentIndex, i);
+                currentIndex++;
+            }
         }
     }
 }

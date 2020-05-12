@@ -1,8 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:local="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:clickable="true" 
-    local:MvxBind="Text Genre.Name;Click DeleteCommand;"/>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:local="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:clickable="true"
+	android:focusableInTouchMode="true"
+	android:padding="4dp"
+    local:MvxBind="Click If(IsEdit, DeleteCommand)">
+
+	<TextView
+		android:id="@+id/txtInput"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		local:layout_constraintTop_toBottomOf="@+id/lblAuthor"
+		local:layout_constraintBottom_toTopOf="@+id/lblValue"
+		local:layout_constraintStart_toStartOf="parent"
+		local:layout_constraintWidth_percent="0.5"
+		local:MvxBind="Text Genre.Name;DrawableRight If(IsEdit, 'ic_delete', '')"/>
+
+</android.support.constraint.ConstraintLayout>

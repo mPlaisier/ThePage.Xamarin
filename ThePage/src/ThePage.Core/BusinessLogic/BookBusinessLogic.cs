@@ -26,7 +26,7 @@ namespace ThePage.Core
         {
             var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
 
-            var author = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().SelectedAuthor;
+            var author = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().Item;
 
             var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre);
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -17,7 +18,7 @@ namespace ThePage.Core
 
         public override string Title => "Genres";
 
-        public List<CellGenre> Genres { get; set; }
+        public List<Genre> Genres { get; set; }
 
         #endregion
 
@@ -33,8 +34,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<CellGenre> _itemClickCommand;
-        public IMvxCommand<CellGenre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellGenre>(async (item) =>
+        IMvxCommand<Genre> _itemClickCommand;
+        public IMvxCommand<Genre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Genre>(async (item) =>
         {
             var result = await _navigation.Navigate<GenreDetailViewModel, GenreDetailParameter, bool>(new GenreDetailParameter(item));
             if (result)
@@ -71,8 +72,7 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var genres = await _thePageService.GetAllGenres();
-            Genres = GenreBusinessLogic.GenresToCellGenres(genres);
+            Genres = await _thePageService.GetAllGenres();
 
             IsLoading = false;
         }

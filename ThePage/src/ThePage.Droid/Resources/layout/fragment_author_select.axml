@@ -5,29 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabConfirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_check"
-        android:tint="@android:color/white"
-        android:layout_margin="8dp"
-        local:layout_constraintBottom_toBottomOf="parent"
-        local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Click CommandConfirm"/>
-    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white"
         android:layout_margin="8dp"
-        local:layout_constraintBottom_toTopOf="@+id/fabConfirm"
+        local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Click CommandAddItem"/>
     <MvxRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        local:MvxItemTemplate="@layout/cell_genre_select_item"
+        local:MvxItemTemplate="@layout/cell_author_select_item"
         local:MvxBind="ItemsSource Items;ItemClick CommandSelectItem;" />
     <FrameLayout
         android:layout_width="match_parent"

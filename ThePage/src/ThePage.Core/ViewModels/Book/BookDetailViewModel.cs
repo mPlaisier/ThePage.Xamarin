@@ -42,7 +42,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public MvxObservableCollection<ICellBook> Items { get; set; }
+        public MvxObservableCollection<ICellBook> Items { get; set; } = new MvxObservableCollection<ICellBook>();
 
         public override string Title => BookCell.Book != null ? BookCell.Book.Title : "Book detail";
 
@@ -54,7 +54,6 @@ namespace ThePage.Core
 
         #region Commands
 
-        //EditBookCommand
         IMvxCommand _editbookCommand;
         public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(ToggleEditValue);
 
@@ -161,14 +160,17 @@ namespace ThePage.Core
                 return;
 
             var selectedGenres = Items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_allGenres, selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
 
-            if (genre != null)
+            if (genres != null)
             {
-                var genreItem = new CellBookGenreItem(genre, RemoveGenre);
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
+
+                var genreItems = new List<CellBookGenreItem>();
+                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
 
                 var index = Items.FindIndex(x => x is CellBookAddGenre);
-                Items.Insert(index, genreItem);
+                Items.InsertRange(index, genreItems);
             }
         }
 
@@ -177,7 +179,7 @@ namespace ThePage.Core
             Items = new MvxObservableCollection<ICellBook>
             {
                 new CellBookTextView("Title",BookCell.Book.Title, EBookInputType.Title,UpdateValidation),
-                new CellBookAuthor(BookCell.Author, _device,_allAuthors, UpdateValidation),
+                new CellBookAuthor(BookCell.Author,_navigation, _device, UpdateValidation),
                 new CellBookTitle("Genres")
             };
 
@@ -201,8 +203,8 @@ namespace ThePage.Core
             var lstInput = Items.OfType<CellBookInput>().ToList();
             var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
-            foreach (var item in Items.OfType<CellBookButton>())
-                item.IsValid = isValid;
+            Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
+
         }
 
         void RemoveGenre(CellBookGenreItem obj)

@@ -149,7 +149,7 @@ namespace ThePage.Core
             Items = new MvxObservableCollection<ICellBook>
             {
                 new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
-                new CellBookAuthor(_device,_authors, UpdateValidation,true),
+                new CellBookAuthor(_navigation, _device, UpdateValidation,true),
                 new CellBookTitle("Genres"),
                 new CellBookAddGenre(() => AddGenreAction().Forget()),
                 new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
@@ -192,7 +192,7 @@ namespace ThePage.Core
             Items = new MvxObservableCollection<ICellBook>
                 {
                     new CellBookTextView("Title",_olBook.Title, EBookInputType.Title,UpdateValidation,true, true),
-                    new CellBookAuthor(author, _device,_authors, UpdateValidation,true),
+                    new CellBookAuthor(_navigation, _device, UpdateValidation,true),
                     new CellBookTitle("Genres"),
                     new CellBookAddGenre(() => AddGenreAction().Forget()),
                     new CellBookNumberTextView("Pages", _olBook.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true,true),
@@ -213,22 +213,24 @@ namespace ThePage.Core
             var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
             var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
-
-            foreach (var item in buttons)
-                item.IsValid = isValid;
+            buttons.ForEach(x => x.IsValid = isValid);
         }
 
         async Task AddGenreAction()
         {
             var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genre = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, Genre>(new SelectedGenreParameters(_genres, selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
 
-            if (genre != null)
+            if (genres != null)
             {
-                var genreItem = new CellBookGenreItem(genre, RemoveGenre);
+                //Remove all old genres:
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
+
+                var genreItems = new List<CellBookGenreItem>();
+                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
 
                 var index = Items.FindIndex(x => x is CellBookAddGenre);
-                Items.Insert(index, genreItem);
+                Items.InsertRange(index, genreItems);
             }
         }
 

@@ -22,10 +22,10 @@ namespace ThePage.UnitTests
             return JsonConvert.DeserializeObject<Genre>(SingleGenre);
         }
 
-        public static CellGenre GetSingleCellGenre()
+        public static CellGenreSelect GetSingleCellGenre()
         {
             var genre = GetSingleGenre();
-            return new CellGenre(genre);
+            return new CellGenreSelect(genre);
         }
     }
 }

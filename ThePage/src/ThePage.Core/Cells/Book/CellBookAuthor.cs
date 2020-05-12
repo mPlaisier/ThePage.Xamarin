@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -8,26 +10,24 @@ namespace ThePage.Core
     public class CellBookAuthor : CellBookInput
     {
         readonly IDevice _device;
+        readonly IMvxNavigationService _navigation;
 
         #region Properties
 
         public string LblAuthor => "Author";
 
-        List<Author> _authors;
-        public List<Author> Authors
+        Author _item;
+        public Author Item
         {
-            get => _authors;
-            set => SetProperty(ref _authors, value);
+            get => _item;
+            set
+            {
+                if (SetProperty(ref _item, value))
+                    UpdateValidation?.Invoke();
+            }
         }
 
-        Author _selectedAuthor;
-        public Author SelectedAuthor
-        {
-            get => _selectedAuthor;
-            set => SetProperty(ref _selectedAuthor, value);
-        }
-
-        public override bool IsValid => SelectedAuthor != null;
+        public override bool IsValid => Item != null;
 
         public override EBookInputType InputType => EBookInputType.Author;
 
@@ -35,36 +35,40 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<Author> _itemSelectedCommand;
-        public IMvxCommand<Author> ItemSelectedCommand => _itemSelectedCommand ??= new MvxCommand<Author>((authorCell) =>
-        {
-            _device.HideKeyboard();
-            SelectedAuthor = authorCell;
-        });
+        IMvxCommand _commandSelectItem;
+        public IMvxCommand CommandSelectItem => _commandSelectItem ??= new MvxCommand(() => HandleSelectItem().Forget());
 
         #endregion
 
         #region Constructor
 
-        public CellBookAuthor(IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)
+        public CellBookAuthor(IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
         {
             _device = device;
-            Authors = authors;
+            _navigation = navigation;
             UpdateValidation = updateValidation;
             IsEdit = isEdit;
-
-            if (authors.IsNotNullAndHasItems())
-                SelectedAuthor = authors[0];
         }
 
-        public CellBookAuthor(Author selectedAuthor, IDevice device, List<Author> authors, Action updateValidation, bool isEdit = false)
-            : this(device, authors, updateValidation, isEdit)
+        public CellBookAuthor(Author selectedAuthor, IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
+            : this(navigation, device, updateValidation, isEdit)
         {
-            SelectedAuthor = selectedAuthor;
+            Item = selectedAuthor;
         }
 
         #endregion
 
+        #region Private
 
+        async Task HandleSelectItem()
+        {
+            _device.HideKeyboard();
+
+            var result = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter(Item));
+            if (result != null)
+                Item = result;
+        }
+
+        #endregion
     }
 }
