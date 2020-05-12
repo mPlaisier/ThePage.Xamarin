@@ -26,6 +26,10 @@
 		<Folder Include="ViewModels\Author\" />
 		<Folder Include="ViewModels\Book\" />
 		<Folder Include="TestData\Data\" />
+		<Folder Include="Cells\" />
+		<Folder Include="Cells\Author\" />
+		<Folder Include="Cells\Genre\" />
+		<Folder Include="Cells\Book\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

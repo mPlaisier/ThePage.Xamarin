@@ -20,7 +20,8 @@ namespace ThePage.Core
         public CellGenreSelect(Genre genre, bool isSelected = false)
         {
             Item = genre;
-            IsSelected = isSelected;
+
+            IsSelected = genre != null ? isSelected : false;
         }
 
         #endregion
