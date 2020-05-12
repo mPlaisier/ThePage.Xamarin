@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using ThePage.Core;
 using Xunit;
-using Xunit.Extensions;
 using static ThePage.Core.CellBookInput;
 
 namespace ThePage.UnitTests.ViewModels.Book
