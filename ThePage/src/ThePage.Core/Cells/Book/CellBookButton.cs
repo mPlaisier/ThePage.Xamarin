@@ -7,8 +7,9 @@ namespace ThePage.Core
 {
     public class CellBookButton : MvxNotifyPropertyChanged, ICellBook
     {
+        readonly bool _requireValidation;
+
         Func<Task> _btnAction { get; }
-        bool _requireValidation;
 
         #region Properties
 
@@ -26,7 +27,7 @@ namespace ThePage.Core
         #region Commands
 
         IMvxCommand _clickCommand;
-        public IMvxCommand ClickCommand => _clickCommand ??= new MvxCommand(() => _btnAction.Invoke().Forget());
+        public IMvxCommand ClickCommand => _clickCommand ??= new MvxCommand(() => _btnAction?.Invoke().Forget());
 
         #endregion
 
