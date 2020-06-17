@@ -5,7 +5,10 @@ namespace ThePage.Api
 {
     public interface IAuthApi
     {
-        [Post("/login")]
+        [Post("/auth/login")]
         Task<ApiResponseUser> Login([Body] ApiRequestUser request);
+
+        [Post("/refresh-tokens")]
+        Task<ApiTokens> RefreshToken([Body] ApiRequestToken request);
     }
 }

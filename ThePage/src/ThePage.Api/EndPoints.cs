@@ -1,6 +1,6 @@
 namespace ThePage.Api
 {
-    static static class EndPoints
+    static class EndPoints
     {
         //Auth
         public const string BaseAuth = "/auth";

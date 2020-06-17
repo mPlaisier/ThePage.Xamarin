@@ -11,12 +11,12 @@ namespace ThePage.Api
         public User User { get; set; }
 
         [JsonProperty("tokens")]
-        public Tokens Tokens { get; set; }
+        public ApiTokens Tokens { get; set; }
 
         #endregion
     }
 
-    public class Tokens
+    public class ApiTokens
     {
         #region Properties
 
