@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
 using MvvmCross;
+using Newtonsoft.Json;
 using Refit;
 using ThePage.Api;
 
@@ -116,9 +118,13 @@ namespace ThePage.Core
 
             if (ex is ApiException apiException)
             {
-                if (apiException.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (apiException.StatusCode == HttpStatusCode.NotFound)
                 {
                     _userInteraction.Alert("Item not found", null, "Error");
+                }
+                else if (apiException.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    _userInteraction.Alert("Incorrect username or password", null, "Error");
                 }
             }
             else
