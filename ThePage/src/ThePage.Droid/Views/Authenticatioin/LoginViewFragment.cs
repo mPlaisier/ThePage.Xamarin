@@ -7,7 +7,7 @@ using ThePage.Droid.Views;
 
 namespace ThePage.Droid
 {
-    [MvxFragmentPresentation(typeof(MainContainerViewModel),
+    [MvxFragmentPresentation(typeof(MainContainerNoToolBarViewModel),
        Resource.Id.content_frame,
        AddToBackStack = true,
        EnterAnimation = Resource.Animation.pull_in_down,

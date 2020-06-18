@@ -2,7 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true" 
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/txtUsername"
@@ -15,7 +17,7 @@
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toTopOf="@+id/txtPassword"
         local:layout_constraintVertical_chainStyle="packed"
-        local:MvxBind="Text Username"/>
+        local:MvxBind="Text Username;Visibility InvertedVisibility(IsLoading)"/>
 
     <EditText
         android:id="@+id/txtPassword"
@@ -28,7 +30,7 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/txtUsername"
         local:layout_constraintBottom_toTopOf="@+id/btnLogin" 
-        local:MvxBind="Text Password"/>
+        local:MvxBind="Text Password;Visibility InvertedVisibility(IsLoading)"/>
 
     <TextView
         style="@style/PrimaryBtn"
@@ -39,17 +41,30 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/txtPassword"
         local:layout_constraintBottom_toTopOf="@+id/btnRegister"
-        local:MvxBind="Text LblBtnLogin;Click LoginCommand;Enabled BtnLoginEnabled;"/>
+        local:MvxBind="Text LblBtnLogin;Click LoginCommand;Enabled BtnLoginEnabled;Visibility InvertedVisibility(IsLoading)"/>
 
     <TextView
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/btnLogin" 
         local:layout_constraintBottom_toBottomOf="parent"
-        local:MvxBind="Text LblRegister"/>
+        local:MvxBind="Text LblRegister;Visibility InvertedVisibility(IsLoading)"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"
+        android:indeterminate="true"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintTop_toTopOf="parent" 
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:MvxBind="Text LblRegister;Visibility Visibility(IsLoading)"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -90,6 +90,7 @@
     <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
     <Compile Include="Views\Author\AuthorSelectFragment.cs" />
     <Compile Include="Views\Authenticatioin\LoginViewFragment.cs" />
+    <Compile Include="Views\Main\MainContainerNoToolbarActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -441,6 +442,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\fragment_login.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_main_no_toolbar_container.axml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

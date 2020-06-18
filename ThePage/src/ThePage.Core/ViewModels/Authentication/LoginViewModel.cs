@@ -80,9 +80,8 @@ namespace ThePage.Core
             else
             {
                 //Show error
+                IsLoading = false;
             }
-
-            IsLoading = false;
         }
 
         void OnRegisterClick()

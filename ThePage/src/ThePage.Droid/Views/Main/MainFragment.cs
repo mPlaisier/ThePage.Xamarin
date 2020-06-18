@@ -16,7 +16,7 @@ namespace ThePage.Droid.Views.Main
 {
     [MvxFragmentPresentation(typeof(MainContainerViewModel),
        Resource.Id.content_frame,
-       AddToBackStack = true,
+       AddToBackStack = false,
        EnterAnimation = Resource.Animation.pull_in_down,
        ExitAnimation = Resource.Animation.push_out_up,
        PopEnterAnimation = Resource.Animation.pull_in_up,
