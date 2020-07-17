@@ -54,7 +54,6 @@ namespace ThePage.Core
             return result != null;
         }
 
-        //TODO add to Interface
         public async Task<string> GetSessionToken()
         {
             string token = null;
