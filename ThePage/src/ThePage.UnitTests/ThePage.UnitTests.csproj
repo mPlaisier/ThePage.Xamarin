@@ -32,6 +32,7 @@
 		<Folder Include="Cells\Author\" />
 		<Folder Include="Cells\Genre\" />
 		<Folder Include="Cells\Book\" />
+		<Folder Include="ViewModels\Authentication\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

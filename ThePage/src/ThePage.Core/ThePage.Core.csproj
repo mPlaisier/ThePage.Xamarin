@@ -33,6 +33,7 @@
     <Folder Include="Cells\Author\" />
     <Folder Include="Cells\Genre\" />
     <Folder Include="Utils\" />
+    <Folder Include="ViewModels\Authentication\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

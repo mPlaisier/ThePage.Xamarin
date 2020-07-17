@@ -89,6 +89,8 @@
     <Compile Include="Views\Genre\SelectGenreFragment.cs" />
     <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
     <Compile Include="Views\Author\AuthorSelectFragment.cs" />
+    <Compile Include="Views\Authentication\LoginViewFragment.cs" />
+    <Compile Include="Views\Main\MainContainerNoToolbarActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -439,6 +441,14 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_login.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_main_no_toolbar_container.axml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -483,6 +493,7 @@
     <Folder Include="Utils\" />
     <Folder Include="Bindings\" />
     <Folder Include="Resources\anim\" />
+    <Folder Include="Views\Authentication\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

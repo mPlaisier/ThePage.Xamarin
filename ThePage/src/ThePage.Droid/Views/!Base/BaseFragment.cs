@@ -19,20 +19,9 @@ namespace ThePage.Droid.Views
 
         #region LifeCycle
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-
-
-
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
-
-            var activity = (MainContainerActivity)Activity;
-            _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
 
             InitializeToolbar();
 
@@ -54,18 +43,21 @@ namespace ThePage.Droid.Views
 
         public void InitializeToolbar()
         {
-            var activity = (MainContainerActivity)Activity;
-            _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
-
-            if (_toolbar != null)
+            if (Activity is MainContainerActivity activity)
             {
-                activity.SetSupportActionBar(_toolbar);
-                if (ShowNavigationIcon)
-                    activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-                else
-                    activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+                _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
 
-                _toolbar.Title = ViewModel.Title;
+                if (_toolbar != null)
+                {
+                    activity.SetSupportActionBar(_toolbar);
+
+                    if (ShowNavigationIcon)
+                        activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+                    else
+                        activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
+                    _toolbar.Title = ViewModel.Title;
+                }
             }
         }
 
