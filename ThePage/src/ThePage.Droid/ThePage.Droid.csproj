@@ -89,7 +89,7 @@
     <Compile Include="Views\Genre\SelectGenreFragment.cs" />
     <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
     <Compile Include="Views\Author\AuthorSelectFragment.cs" />
-    <Compile Include="Views\Authenticatioin\LoginViewFragment.cs" />
+    <Compile Include="Views\Authentication\LoginViewFragment.cs" />
     <Compile Include="Views\Main\MainContainerNoToolbarActivity.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -493,7 +493,7 @@
     <Folder Include="Utils\" />
     <Folder Include="Bindings\" />
     <Folder Include="Resources\anim\" />
-    <Folder Include="Views\Authenticatioin\" />
+    <Folder Include="Views\Authentication\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

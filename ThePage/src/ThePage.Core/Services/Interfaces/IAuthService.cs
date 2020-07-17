@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -8,6 +7,8 @@ namespace ThePage.Core
         #region Login
 
         Task<bool> Login(string username, string password);
+
+        Task<string> GetSessionToken();
 
         #endregion
     }

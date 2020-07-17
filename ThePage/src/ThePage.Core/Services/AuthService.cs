@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
 using MvvmCross;
-using Newtonsoft.Json;
 using Refit;
 using ThePage.Api;
 
@@ -61,7 +58,7 @@ namespace ThePage.Core
         public async Task<string> GetSessionToken()
         {
             string token = null;
-            if (Barrel.Current.Exists(LoginKey)) //TODO IsExpired required? && !Barrel.Current.IsExpired(LoginKey))
+            if (Barrel.Current.Exists(LoginKey))
             {
                 var result = Barrel.Current.Get<ApiResponseUser>(LoginKey);
                 token = result.Tokens.Access.Expires < DateTime.Now
@@ -74,6 +71,7 @@ namespace ThePage.Core
 
             //Procedure when user session is expired
             HandleSessionExpired();
+
             return null;
         }
 
@@ -84,9 +82,6 @@ namespace ThePage.Core
         void handleSuccessfullLogin(ApiResponseUser response)
         {
             IsLoggedIn = true;
-            //TODO test with MaxValue
-            //Barrel.Current.Add(LoginKey, response.Tokens, TimeSpan.MaxValue);
-
             Barrel.Current.Add(LoginKey, response.Tokens, TimeSpan.FromDays(30));
         }
 
