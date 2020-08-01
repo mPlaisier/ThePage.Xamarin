@@ -11,13 +11,13 @@ namespace ThePage.Api
         #region Properties
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; }
 
         [JsonProperty("author")]
-        public ApiBookAuthor Author { get; set; }
+        public ApiBookAuthor Author { get; }
 
         #endregion
     }
@@ -27,10 +27,10 @@ namespace ThePage.Api
         #region Properties
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; }
 
         #endregion
     }

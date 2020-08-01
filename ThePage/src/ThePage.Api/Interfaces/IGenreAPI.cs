@@ -6,19 +6,24 @@ namespace ThePage.Api
 {
     public interface IGenreAPI
     {
-        [Get("/genres")]
-        Task<List<Genre>> Get();
+        [Get("/genres/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiGenreResponse> Get();
 
-        [Get("/genres/{id}")]
-        Task<Genre> Get(string id);
+        [Get("/genres/v2/{id}")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiGenre> Get(string id);
 
-        [Post("/genres")]
-        Task<Genre> Add([Body] Genre genre);
+        [Post("/genres/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiGenre> Add([Body] ApiGenreRequest genre);
 
-        [Patch("/genres/{genre.Id}")]
-        Task<Genre> Update(Genre genre);
+        [Patch("/genres/v2/{genre.Id}")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiGenre> Update(ApiGenre genre);
 
-        [Delete("/genres/{genre.Id}")]
-        Task Delete(Genre genre);
+        [Delete("/genres/v2/{genre.Id}")]
+        [Headers("Authorization: Bearer")]
+        Task Delete(ApiGenre genre);
     }
 }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
-    public class ApiResponseUser
+    public class ApiUserReponse
     {
         #region Properties
 

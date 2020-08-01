@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
@@ -12,40 +11,38 @@ namespace ThePage.Api
         const string GetGenresKey = "GetGenresKey";
         const string GetSingleGenreKey = "GetGenreKey";
 
-        #region Properties
-
-        static readonly IGenreAPI _genreApi = RestService.For<IGenreAPI>(Secrets.ThePageAPI_URL);
-
-        #endregion
-
         #region FETCH
 
-        public static async Task<List<Genre>> Get(bool forceRefresh = false)
+        public static async Task<ApiGenreResponse> Get(string token, bool forceRefresh = false)
         {
-            List<Genre> result = null;
+            ApiGenreResponse result = null;
             if (!forceRefresh && Barrel.Current.Exists(GetGenresKey) && !Barrel.Current.IsExpired(GetGenresKey))
-                result = Barrel.Current.Get<List<Genre>>(GetGenresKey);
+                result = Barrel.Current.Get<ApiGenreResponse>(GetGenresKey);
 
             if (result == null)
             {
-                result = await _genreApi.Get();
+                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                result = await api.Get();
+
                 Barrel.Current.Add(GetGenresKey, result, TimeSpan.FromMinutes(Constants.GenreExpirationTimeInMinutes));
             }
 
             return result;
         }
 
-        public static async Task<Genre> Get(string id, bool forceRefresh = false)
+        public static async Task<ApiGenre> Get(string token, string id, bool forceRefresh = false)
         {
             var genreKey = GetSingleGenreKey + id;
-            Genre result = null;
+            ApiGenre result = null;
 
             if (!forceRefresh && Barrel.Current.Exists(genreKey) && !Barrel.Current.IsExpired(genreKey))
-                result = Barrel.Current.Get<Genre>(genreKey);
+                result = Barrel.Current.Get<ApiGenre>(genreKey);
 
             if (result == null)
             {
-                result = await _genreApi.Get(id);
+                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                result = await api.Get(id);
+
                 Barrel.Current.Add(genreKey, result, TimeSpan.FromMinutes(Constants.GenreExpirationTimeInMinutes));
             }
 
@@ -56,39 +53,39 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<Genre> Add(Genre genre)
+        public static async Task<ApiGenre> Add(string token, ApiGenreRequest genre)
         {
             //Clear cache
             Barrel.Current.Empty(GetGenresKey);
 
-            return await _genreApi.Add(genre);
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.Add(genre);
         }
 
         #endregion
 
         #region PATCH
 
-        public static async Task<Genre> Update(Genre genre)
+        public static async Task<ApiGenre> Update(string token, ApiGenre genre)
         {
             //Clear cache
             Barrel.Current.Empty(GetGenresKey);
 
-            return await _genreApi.Update(genre);
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.Update(genre);
         }
 
         #endregion
 
         #region DELETE
 
-        public static async Task<bool> Delete(Genre genre)
+        public static async Task<bool> Delete(string token, ApiGenre genre)
         {
             //Clear cache
             Barrel.Current.Empty(GetGenresKey);
 
-            //TODO improve the API to return a better result
-            //ATM we receive if successfull:
-            //"{\"message\":\"Deleted genre\"}"
-            await _genreApi.Delete(genre);
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            await api.Delete(genre);
 
             return true;
         }
