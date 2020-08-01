@@ -59,10 +59,10 @@ namespace ThePage.Core
             string token = null;
             if (Barrel.Current.Exists(LoginKey))
             {
-                var result = Barrel.Current.Get<ApiResponseUser>(LoginKey);
-                token = result.Tokens.Access.Expires < DateTime.Now
-                    ? result.Tokens.Access.Token
-                    : await UpdateSessionToken(result.Tokens.Refresh);
+                var result = Barrel.Current.Get<ApiTokens>(LoginKey);
+                token = result.Access.Expires > DateTime.UtcNow
+                    ? result.Access.Token
+                    : await UpdateSessionToken(result.Refresh);
             }
 
             if (token != null)

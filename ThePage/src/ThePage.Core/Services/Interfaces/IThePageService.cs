@@ -19,6 +19,8 @@ namespace ThePage.Core
 
         Task<bool> DeleteBook(Book book);
 
+        Task<ApiBookResponse> GetAllBooksV2();
+
         #endregion
 
         #region Author

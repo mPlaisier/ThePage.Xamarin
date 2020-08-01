@@ -13,22 +13,27 @@ namespace ThePage.Core
     public class ThePageService : IThePageService
     {
         readonly IUserInteraction _userInteraction;
+        readonly IAuthService _authService;
 
         #region Constructor
 
-        public ThePageService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
+        public ThePageService() :
+            this(Mvx.IoCProvider.Resolve<IUserInteraction>(),
+                 Mvx.IoCProvider.Resolve<IAuthService>())
         {
-
         }
 
-        public ThePageService(IUserInteraction userInteraction)
+        public ThePageService(IUserInteraction userInteraction, IAuthService authService)
         {
             _userInteraction = userInteraction;
+            _authService = authService;
+
             Barrel.ApplicationId = "thepageapplication";
             Barrel.EncryptionKey = "encryptionKey";
         }
 
         #endregion
+
         #region Public(Books)
 
         public async Task<List<Book>> GetAllBooks()
@@ -100,6 +105,28 @@ namespace ThePage.Core
                 HandleException(ex);
             }
             return false;
+        }
+
+        public async Task<ApiBookResponse> GetAllBooksV2()
+        {
+            ApiBookResponse result = null;
+
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                {
+                    result = await BookManager.GetV2(token);
+                }
+                //TODO add logout feature when token == null
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+
+            }
+            return result;
         }
 
         #endregion
