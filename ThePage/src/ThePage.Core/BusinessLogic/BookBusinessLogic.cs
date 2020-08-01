@@ -22,7 +22,7 @@ namespace ThePage.Core
             return new CellBook(book, author, bookGenres);
         }
 
-        public static Book CreateBookFromInput(IEnumerable<ICellBook> items, string id = null)
+        public static ApiBookDetailResponse CreateBookFromInput(IEnumerable<ICellBook> items, string id)
         {
             var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
 
@@ -38,7 +38,26 @@ namespace ThePage.Core
 
             var pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
 
-            return new Book(id, title, author.Id, genres.GetIdStrings(), isbn, owned, read, pages);
+            return new ApiBookDetailResponse(id, title, author, genres.ToList(), isbn, owned, read, pages);
+        }
+
+        public static ApiBookDetailRequest CreateBookFromInput(IEnumerable<ICellBook> items)
+        {
+            var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
+
+            var author = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().Item;
+
+            var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre);
+
+            var isbn = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtInput;
+
+            var owned = items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Owned).First().IsSelected;
+
+            var read = items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Read).First().IsSelected;
+
+            var pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
+
+            return new ApiBookDetailRequest(title, author, genres.ToList(), isbn, owned, read, pages);
         }
 
         #endregion

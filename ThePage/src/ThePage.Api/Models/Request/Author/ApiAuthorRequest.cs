@@ -9,6 +9,9 @@ namespace ThePage.Api
         [JsonProperty("name")]
         public string Name { get; }
 
+        [JsonProperty("olkey")]
+        public string Olkey { get; set; }
+
         #endregion
 
         #region Constructor

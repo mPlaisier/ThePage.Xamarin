@@ -20,5 +20,18 @@ namespace ThePage.Api
         public string Olkey { get; set; }
 
         #endregion
+
+        #region Constructor
+
+        public ApiAuthor()
+        {
+        }
+
+        public ApiAuthor(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
     }
 }

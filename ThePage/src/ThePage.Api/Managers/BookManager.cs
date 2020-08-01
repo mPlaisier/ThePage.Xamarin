@@ -55,7 +55,7 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<Book> Add(string token, Book book)
+        public static async Task<ApiBookDetailResponse> Add(string token, ApiBookDetailRequest book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
@@ -68,7 +68,7 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<Book> Update(string token, Book book)
+        public static async Task<ApiBookDetailResponse> Update(string token, ApiBookDetailResponse book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
@@ -81,7 +81,7 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> Delete(string token, Book book)
+        public static async Task<bool> Delete(string token, ApiBookDetailResponse book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);

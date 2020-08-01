@@ -18,7 +18,7 @@ namespace ThePage.Core
 
         public override string Title => "Genres";
 
-        public List<Genre> Genres { get; set; }
+        public List<ApiGenre> Genres { get; set; }
 
         #endregion
 
@@ -34,8 +34,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<Genre> _itemClickCommand;
-        public IMvxCommand<Genre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Genre>(async (item) =>
+        IMvxCommand<ApiGenre> _itemClickCommand;
+        public IMvxCommand<ApiGenre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiGenre>(async (item) =>
         {
             var result = await _navigation.Navigate<GenreDetailViewModel, GenreDetailParameter, bool>(new GenreDetailParameter(item));
             if (result)
@@ -72,7 +72,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            Genres = await _thePageService.GetAllGenres();
+            var result = await _thePageService.GetAllGenres();
+            Genres = result.Docs;
 
             IsLoading = false;
         }

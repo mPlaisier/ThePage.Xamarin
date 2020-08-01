@@ -16,8 +16,8 @@ namespace ThePage.Core
 
         public string LblAuthor => "Author";
 
-        Author _item;
-        public Author Item
+        ApiAuthor _item;
+        public ApiAuthor Item
         {
             get => _item;
             set
@@ -50,7 +50,7 @@ namespace ThePage.Core
             IsEdit = isEdit;
         }
 
-        public CellBookAuthor(Author selectedAuthor, IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
+        public CellBookAuthor(ApiAuthor selectedAuthor, IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
             : this(navigation, device, updateValidation, isEdit)
         {
             Item = selectedAuthor;
@@ -64,7 +64,7 @@ namespace ThePage.Core
         {
             _device.HideKeyboard();
 
-            var result = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter(Item));
+            var result = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(Item));
             if (result != null)
                 Item = result;
         }

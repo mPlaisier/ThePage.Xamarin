@@ -15,14 +15,14 @@ namespace ThePage.Api
 
         [Post("/books/v2")]
         [Headers("Authorization: Bearer")]
-        Task<Book> AddBook([Body] Book book);
+        Task<ApiBookDetailResponse> AddBook([Body] ApiBookDetailRequest book);
 
         [Patch("/books/v2/{book.Id}")]
         [Headers("Authorization: Bearer")]
-        Task<Book> UpdateBook(Book book);
+        Task<ApiBookDetailResponse> UpdateBook(ApiBookDetailResponse book);
 
         [Delete("/books/v2/{book.Id}")]
         [Headers("Authorization: Bearer")]
-        Task DeleteBook(Book book);
+        Task DeleteBook(ApiBookDetailResponse book);
     }
 }

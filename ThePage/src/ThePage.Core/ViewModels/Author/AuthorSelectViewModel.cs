@@ -10,13 +10,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public Author SelectedAuthor { get; }
+        public ApiAuthor SelectedAuthor { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorSelectParameter(Author selectedAuthor)
+        public AuthorSelectParameter(ApiAuthor selectedAuthor)
         {
             SelectedAuthor = selectedAuthor;
         }
@@ -24,7 +24,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorSelectViewModel : BaseSelectSingleItemViewModel<AuthorSelectParameter, Author, CellAuthorSelect>
+    public class AuthorSelectViewModel : BaseSelectSingleItemViewModel<AuthorSelectParameter, ApiAuthor, CellAuthorSelect>
     {
         readonly IThePageService _thePageService;
         readonly IMvxNavigationService _navigationService;
@@ -35,7 +35,7 @@ namespace ThePage.Core
 
         public override List<CellAuthorSelect> Items { get; set; }
 
-        public override Author SelectedItem { get; internal set; }
+        public override ApiAuthor SelectedItem { get; internal set; }
 
         #endregion
 
@@ -93,7 +93,7 @@ namespace ThePage.Core
             var authors = await _thePageService.GetAllAuthors();
 
             Items = new List<CellAuthorSelect>();
-            authors.ForEach(x => Items.Add(new CellAuthorSelect(x, x == SelectedItem)));
+            authors.Docs.ForEach(x => Items.Add(new CellAuthorSelect(x, x == SelectedItem)));
 
             IsLoading = false;
         }

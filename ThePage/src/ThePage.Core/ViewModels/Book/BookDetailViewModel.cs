@@ -16,13 +16,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public CellBook Book { get; }
+        public ApiBook Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public BookDetailParameter(CellBook book)
+        public BookDetailParameter(ApiBook book)
         {
             Book = book;
         }
@@ -40,13 +40,15 @@ namespace ThePage.Core
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
 
+        ApiBook _book;
+
         #region Properties
 
         public MvxObservableCollection<ICellBook> Items { get; set; } = new MvxObservableCollection<ICellBook>();
 
-        public override string Title => BookCell.Book != null ? BookCell.Book.Title : "Book detail";
+        public override string Title => BookDetail != null ? BookDetail.Title : "Book detail";
 
-        public CellBook BookCell { get; internal set; }
+        public ApiBookDetailResponse BookDetail { get; internal set; }
 
         public bool IsEditing { get; set; }
 
@@ -75,7 +77,7 @@ namespace ThePage.Core
 
         public override void Prepare(BookDetailParameter parameter)
         {
-            BookCell = parameter.Book;
+            _book = parameter.Book;
         }
 
         public override async Task Initialize()
@@ -101,7 +103,7 @@ namespace ThePage.Core
 
             UpdateBookCellData();
 
-            var result = await _thePageService.UpdateBook(BookCell.Book);
+            var result = await _thePageService.UpdateBook(BookDetail);
 
             if (result != null)
                 _userInteraction.ToastMessage("Book updated");
@@ -122,7 +124,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookCell.Book);
+                var result = await _thePageService.DeleteBook(BookDetail);
 
                 if (result)
                 {
@@ -145,8 +147,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            _allAuthors = await _thePageService.GetAllAuthors();
-            _allGenres = await _thePageService.GetAllGenres();
+            BookDetail = await _thePageService.GetBook(_book.Id);
 
             CreateCellBooks();
 
@@ -160,7 +161,7 @@ namespace ThePage.Core
                 return;
 
             var selectedGenres = Items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<ApiGenre>>(new SelectedGenreParameters(selectedGenres));
 
             if (genres != null)
             {
@@ -178,20 +179,20 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
             {
-                new CellBookTextView("Title",BookCell.Book.Title, EBookInputType.Title,UpdateValidation),
-                new CellBookAuthor(BookCell.Author,_navigation, _device, UpdateValidation),
+                new CellBookTextView("Title",BookDetail.Title, EBookInputType.Title,UpdateValidation),
+                new CellBookAuthor(BookDetail.Author,_navigation, _device, UpdateValidation),
                 new CellBookTitle("Genres")
             };
 
-            foreach (var item in BookCell.Genres)
+            foreach (var item in BookDetail.Genres)
             {
                 Items.Add(new CellBookGenreItem(item, RemoveGenre));
             }
 
-            Items.Add(new CellBookNumberTextView("Pages", BookCell.Book.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true));
-            Items.Add(new CellBookNumberTextView("ISBN", BookCell.Book.ISBN, EBookInputType.ISBN, UpdateValidation, false));
-            Items.Add(new CellBookSwitch("Do you own this book?", BookCell.Book.Owned, EBookInputType.Owned, UpdateValidation));
-            Items.Add(new CellBookSwitch("Have you read this book?", BookCell.Book.Read, EBookInputType.Read, UpdateValidation));
+            Items.Add(new CellBookNumberTextView("Pages", BookDetail.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true));
+            Items.Add(new CellBookNumberTextView("ISBN", BookDetail.ISBN, EBookInputType.ISBN, UpdateValidation, false));
+            Items.Add(new CellBookSwitch("Do you own this book?", BookDetail.Owned, EBookInputType.Owned, UpdateValidation));
+            Items.Add(new CellBookSwitch("Have you read this book?", BookDetail.Read, EBookInputType.Read, UpdateValidation));
             Items.Add(new CellBookButton("Delete Book", DeleteBook, false));
         }
 
@@ -241,20 +242,15 @@ namespace ThePage.Core
 
         void UpdateBookCellData()
         {
-            var updatedBook = BookBusinessLogic.CreateBookFromInput(Items, BookCell.Book.Id);
-            var updatedGenres = GenreBusinessLogic.GetGenresFromString(updatedBook.Genres, _allGenres).ToList();
-            var updatedAuthor = AuthorBusinessLogic.GetAuthorFromString(updatedBook.Author, _allAuthors);
+            var updatedBook = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id);
 
-            BookCell.Book.Title = updatedBook.Title;
-            BookCell.Book.Author = updatedBook.Author;
-            BookCell.Book.Genres = updatedBook.Genres;
-            BookCell.Book.ISBN = updatedBook.ISBN;
-            BookCell.Book.Owned = updatedBook.Owned;
-            BookCell.Book.Read = updatedBook.Read;
-            BookCell.Book.Pages = updatedBook.Pages;
-
-            BookCell.Author = updatedAuthor;
-            BookCell.Genres = updatedGenres;
+            BookDetail.Title = updatedBook.Title;
+            BookDetail.Author = updatedBook.Author;
+            BookDetail.Genres = updatedBook.Genres;
+            BookDetail.ISBN = updatedBook.ISBN;
+            BookDetail.Owned = updatedBook.Owned;
+            BookDetail.Read = updatedBook.Read;
+            BookDetail.Pages = updatedBook.Pages;
         }
 
         #endregion

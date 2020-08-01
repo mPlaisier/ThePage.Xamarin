@@ -41,8 +41,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<CellBook> _itemClickCommand;
-        public IMvxCommand<CellBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellBook>(async (item) =>
+        IMvxCommand<ApiBook> _itemClickCommand;
+        public IMvxCommand<ApiBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBook>(async (item) =>
         {
             var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)
@@ -82,7 +82,7 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var apiBookResponse = await _thePageService.GetAllBooksV2();
+            var apiBookResponse = await _thePageService.GetAllBooks();
             Books = apiBookResponse.Docs;
 
             IsLoading = false;
@@ -121,6 +121,5 @@ namespace ThePage.Core
         {
             public Action<string> ISBNCallback { get; set; }
         }
-
     }
 }

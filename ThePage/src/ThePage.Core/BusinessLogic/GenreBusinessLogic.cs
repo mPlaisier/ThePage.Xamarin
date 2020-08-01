@@ -8,7 +8,7 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<CellGenreSelect> GenresToCellGenres(List<Genre> genreApi)
+        public static List<CellGenreSelect> GenresToCellGenres(List<ApiGenre> genreApi)
         {
             return genreApi?.Select(genre => new CellGenreSelect(genre)).ToList();
         }

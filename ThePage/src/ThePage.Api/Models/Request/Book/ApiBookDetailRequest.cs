@@ -3,54 +3,51 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
-    public class ApiBookDetailResponse
+    public class ApiBookDetailRequest
     {
         #region Properties
 
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; }
 
         [JsonProperty("author")]
-        public ApiAuthor Author { get; set; }
+        public ApiAuthor Author { get; }
 
         [JsonProperty("genres")]
-        public List<ApiGenre> Genres { get; set; }
+        public List<ApiGenre> Genres { get; }
 
         [JsonProperty("isbn")]
-        public string ISBN { get; set; }
+        public string ISBN { get; }
 
         [JsonProperty("owned")]
-        public bool Owned { get; set; }
+        public bool Owned { get; }
 
         [JsonProperty("read")]
-        public bool Read { get; set; }
+        public bool Read { get; }
 
         [JsonProperty("pages")]
-        public int Pages { get; set; }
+        public int Pages { get; }
 
         [JsonProperty("ebook")]
-        public bool Ebook { get; set; }
+        public bool Ebook { get; }
 
         [JsonProperty("olkey")]
-        public string Olkey { get; set; }
+        public string Olkey { get; }
 
         [JsonProperty("olcover")]
-        public List<Dictionary<string, string>> OlCover { get; set; }
+        public List<Dictionary<string, string>> OlCover { get; }
 
         #endregion
 
         #region Constructor
 
-        public ApiBookDetailResponse()
+        public ApiBookDetailRequest()
         {
+
         }
 
-        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages)
+        public ApiBookDetailRequest(string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages)
         {
-            Id = id;
             Title = title;
             Author = author;
             Genres = genres;
@@ -60,9 +57,8 @@ namespace ThePage.Api
             Pages = pages;
         }
 
-        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, List<Dictionary<string, string>> olCover)
+        public ApiBookDetailRequest(string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, List<Dictionary<string, string>> olCover)
         {
-            Id = id;
             Title = title;
             Author = author;
             Genres = genres;

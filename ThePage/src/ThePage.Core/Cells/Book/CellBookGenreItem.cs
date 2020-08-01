@@ -10,7 +10,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public Genre Genre { get; }
+        public ApiGenre Genre { get; }
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookGenreItem(Genre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
+        public CellBookGenreItem(ApiGenre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
         {
             Genre = genre;
             _removeGenre = removeGenre;

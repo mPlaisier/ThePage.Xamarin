@@ -13,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public Genre Genre { get; }
+        public ApiGenre Genre { get; }
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailParameter(Genre genre)
+        public GenreDetailParameter(ApiGenre genre)
         {
             Genre = genre;
         }
@@ -38,7 +38,7 @@ namespace ThePage.Core
 
         public override string Title => "Genre Detail";
 
-        public Genre Genre { get; internal set; }
+        public ApiGenre Genre { get; internal set; }
 
         public string LblName => "Name:";
 

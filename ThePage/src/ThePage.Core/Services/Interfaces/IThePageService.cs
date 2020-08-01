@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThePage.Api;
 
@@ -9,41 +7,39 @@ namespace ThePage.Core
     {
         #region Book
 
-        Task<List<Book>> GetAllBooks();
+        Task<ApiBookResponse> GetAllBooks();
 
-        Task<Book> GetBook(string id);
+        Task<ApiBookDetailResponse> GetBook(string id);
 
-        Task<bool> AddBook(Book book);
+        Task<bool> AddBook(ApiBookDetailRequest book);
 
-        Task<Book> UpdateBook(Book book);
+        Task<ApiBookDetailResponse> UpdateBook(ApiBookDetailResponse book);
 
-        Task<bool> DeleteBook(Book book);
-
-        Task<ApiBookResponse> GetAllBooksV2();
+        Task<bool> DeleteBook(ApiBookDetailResponse book);
 
         #endregion
 
         #region Author
 
-        Task<List<Author>> GetAllAuthors();
+        Task<ApiAuthorResponse> GetAllAuthors();
 
-        Task<bool> AddAuthor(Author author);
+        Task<bool> AddAuthor(ApiAuthorRequest author);
 
-        Task<Author> UpdateAuthor(Author author);
+        Task<ApiAuthor> UpdateAuthor(ApiAuthor author);
 
-        Task<bool> DeleteAuthor(Author author);
+        Task<bool> DeleteAuthor(ApiAuthor author);
 
         #endregion
 
         #region Genre
 
-        Task<List<Genre>> GetAllGenres();
+        Task<ApiGenreResponse> GetAllGenres();
 
-        Task<bool> AddGenre(Genre author);
+        Task<bool> AddGenre(ApiGenreRequest author);
 
-        Task<Genre> UpdateGenre(Genre author);
+        Task<ApiGenre> UpdateGenre(ApiGenre author);
 
-        Task<bool> DeleteGenre(Genre author);
+        Task<bool> DeleteGenre(ApiGenre author);
 
         #endregion
     }

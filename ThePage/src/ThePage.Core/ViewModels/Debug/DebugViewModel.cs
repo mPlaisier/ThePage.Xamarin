@@ -177,20 +177,21 @@ namespace ThePage.Core
                 var genres = await _thePageService.GetAllGenres();
                 var books = await _thePageService.GetAllBooks();
 
-                foreach (var author in authors)
+                foreach (var author in authors.Docs)
                 {
                     await _thePageService.DeleteAuthor(author);
                 }
 
-                foreach (var genre in genres)
+                foreach (var genre in genres.Docs)
                 {
                     await _thePageService.DeleteGenre(genre);
                 }
 
-                foreach (var book in books)
-                {
-                    await _thePageService.DeleteBook(book);
-                }
+                //TODO
+                //foreach (var book in books.Docs)
+                //{
+                //    await _thePageService.DeleteBook(book);
+                //}
 
                 IsLoading = false;
             }
@@ -215,7 +216,7 @@ namespace ThePage.Core
                 var authors = await _thePageService.GetAllAuthors();
 
                 //Create books
-                await CreateBooks(genres, authors);
+                await CreateBooks(genres.Docs, authors.Docs);
 
                 IsLoading = false;
             }
@@ -228,7 +229,7 @@ namespace ThePage.Core
 
             for (int i = 0; i < amountOfGenres; i++)
             {
-                await _thePageService.AddGenre(new Genre($"Genre {i + 1}"));
+                await _thePageService.AddGenre(new ApiGenreRequest($"Genre {i + 1}"));
             }
         }
 
@@ -237,11 +238,11 @@ namespace ThePage.Core
             int amountOfAuthors = 10;
             for (int i = 0; i < amountOfAuthors; i++)
             {
-                await _thePageService.AddAuthor(new Author($"Author {i + 1}"));
+                await _thePageService.AddAuthor(new ApiAuthorRequest($"Author {i + 1}"));
             }
         }
 
-        async Task CreateBooks(List<Genre> genres, List<Author> authors)
+        async Task CreateBooks(List<ApiGenre> genres, List<ApiAuthor> authors)
         {
             var random = new Random();
             int amountOfBooks = 25;
@@ -251,7 +252,7 @@ namespace ThePage.Core
             for (int i = 0; i < amountOfBooks; i++)
             {
                 var amountGenres = random.Next(minGenres, maxGenres);
-                var selectedgenres = new List<Genre>();
+                var selectedgenres = new List<ApiGenre>();
                 while (selectedgenres.Count < amountGenres)
                 {
                     var genre = genres[random.Next(0, genres.Count() - 1)];
@@ -261,7 +262,16 @@ namespace ThePage.Core
 
                 var author = authors[random.Next(0, authors.Count() - 1)];
 
-                var book = new Book($"Book {i + 1}", author.Id, selectedgenres.GetIdStrings(), "", false, true, random.Next(50, 500));
+                var book = new ApiBookDetailRequest($"Book {i + 1}",
+                                                    author,
+                                                    selectedgenres,
+                                                    "",
+                                                    false,
+                                                    true,
+                                                    random.Next(50, 500),
+                                                    false,
+                                                    string.Empty,
+                                                    null);
 
                 await _thePageService.AddBook(book);
             }

@@ -44,8 +44,8 @@ namespace ThePage.Core
         OLObject _olBook;
         string _isbn;
 
-        List<Genre> _genres;
-        List<Author> _authors;
+        ApiGenreResponse _genres;
+        ApiAuthorResponse _authors;
 
         #region Properties
 
@@ -165,9 +165,9 @@ namespace ThePage.Core
             var olAuthor = _olBook.Authors.First();
             var olkey = GetAuthorKey(olAuthor?.Url.ToString());
 
-            Author author = null;
+            ApiAuthor author = null;
 
-            author = _authors.FirstOrDefault(a => a.OLKey != null && a.OLKey.Equals(olkey));
+            author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
 
             if (author == null)
             {
@@ -175,18 +175,18 @@ namespace ThePage.Core
                 if (!result)
                     return;
 
-                author = new Author
+                author = new ApiAuthor
                 {
                     Name = olAuthor.Name,
-                    OLKey = olkey
+                    Olkey = olkey
                 };
-                var isAdded = await _navigation.Navigate<AddAuthorViewModel, Author, bool>(author);
+                var isAdded = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, bool>(author);
 
                 if (!isAdded)
                     return;
 
                 _authors = await _thePageService.GetAllAuthors();
-                author = _authors.FirstOrDefault(a => a.OLKey != null && a.OLKey.Equals(olkey));
+                author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
             }
 
             Items = new MvxObservableCollection<ICellBook>
@@ -201,7 +201,6 @@ namespace ThePage.Core
                     new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
                     new CellBookButton("Add Book",AddBook)
                 };
-
         }
 
         void UpdateValidation()
@@ -219,7 +218,7 @@ namespace ThePage.Core
         async Task AddGenreAction()
         {
             var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<ApiGenre>>(new SelectedGenreParameters(selectedGenres));
 
             if (genres != null)
             {

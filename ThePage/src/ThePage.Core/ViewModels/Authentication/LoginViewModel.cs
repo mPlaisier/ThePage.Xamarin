@@ -78,13 +78,14 @@ namespace ThePage.Core
             }
             else
             {
-                //Show error
+                //TODO Show error
                 IsLoading = false;
             }
         }
 
         void OnRegisterClick()
         {
+            //TODO
             //Navigate to Register VM
         }
 
