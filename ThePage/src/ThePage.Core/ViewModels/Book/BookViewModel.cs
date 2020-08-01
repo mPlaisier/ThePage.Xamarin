@@ -6,6 +6,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -18,7 +19,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public List<CellBook> Books { get; set; }
+        public List<ApiBook> Books { get; set; }
 
         public override string Title => "Books";
 
@@ -81,11 +82,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var books = await _thePageService.GetAllBooks();
-            var authors = await _thePageService.GetAllAuthors();
-            var genres = await _thePageService.GetAllGenres();
-
-            Books = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
+            var apiBookResponse = await _thePageService.GetAllBooksV2();
+            Books = apiBookResponse.Docs;
 
             IsLoading = false;
         }
