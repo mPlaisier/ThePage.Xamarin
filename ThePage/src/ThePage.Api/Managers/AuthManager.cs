@@ -6,16 +6,11 @@ namespace ThePage.Api
 {
     public static class AuthManager
     {
-        #region Properties
-
-        static readonly IAuthApi _authApi = RestService.For<IAuthApi>(Secrets.ThePageAPI_URL);
-
-        #endregion
-
         #region Login
 
         public static async Task<ApiResponseUser> Login(ApiRequestUser request)
         {
+            var _authApi = RestService.For<IAuthApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL));
             var result = await _authApi.Login(request);
 
             return result;
@@ -23,6 +18,7 @@ namespace ThePage.Api
 
         public static async Task<ApiTokens> RefreshTokens(string refreshtoken)
         {
+            var _authApi = RestService.For<IAuthApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL));
             var result = await _authApi.RefreshToken(new ApiRequestToken(refreshtoken));
 
             return result;

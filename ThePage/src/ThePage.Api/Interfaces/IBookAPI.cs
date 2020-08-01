@@ -20,5 +20,10 @@ namespace ThePage.Api
 
         [Delete("/books/{book.Id}")]
         Task DeleteBook(Book book);
+
+        //V2
+        [Get("/books/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiBookResponse> GetBooksV2();
     }
 }

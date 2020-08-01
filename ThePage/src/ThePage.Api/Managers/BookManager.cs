@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
@@ -12,6 +13,7 @@ namespace ThePage.Api
         #region CachingKeys
 
         const string FetchBooksKey = "GetBooksKey";
+        const string FetchBooksV2Key = "GetBooksV2Key";
         const string GetSingleBookKey = "GetBookKey";
 
         #endregion
@@ -51,6 +53,23 @@ namespace ThePage.Api
             {
                 result = await _bookAPI.GetBook(id);
                 Barrel.Current.Add(bookKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+            }
+
+            return result;
+        }
+
+        public static async Task<ApiBookResponse> GetV2(string token, bool forceRefresh = false)
+        {
+            ApiBookResponse result = null;
+            if (!forceRefresh && !Barrel.Current.Exists(FetchBooksV2Key) && !Barrel.Current.IsExpired(FetchBooksV2Key))
+                result = Barrel.Current.Get<ApiBookResponse>(FetchBooksV2Key);
+
+            if (result == null)
+            {
+                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+
+                result = await api.GetBooksV2();
+                Barrel.Current.Add(FetchBooksV2Key, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
             }
 
             return result;
