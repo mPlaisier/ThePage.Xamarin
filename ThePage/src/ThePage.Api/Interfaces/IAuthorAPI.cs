@@ -17,9 +17,9 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiAuthor> AddAuthor([Body] ApiAuthorRequest author);
 
-        [Patch("/authors/v2/{author.Id}")]
+        [Patch("/authors/v2/{id}")]
         [Headers("Authorization: Bearer")]
-        Task<ApiAuthor> UpdateAuthor(ApiAuthor author);
+        Task<ApiAuthor> UpdateAuthor([Body] ApiAuthorRequest author, string id);
 
         [Delete("/authors/v2/{author.Id}")]
         [Headers("Authorization: Bearer")]

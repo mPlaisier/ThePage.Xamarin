@@ -32,9 +32,6 @@ namespace ThePage.Core
 
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
     {
-        List<Genre> _allGenres;
-        List<Author> _allAuthors;
-
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
@@ -101,9 +98,9 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
-            UpdateBookCellData();
+            var request = UpdateBookCellData();
 
-            var result = await _thePageService.UpdateBook(BookDetail);
+            var result = await _thePageService.UpdateBook(BookDetail.Id, request);
 
             if (result != null)
                 _userInteraction.ToastMessage("Book updated");
@@ -149,7 +146,7 @@ namespace ThePage.Core
 
             BookDetail = await _thePageService.GetBook(_book.Id);
 
-            CreateCellBooks();
+            Items = BookBusinessLogic.CreateCellBookDetailCells(BookDetail, UpdateValidation, RemoveGenre, DeleteBook, _navigation, _device);
 
             IsLoading = false;
             UpdateValidation();
@@ -175,27 +172,6 @@ namespace ThePage.Core
             }
         }
 
-        void CreateCellBooks()
-        {
-            Items = new MvxObservableCollection<ICellBook>
-            {
-                new CellBookTextView("Title",BookDetail.Title, EBookInputType.Title,UpdateValidation),
-                new CellBookAuthor(BookDetail.Author,_navigation, _device, UpdateValidation),
-                new CellBookTitle("Genres")
-            };
-
-            foreach (var item in BookDetail.Genres)
-            {
-                Items.Add(new CellBookGenreItem(item, RemoveGenre));
-            }
-
-            Items.Add(new CellBookNumberTextView("Pages", BookDetail.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true));
-            Items.Add(new CellBookNumberTextView("ISBN", BookDetail.ISBN, EBookInputType.ISBN, UpdateValidation, false));
-            Items.Add(new CellBookSwitch("Do you own this book?", BookDetail.Owned, EBookInputType.Owned, UpdateValidation));
-            Items.Add(new CellBookSwitch("Have you read this book?", BookDetail.Read, EBookInputType.Read, UpdateValidation));
-            Items.Add(new CellBookButton("Delete Book", DeleteBook, false));
-        }
-
         void UpdateValidation()
         {
             if (IsLoading)
@@ -205,7 +181,6 @@ namespace ThePage.Core
             var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
 
             Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
-
         }
 
         void RemoveGenre(CellBookGenreItem obj)
@@ -240,17 +215,31 @@ namespace ThePage.Core
             }
         }
 
-        void UpdateBookCellData()
+        ApiBookDetailRequest UpdateBookCellData()
         {
-            var updatedBook = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id);
+            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id);
 
             BookDetail.Title = updatedBook.Title;
-            BookDetail.Author = updatedBook.Author;
-            BookDetail.Genres = updatedBook.Genres;
+            BookDetail.Author = author;
+
+
+            _book.Title = updatedBook.Title;
+            _book.Author = author;
+
+
+            BookDetail.Genres = genres.ToList();
             BookDetail.ISBN = updatedBook.ISBN;
-            BookDetail.Owned = updatedBook.Owned;
-            BookDetail.Read = updatedBook.Read;
-            BookDetail.Pages = updatedBook.Pages;
+
+            if (updatedBook.Owned.HasValue)
+                BookDetail.Owned = updatedBook.Owned.Value;
+
+            if (updatedBook.Read.HasValue)
+                BookDetail.Read = updatedBook.Read.Value;
+
+            if (updatedBook.Pages.HasValue)
+                BookDetail.Pages = updatedBook.Pages.Value;
+
+            return updatedBook;
         }
 
         #endregion

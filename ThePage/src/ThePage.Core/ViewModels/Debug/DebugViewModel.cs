@@ -263,8 +263,8 @@ namespace ThePage.Core
                 var author = authors[random.Next(0, authors.Count() - 1)];
 
                 var book = new ApiBookDetailRequest($"Book {i + 1}",
-                                                    author,
-                                                    selectedgenres,
+                                                    author.Id,
+                                                    selectedgenres.GetIdStrings().ToList(),
                                                     "",
                                                     false,
                                                     true,

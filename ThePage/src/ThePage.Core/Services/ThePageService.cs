@@ -71,7 +71,7 @@ namespace ThePage.Core
 
         public async Task<bool> AddBook(ApiBookDetailRequest book)
         {
-            ApiBookDetailResponse result = null;
+            ApiBookDetailRequest result = null;
             try
             {
                 var token = await _authService.GetSessionToken();
@@ -86,15 +86,15 @@ namespace ThePage.Core
             return result != null;
         }
 
-        public async Task<ApiBookDetailResponse> UpdateBook(ApiBookDetailResponse book)
+        public async Task<ApiBookDetailRequest> UpdateBook(string id, ApiBookDetailRequest book)
         {
-            ApiBookDetailResponse result = null;
+            ApiBookDetailRequest result = null;
             try
             {
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    result = await BookManager.Update(token, book);
+                    result = await BookManager.Update(token, id, book);
             }
             catch (Exception ex)
             {
@@ -157,7 +157,7 @@ namespace ThePage.Core
             return result != null;
         }
 
-        public async Task<ApiAuthor> UpdateAuthor(ApiAuthor author)
+        public async Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author)
         {
             ApiAuthor result = null;
             try
@@ -165,7 +165,7 @@ namespace ThePage.Core
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    result = await AuthorManager.Update(token, author);
+                    result = await AuthorManager.Update(token, id, author);
             }
             catch (Exception ex)
             {
@@ -228,7 +228,7 @@ namespace ThePage.Core
             return result != null;
         }
 
-        public async Task<ApiGenre> UpdateGenre(ApiGenre genre)
+        public async Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre)
         {
             ApiGenre result = null;
             try
@@ -236,7 +236,7 @@ namespace ThePage.Core
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    result = await GenreManager.Update(token, genre);
+                    result = await GenreManager.Update(token, id, genre);
             }
             catch (Exception ex)
             {

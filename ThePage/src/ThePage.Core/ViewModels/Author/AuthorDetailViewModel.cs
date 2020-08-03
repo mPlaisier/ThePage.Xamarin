@@ -117,7 +117,9 @@ namespace ThePage.Core
             TxtName = TxtName.Trim();
             Author.Name = TxtName;
 
-            var author = await _thePageService.UpdateAuthor(Author);
+            var request = new ApiAuthorRequest(TxtName);
+
+            var author = await _thePageService.UpdateAuthor(Author.Id, request);
             if (author != null)
                 _userInteraction.ToastMessage("Author updated");
             else

@@ -18,9 +18,9 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiGenre> Add([Body] ApiGenreRequest genre);
 
-        [Patch("/genres/v2/{genre.Id}")]
+        [Patch("/genres/v2/{id}")]
         [Headers("Authorization: Bearer")]
-        Task<ApiGenre> Update(ApiGenre genre);
+        Task<ApiGenre> Update([Body] ApiGenreRequest genre, string id);
 
         [Delete("/genres/v2/{genre.Id}")]
         [Headers("Authorization: Bearer")]

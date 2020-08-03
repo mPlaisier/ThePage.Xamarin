@@ -38,7 +38,7 @@ namespace ThePage.Api
         public string Olkey { get; set; }
 
         [JsonProperty("olcover")]
-        public List<Dictionary<string, string>> OlCover { get; set; }
+        public Olcover OlCover { get; set; }
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace ThePage.Api
             Pages = pages;
         }
 
-        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, List<Dictionary<string, string>> olCover)
+        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, Olcover olCover)
         {
             Id = id;
             Title = title;
@@ -76,5 +76,17 @@ namespace ThePage.Api
         }
 
         #endregion
+    }
+
+    public class Olcover
+    {
+        [JsonProperty("small")]
+        public string Small { get; internal set; }
+
+        [JsonProperty("medium")]
+        public string Medium { get; internal set; }
+
+        [JsonProperty("large")]
+        public string Large { get; internal set; }
     }
 }

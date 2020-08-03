@@ -33,9 +33,13 @@ namespace ThePage.Core
             return genres == null ? new List<string>() : genres.Select(g => g.Id).ToList();
         }
 
-        public static List<string> GetIdStrings(this IEnumerable<ApiGenre> genres)
+        public static List<string> GetIdStrings(this IEnumerable<ApiGenre> genres, bool nullAllowed = false)
         {
-            return genres == null ? new List<string>() : genres.Select(g => g.Id).ToList();
+            return genres == null && nullAllowed
+                ? null
+                : genres == null
+                    ? new List<string>()
+                    : genres.Select(g => g.Id).ToList();
         }
 
         public static List<Genre> SortByName(this List<Genre> genres)

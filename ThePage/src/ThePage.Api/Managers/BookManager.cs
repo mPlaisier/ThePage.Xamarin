@@ -55,7 +55,7 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<ApiBookDetailResponse> Add(string token, ApiBookDetailRequest book)
+        public static async Task<ApiBookDetailRequest> Add(string token, ApiBookDetailRequest book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
@@ -68,13 +68,13 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<ApiBookDetailResponse> Update(string token, ApiBookDetailResponse book)
+        public static async Task<ApiBookDetailRequest> Update(string token, string id, ApiBookDetailRequest book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
-            return await api.UpdateBook(book);
+            return await api.UpdateBook(book, id);
         }
 
         #endregion

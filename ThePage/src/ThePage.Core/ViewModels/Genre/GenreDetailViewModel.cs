@@ -117,7 +117,9 @@ namespace ThePage.Core
             TxtName = TxtName.Trim();
             Genre.Name = TxtName;
 
-            var genre = await _thePageService.UpdateGenre(Genre);
+            var request = new ApiGenreRequest(TxtName);
+            var genre = await _thePageService.UpdateGenre(Genre.Id, request);
+
             if (genre != null)
                 _userInteraction.ToastMessage("Genre updated");
             else

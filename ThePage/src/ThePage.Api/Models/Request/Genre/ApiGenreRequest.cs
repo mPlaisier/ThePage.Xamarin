@@ -6,8 +6,11 @@ namespace ThePage.Api
     {
         #region Properties
 
-        [JsonProperty("name")]
-        public string Name { get; }
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
 
         #endregion
 

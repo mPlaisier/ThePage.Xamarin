@@ -65,13 +65,13 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<ApiAuthor> Update(string token, ApiAuthor author)
+        public static async Task<ApiAuthor> Update(string token, string id, ApiAuthorRequest author)
         {
             //Clear cache
             Barrel.Current.Empty(GetAuthorsKey);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
-            return await api.UpdateAuthor(author);
+            return await api.UpdateAuthor(author, id);
         }
 
         #endregion

@@ -66,13 +66,13 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<ApiGenre> Update(string token, ApiGenre genre)
+        public static async Task<ApiGenre> Update(string token, string id, ApiGenreRequest genre)
         {
             //Clear cache
             Barrel.Current.Empty(GetGenresKey);
 
             var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
-            return await api.Update(genre);
+            return await api.Update(genre, id);
         }
 
         #endregion

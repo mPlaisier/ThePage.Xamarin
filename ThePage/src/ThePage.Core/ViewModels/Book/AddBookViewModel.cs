@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -104,7 +103,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var book = BookBusinessLogic.CreateBookFromInput(Items);
+            var (book, author, genres) = BookBusinessLogic.CreateBookFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
             if (result)
