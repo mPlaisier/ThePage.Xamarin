@@ -13,19 +13,6 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static List<CellBook> BooksToCellBooks(List<Book> booksApi, List<Author> authorsApi, List<Genre> genresApi)
-        {
-            return booksApi?.Select(x => BookToCellBook(x, authorsApi, genresApi)).ToList();
-        }
-
-        public static CellBook BookToCellBook(Book book, List<Author> authors, List<Genre> genres)
-        {
-            var author = AuthorBusinessLogic.GetAuthorFromString(book.Author, authors);
-            var bookGenres = GenreBusinessLogic.GetGenresFromString(book.Genres ?? new List<string>(), genres)?.ToList();
-
-            return new CellBook(book, author, bookGenres);
-        }
-
         public static (ApiBookDetailRequest, ApiAuthor author, IEnumerable<ApiGenre>) CreateBookFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
         {
             //Title

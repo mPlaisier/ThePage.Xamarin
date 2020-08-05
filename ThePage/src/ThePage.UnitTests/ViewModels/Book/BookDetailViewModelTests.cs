@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -31,7 +30,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             _vm.Initialize();
         }
 
-        void PrepareAuthorAndGenreData()
+        void PrepareThePageServiceResults(bool containsGenres = true)
         {
             MockThePageService
                .Setup(x => x.GetAllGenres())
@@ -40,6 +39,15 @@ namespace ThePage.UnitTests.ViewModels.Book
             MockThePageService
                .Setup(x => x.GetAllAuthors())
                .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
+
+            if (containsGenres)
+                MockThePageService
+                    .Setup(x => x.GetBook(It.IsAny<string>()))
+                   .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseWithGenres()));
+            else
+                MockThePageService
+                    .Setup(x => x.GetBook(It.IsAny<string>()))
+                   .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseNoGenres()));
         }
 
         #endregion
@@ -48,8 +56,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookCellItemsCountWithGenres()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             //Assert
@@ -60,8 +70,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookCellItemsCountWithoutGenres()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWithoutGenres()));
+            PrepareThePageServiceResults(false);
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             //Assert
@@ -72,8 +84,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookCellItemsCountWithGenresAfterEdit()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             _vm.EditBookCommand.Execute();
@@ -86,8 +100,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookCellItemsCountWithoutGenresAfterEdit()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWithoutGenres()));
+            PrepareThePageServiceResults(false);
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             _vm.EditBookCommand.Execute();
@@ -100,8 +116,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookWithGenresCellItemsTypesAndOrder()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             //Assert
@@ -121,8 +139,14 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookWithoutGenresCellItemsTypesAndOrder()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWithoutGenres()));
+            PrepareThePageServiceResults(false);
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            MockThePageService
+                .Setup(x => x.GetBook(It.IsAny<string>()))
+               .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseNoGenres()));
+
+            //Execute
             _vm.Initialize();
 
             //Assert
@@ -140,10 +164,11 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookWithGenresCellItemsTypesAndOrderAfterEditCommand()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
-            _vm.Initialize();
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
 
+            //Execute
+            _vm.Initialize();
             _vm.EditBookCommand.Execute();
 
             //Assert
@@ -164,10 +189,11 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookWithoutGenresCellItemsTypesAndOrderAfterEditCommand()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWithoutGenres()));
-            _vm.Initialize();
+            PrepareThePageServiceResults(false);
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
 
+            //Execute
+            _vm.Initialize();
             _vm.EditBookCommand.Execute();
 
             //Assert
@@ -186,8 +212,11 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void BookDetailEditIsDisabledAStart()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Execute
             _vm.Initialize();
 
             //Assert
@@ -198,8 +227,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void BookDetailEditIsEnabledAferEditCommand()
         {
             //Arrange
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+
+            //Excute
             _vm.Initialize();
 
             _vm.EditBookCommand.Execute();
@@ -219,8 +250,8 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, string pages, bool isValid)
         {
             //Setup
-            PrepareAuthorAndGenreData();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            PrepareThePageServiceResults();
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
             _vm.Initialize();
 
             _vm.EditBookCommand.Execute();
@@ -244,12 +275,12 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void LoadingAndEditingToFalseAfterEdit(bool result)
         {
             //Arrange
-            PrepareAuthorAndGenreData();
+            PrepareThePageServiceResults();
             MockThePageService
-               .Setup(x => x.UpdateBook(It.IsAny<Api.Book>()))
-               .Returns(() => result ? Task.FromResult(new Api.Book()) : Task.FromResult<Api.Book>(null));
+               .Setup(x => x.UpdateBook(It.IsAny<string>(), It.IsAny<Api.ApiBookDetailRequest>()))
+               .Returns(() => result ? Task.FromResult(new Api.ApiBookDetailRequest()) : Task.FromResult<Api.ApiBookDetailRequest>(null));
 
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
             _vm.Initialize();
 
             //Set view as Edit so we get the Update button
@@ -269,15 +300,15 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckLoadingAndEditingValueAfterDeleteCommand(bool result)
         {
             //Arrange
-            PrepareAuthorAndGenreData();
+            PrepareThePageServiceResults();
             MockThePageService
-               .Setup(x => x.DeleteBook(It.IsAny<Api.Book>()))
+               .Setup(x => x.DeleteBook(It.IsAny<Api.ApiBookDetailResponse>()))
                .Returns(() => Task.FromResult(result));
             MockUserInteraction
                  .Setup(x => x.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                  .Returns(() => Task.FromResult(true));
 
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleCellBookWith2Genres()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
             _vm.Initialize();
 
 

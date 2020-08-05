@@ -75,8 +75,8 @@ namespace ThePage.UnitTests.ViewModels.Genre
         {
             //Arrange
             MockThePageService
-                .Setup(x => x.UpdateGenre(It.IsAny<Api.Genre>()))
-                .Returns(() => result ? Task.FromResult(new Api.Genre()) : Task.FromResult<Api.Genre>(null));
+                .Setup(x => x.UpdateGenre(It.IsAny<string>(), It.IsAny<Api.ApiGenreRequest>()))
+                .Returns(() => result ? Task.FromResult(new Api.ApiGenre()) : Task.FromResult<Api.ApiGenre>(null));
             LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleGenre()));
 
             //Executev

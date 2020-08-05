@@ -42,7 +42,7 @@ namespace ThePage.UnitTests.Cells.Book
 
             public static CellBookGenreItem GetNullValueCellBookGenreItem()
             {
-                Api.Genre genre = null;
+                Api.ApiGenre genre = null;
                 var isEdit = false;
 
                 return new CellBookGenreItem(genre, null, isEdit);

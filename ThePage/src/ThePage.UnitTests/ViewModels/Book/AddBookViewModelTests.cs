@@ -126,7 +126,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Setup
             var isbn = "5456554412";
-            AddBookParameter param = new AddBookParameter(isbn, null);
+            var param = new AddBookParameter(isbn, null);
 
             //Execute
             LoadViewModel(param);
@@ -165,7 +165,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         }
 
         [Theory, MemberData(nameof(InputDataForBooks))]
-        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Api.Author author, string pages, bool isValid)
+        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Api.ApiAuthor author, string pages, bool isValid)
         {
             //Setup
             PrepareAuthorAndGenreData();
@@ -194,7 +194,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             MockThePageService
-               .Setup(x => x.AddBook(It.IsAny<Api.Book>()))
+               .Setup(x => x.AddBook(It.IsAny<Api.ApiBookDetailRequest>()))
                .Returns(() => Task.FromResult(result));
 
             PrepareAuthorAndGenreData();

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Moq;
+using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
@@ -47,7 +48,7 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void LoadingAddAuthorSuccessful(bool result, bool isLoading)
         {
             MockThePageService
-                .Setup(x => x.AddAuthor(It.IsAny<Api.Author>()))
+                .Setup(x => x.AddAuthor(It.IsAny<ApiAuthorRequest>()))
                 .Returns(() => Task.FromResult(result));
 
             _vm.TxtName = "";
@@ -56,7 +57,5 @@ namespace ThePage.UnitTests.ViewModels.Author
             //Execute
             Assert.Equal(isLoading, _vm.IsLoading);
         }
-
-
     }
 }

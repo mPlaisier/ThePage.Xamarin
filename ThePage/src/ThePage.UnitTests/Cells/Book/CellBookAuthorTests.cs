@@ -58,7 +58,7 @@ namespace ThePage.UnitTests.Cells.Book
 
             public static CellBookAuthor GetCellBookAuthorIsNotValid()
             {
-                Api.Author author = null;
+                Api.ApiAuthor author = null;
                 var cell = new CellBookAuthor(author, null, null, null);
 
                 return cell;

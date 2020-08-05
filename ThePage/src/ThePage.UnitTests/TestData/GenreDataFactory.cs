@@ -7,19 +7,19 @@ namespace ThePage.UnitTests
 {
     public static partial class GenreDataFactory
     {
-        public static List<Genre> GetListGenre4ElementsComplete()
+        public static ApiGenreResponse GetListGenre4ElementsComplete()
         {
-            return JsonConvert.DeserializeObject<List<Genre>>(ListGenre4ElementsComplete);
+            return JsonConvert.DeserializeObject<ApiGenreResponse>(ListGenre4ElementsComplete);
         }
 
-        public static List<Genre> GetListGenreEmpty()
+        public static ApiGenreResponse GetListGenreEmpty()
         {
-            return JsonConvert.DeserializeObject<List<Genre>>(ListGenreDataEmpty);
+            return JsonConvert.DeserializeObject<ApiGenreResponse>(ListGenreDataEmpty);
         }
 
-        public static Genre GetSingleGenre()
+        public static ApiGenre GetSingleGenre()
         {
-            return JsonConvert.DeserializeObject<Genre>(SingleGenre);
+            return JsonConvert.DeserializeObject<ApiGenre>(SingleGenre);
         }
 
         public static CellGenreSelect GetSingleCellGenre()

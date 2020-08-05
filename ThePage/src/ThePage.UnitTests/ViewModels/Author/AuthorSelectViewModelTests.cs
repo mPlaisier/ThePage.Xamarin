@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
@@ -67,7 +67,7 @@ namespace ThePage.UnitTests.ViewModels.Author
             //Arrange
             MockThePageService
                 .Setup(x => x.GetAllAuthors())
-                .Returns(() => Task.FromResult<List<Api.Author>>(null));
+                .Returns(() => Task.FromResult<ApiAuthorResponse>(null));
             LoadViewModel(GetSingleSelectedItemParameter());
 
             Assert.Empty(_vm.Items);

@@ -1,34 +1,56 @@
-using System;
 namespace ThePage.UnitTests
 {
     public static partial class GenreDataFactory
     {
         const string SingleGenre =
             @"{
-                ""_id"":""5e7fc0bbbc363c52e7d115ce"",
+                ""id"":""5f2841021bf6180017179b8d"",
                 ""name"":""Fiction""
             }";
 
         const string ListGenre4ElementsComplete =
-           @"[{
-                ""_id"":""5e7fc0bbbc363c52e7d115ce"",
-                ""name"":""Fiction"",
-                ""__v"":0},
-            {
-                ""_id"":""5e7fc0c9bc363c52e7d115cf"",
-                ""name"":""Non-Fiction"",
-                ""__v"":0},
-            {
-                ""_id"":""5e80755dd032d70017508517"",
-                ""name"":""Epic-Fantasy"",
-                ""__v"":0},
+           @"{
+                ""docs"": [
+                    {
+                        ""name"": ""Fiction"",
+                        ""id"": ""5f2841021bf6180017179b8d""
+                    },
+                    {
+                        ""name"": ""Non-Fiction"",
+                        ""id"": ""5f2872947e7cfd00174298ec""
+                    },
+                    {
+                        ""name"": ""Epic-Fantasy"",
+                        ""id"": ""5f25b4b4537e9f0017b5948a""
+                    },
+                    {
+                        ""name"": ""Fantasy"",
+                        ""id"": ""5f268ed046219d001762142e""
+                    }
+                ],
+                ""totalDocs"": 6,
+                ""limit"": 25,
+                ""totalPages"": 1,
+                ""page"": 1,
+                ""pagingCounter"": 1,
+                ""hasPrevPage"": false,
+                ""hasNextPage"": false,
+                ""prevPage"": null,
+                ""nextPage"": null
+            }";
 
-            {
-                ""_id"":""5e878ae11d0ad60017ca1f26"",
-                ""name"":""Fantasy"",
-                ""__v"":0}
-            ]";
-
-        const string ListGenreDataEmpty = @"[]";
+        const string ListGenreDataEmpty =
+            @"{
+                ""docs"": [],
+                ""totalDocs"": 0,
+                ""limit"": 25,
+                ""totalPages"": 1,
+                ""page"": 1,
+                ""pagingCounter"": 1,
+                ""hasPrevPage"": false,
+                ""hasNextPage"": false,
+                ""prevPage"": null,
+                ""nextPage"": null
+            }";
     }
 }
