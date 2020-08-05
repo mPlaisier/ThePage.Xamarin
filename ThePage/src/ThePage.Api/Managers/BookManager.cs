@@ -86,6 +86,8 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, ApiBookDetailResponse book)
         {
             //Clear cache
+            var bookKey = GetSingleBookKey + book.Id;
+            Barrel.Current.Empty(bookKey);
             Barrel.Current.Empty(FetchBooksKey);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));

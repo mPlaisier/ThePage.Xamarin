@@ -69,6 +69,8 @@ namespace ThePage.Api
         public static async Task<ApiGenre> Update(string token, string id, ApiGenreRequest genre)
         {
             //Clear cache
+            var genreKey = GetSingleGenreKey + id;
+            Barrel.Current.Empty(genreKey);
             Barrel.Current.Empty(GetGenresKey);
 
             var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
@@ -82,6 +84,8 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, ApiGenre genre)
         {
             //Clear cache
+            var genreKey = GetSingleGenreKey + genre.Id;
+            Barrel.Current.Empty(genreKey);
             Barrel.Current.Empty(GetGenresKey);
 
             var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
