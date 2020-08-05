@@ -71,6 +71,8 @@ namespace ThePage.Api
         public static async Task<ApiBookDetailRequest> Update(string token, string id, ApiBookDetailRequest book)
         {
             //Clear cache
+            var bookKey = GetSingleBookKey + id;
+            Barrel.Current.Empty(bookKey);
             Barrel.Current.Empty(FetchBooksKey);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));

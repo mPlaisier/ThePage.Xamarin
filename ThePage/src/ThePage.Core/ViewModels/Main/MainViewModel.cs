@@ -68,7 +68,7 @@ namespace ThePage.Core.ViewModels.Main
                new CellMenuItem("Authors",EMenu.Authors),
                new CellMenuItem("Genres", EMenu.Genre),
                new CellMenuHeader("Other"),
-               new CellMenuItem("Debug",EMenu.Debug),
+               new CellMenuItem("Debug",EMenu.Debug)
             };
 #else
             Items = new List<CellMenu>
