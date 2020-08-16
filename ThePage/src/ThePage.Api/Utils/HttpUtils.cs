@@ -15,7 +15,7 @@ namespace ThePage.Api
                 BaseAddress = new Uri(uri)
             };
 #else
-             if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
                 client = new HttpClient()
                 {
@@ -26,7 +26,7 @@ namespace ThePage.Api
             {
                 client = new HttpClient(new AuthenticatedHttpClientHandler(token))
                 {
-                    BaseAddress = new Uri(Secrets.ThePageAPI_URL)
+                    BaseAddress = new Uri(uri)
                 };
             }
 #endif
