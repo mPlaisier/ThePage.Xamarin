@@ -19,7 +19,7 @@ namespace ThePage.Api
 
         [Patch("/books/v2/{Id}")]
         [Headers("Authorization: Bearer")]
-        Task<ApiBookDetailRequest> UpdateBook([Body] ApiBookDetailRequest book, string id);
+        Task<ApiBookDetailResponse> UpdateBook([Body] ApiBookDetailRequest book, string id);
 
         [Delete("/books/v2/{book.Id}")]
         [Headers("Authorization: Bearer")]

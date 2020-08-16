@@ -13,7 +13,7 @@ namespace ThePage.Core
 
         Task<bool> AddBook(ApiBookDetailRequest book);
 
-        Task<ApiBookDetailRequest> UpdateBook(string id, ApiBookDetailRequest book);
+        Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book);
 
         Task<bool> DeleteBook(ApiBookDetailResponse book);
 

@@ -86,9 +86,9 @@ namespace ThePage.Core
             return result != null;
         }
 
-        public async Task<ApiBookDetailRequest> UpdateBook(string id, ApiBookDetailRequest book)
+        public async Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book)
         {
-            ApiBookDetailRequest result = null;
+            ApiBookDetailResponse result = null;
             try
             {
                 var token = await _authService.GetSessionToken();

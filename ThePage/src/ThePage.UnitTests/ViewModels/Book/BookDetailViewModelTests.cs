@@ -278,7 +278,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             PrepareThePageServiceResults();
             MockThePageService
                .Setup(x => x.UpdateBook(It.IsAny<string>(), It.IsAny<Api.ApiBookDetailRequest>()))
-               .Returns(() => result ? Task.FromResult(new Api.ApiBookDetailRequest()) : Task.FromResult<Api.ApiBookDetailRequest>(null));
+               .Returns(() => result ? Task.FromResult(new Api.ApiBookDetailResponse()) : Task.FromResult<Api.ApiBookDetailResponse>(null));
 
             LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
             _vm.Initialize();

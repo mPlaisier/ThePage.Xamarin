@@ -68,7 +68,7 @@ namespace ThePage.Api
 
         #region PATCH
 
-        public static async Task<ApiBookDetailRequest> Update(string token, string id, ApiBookDetailRequest book)
+        public static async Task<ApiBookDetailResponse> Update(string token, string id, ApiBookDetailRequest book)
         {
             //Clear cache
             var bookKey = GetSingleBookKey + id;

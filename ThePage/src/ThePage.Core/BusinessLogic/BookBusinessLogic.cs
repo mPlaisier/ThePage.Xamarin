@@ -13,7 +13,7 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static (ApiBookDetailRequest, ApiAuthor author, IEnumerable<ApiGenre>) CreateBookFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
+        public static (ApiBookDetailRequest, ApiAuthor, IEnumerable<ApiGenre>) CreateBookFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
         {
             //Title
             var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
@@ -21,13 +21,14 @@ namespace ThePage.Core
                 title = null;
 
             //Author
-            var author = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().Item;
-            if (author == null || author.Equals(originalResponse?.Author.Id))
+            var responseAuthor = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().Item;
+            var author = responseAuthor;
+            if (author == null || author.Id.Equals(originalResponse?.Author.Id))
                 author = null;
 
             //Genres
-            var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre);
-            if (genres == null || genres.Equals(originalResponse?.Genres))
+            var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+            if (genres == null || (genres.Count == originalResponse?.Genres.Count && !genres.Except(originalResponse?.Genres).Any()))
                 genres = null;
 
             //Isbn
@@ -42,12 +43,12 @@ namespace ThePage.Core
 
             //Read
             bool? read = items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Read).First().IsSelected;
-            if (read == null || title.Equals(originalResponse?.Title))
+            if (read == null || read == originalResponse?.Read)
                 read = null;
 
             //Pages
             int? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
-            if (pages == null || title.Equals(originalResponse?.Title))
+            if (pages == null || pages == originalResponse?.Pages)
                 pages = null;
 
             //Build
@@ -55,14 +56,14 @@ namespace ThePage.Core
                        .Builder()
                        .SetId(id)
                        .SetTitle(title)
-                       .SetAuthor(author.Id)
+                       .SetAuthor(author?.Id)
                        .SetGenres(genres.GetIdStrings(true))
                        .SetIsbn(isbn)
                        .SetOwned(owned)
                        .SetRead(read)
                        .SetPages(pages)
                        .Build(),
-                    author,
+                    responseAuthor,
                     genres);
         }
 

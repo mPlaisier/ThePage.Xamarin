@@ -217,17 +217,19 @@ namespace ThePage.Core
 
         ApiBookDetailRequest UpdateBookCellData()
         {
-            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id);
+            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id, BookDetail);
 
             BookDetail.Title = updatedBook.Title;
             BookDetail.Author = author;
 
-
             _book.Title = updatedBook.Title;
             _book.Author = author;
 
+            if (genres == null)
+                BookDetail.Genres = new List<ApiGenre>();
+            else
+                genres.ToList();
 
-            BookDetail.Genres = genres.ToList();
             BookDetail.ISBN = updatedBook.ISBN;
 
             if (updatedBook.Owned.HasValue)
