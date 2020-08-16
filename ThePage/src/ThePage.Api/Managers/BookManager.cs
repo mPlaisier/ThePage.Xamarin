@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
@@ -16,43 +15,39 @@ namespace ThePage.Api
 
         #endregion
 
-        #region Properties
-
-        static readonly IBookAPI _bookAPI = RestService.For<IBookAPI>(Secrets.ThePageAPI_URL);
-
-        #endregion
-
         #region FETCH
 
-        public static async Task<List<Book>> Get(bool forceRefresh = false)
+        public static async Task<ApiBookResponse> Get(string token, bool forceRefresh = false)
         {
-            List<Book> result = null;
+            ApiBookResponse result = null;
             if (!forceRefresh && !Barrel.Current.Exists(FetchBooksKey) && !Barrel.Current.IsExpired(FetchBooksKey))
-                result = Barrel.Current.Get<List<Book>>(FetchBooksKey);
+                result = Barrel.Current.Get<ApiBookResponse>(FetchBooksKey);
 
             if (result == null)
             {
-                result = await _bookAPI.GetBooks();
+                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+
+                result = await api.GetBooks();
                 Barrel.Current.Add(FetchBooksKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
             }
-
             return result;
         }
 
-        public static async Task<Book> Get(string id, bool forceRefresh = false)
+        public static async Task<ApiBookDetailResponse> Get(string token, string id, bool forceRefresh = false)
         {
             var bookKey = GetSingleBookKey + id;
-            Book result = null;
+            ApiBookDetailResponse result = null;
 
             if (!forceRefresh && Barrel.Current.Exists(bookKey) && !Barrel.Current.IsExpired(bookKey))
-                result = Barrel.Current.Get<Book>(bookKey);
+                result = Barrel.Current.Get<ApiBookDetailResponse>(bookKey);
 
             if (result == null)
             {
-                result = await _bookAPI.GetBook(id);
+                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                result = await api.GetBook(id);
+
                 Barrel.Current.Add(bookKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
             }
-
             return result;
         }
 
@@ -60,36 +55,44 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<Book> Add(Book book)
+        public static async Task<ApiBookDetailRequest> Add(string token, ApiBookDetailRequest book)
         {
             //Clear cache
             Barrel.Current.Empty(FetchBooksKey);
 
-            return await _bookAPI.AddBook(book);
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.AddBook(book);
         }
 
         #endregion
 
         #region PATCH
 
-        public static async Task<Book> Update(Book book)
+        public static async Task<ApiBookDetailResponse> Update(string token, string id, ApiBookDetailRequest book)
         {
             //Clear cache
+            var bookKey = GetSingleBookKey + id;
+            Barrel.Current.Empty(bookKey);
             Barrel.Current.Empty(FetchBooksKey);
 
-            return await _bookAPI.UpdateBook(book);
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.UpdateBook(book, id);
         }
 
         #endregion
 
         #region DELETE
 
-        public static async Task<bool> Delete(Book book)
+        public static async Task<bool> Delete(string token, ApiBookDetailResponse book)
         {
             //Clear cache
+            var bookKey = GetSingleBookKey + book.Id;
+            Barrel.Current.Empty(bookKey);
             Barrel.Current.Empty(FetchBooksKey);
 
-            await _bookAPI.DeleteBook(book);
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            await api.DeleteBook(book);
+
             return true;
         }
 

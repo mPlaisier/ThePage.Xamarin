@@ -4,6 +4,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using PropertyChanged;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public CellAuthor Author { get; }
+        public ApiAuthor Author { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(CellAuthor author)
+        public AuthorDetailParameter(ApiAuthor author)
         {
             Author = author;
         }
@@ -37,7 +38,7 @@ namespace ThePage.Core
 
         public override string Title => "Author Detail";
 
-        public CellAuthor AuthorCell { get; internal set; }
+        public ApiAuthor Author { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -87,9 +88,9 @@ namespace ThePage.Core
 
         public override void Prepare(AuthorDetailParameter parameter)
         {
-            AuthorCell = parameter.Author;
+            Author = parameter.Author;
 
-            TxtName = AuthorCell.Author.Name;
+            TxtName = Author.Name;
             IsEditing = false;
         }
 
@@ -114,9 +115,11 @@ namespace ThePage.Core
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            AuthorCell.Author.Name = TxtName;
+            Author.Name = TxtName;
 
-            var author = await _thePageService.UpdateAuthor(AuthorCell.Author);
+            var request = new ApiAuthorRequest(TxtName);
+
+            var author = await _thePageService.UpdateAuthor(Author.Id, request);
             if (author != null)
                 _userInteraction.ToastMessage("Author updated");
             else
@@ -135,7 +138,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteAuthor(AuthorCell.Author);
+                var result = await _thePageService.DeleteAuthor(Author);
 
                 if (result)
                 {

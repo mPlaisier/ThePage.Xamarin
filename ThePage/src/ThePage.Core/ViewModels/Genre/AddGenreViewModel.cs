@@ -75,7 +75,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddGenre(new Genre(TxtName.Trim()));
+            var result = await _thePageService.AddGenre(new ApiGenreRequest(TxtName.Trim()));
 
             if (result)
             {

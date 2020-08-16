@@ -2,18 +2,18 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
-    public class ApiRequestToken
+    public class ApiTokenRequest
     {
         #region Properties
 
         [JsonProperty("refreshToken")]
-        public string RefreshToken { get; set; }
+        public string RefreshToken { get; }
 
         #endregion
 
         #region Constructor
 
-        public ApiRequestToken(string refreshToken)
+        public ApiTokenRequest(string refreshToken)
         {
             RefreshToken = refreshToken;
         }

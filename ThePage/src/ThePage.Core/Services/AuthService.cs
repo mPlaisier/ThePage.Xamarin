@@ -40,10 +40,26 @@ namespace ThePage.Core
 
         public async Task<bool> Login(string username, string password)
         {
-            ApiResponseUser result = null;
+            ApiUserReponse result = null;
             try
             {
-                result = await AuthManager.Login(new ApiRequestUser(username, password));
+                result = await AuthManager.Login(new ApiUserRequest(username, password));
+                handleSuccessfullLogin(result);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+
+            return result != null;
+        }
+
+        public async Task<bool> Register(string username, string name, string email, string password)
+        {
+            ApiUserReponse result = null;
+            try
+            {
+                result = await AuthManager.Register(new ApiRegisterRequest(username, name, email, password));
                 handleSuccessfullLogin(result);
             }
             catch (Exception ex)
@@ -59,10 +75,10 @@ namespace ThePage.Core
             string token = null;
             if (Barrel.Current.Exists(LoginKey))
             {
-                var result = Barrel.Current.Get<ApiResponseUser>(LoginKey);
-                token = result.Tokens.Access.Expires < DateTime.Now
-                    ? result.Tokens.Access.Token
-                    : await UpdateSessionToken(result.Tokens.Refresh);
+                var result = Barrel.Current.Get<ApiTokens>(LoginKey);
+                token = result.Access.Expires > DateTime.UtcNow
+                    ? result.Access.Token
+                    : await UpdateSessionToken(result.Refresh);
             }
 
             if (token != null)
@@ -78,7 +94,7 @@ namespace ThePage.Core
 
         #region Private
 
-        void handleSuccessfullLogin(ApiResponseUser response)
+        void handleSuccessfullLogin(ApiUserReponse response)
         {
             IsLoggedIn = true;
             Barrel.Current.Add(LoginKey, response.Tokens, TimeSpan.FromDays(30));

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
@@ -31,7 +32,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
 
         SelectedGenreParameters GetSingleSelectedItemParameter()
         {
-            var list = new List<Api.Genre>()
+            var list = new List<ApiGenre>()
             {
                 GenreDataFactory.GetSingleGenre()
             };
@@ -96,7 +97,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
             //Arrange
             MockThePageService
                 .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult<List<Api.Genre>>(null));
+                .Returns(() => Task.FromResult<ApiGenreResponse>(null));
             LoadViewModel(GetSingleSelectedItemParameter());
 
             Assert.Empty(_vm.Items);

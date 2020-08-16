@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
-    public class ApiRequestUser
+    public class ApiUserRequest
     {
         #region Properties
 
@@ -16,7 +16,7 @@ namespace ThePage.Api
 
         #region Constructor
 
-        public ApiRequestUser(string username, string password)
+        public ApiUserRequest(string username, string password)
         {
             Username = username;
             Password = password;

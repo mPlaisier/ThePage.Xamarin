@@ -18,9 +18,7 @@
 		<PackageReference Include="MvvmCross.Tests" Version="6.4.3" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="BL\" />
 		<Folder Include="ViewModels\" />
-		<Folder Include="BL\Data\" />
 		<Folder Include="ViewModels\Genre\" />
 		<Folder Include="TestData\" />
 		<Folder Include="Mock\" />

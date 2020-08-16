@@ -1,42 +1,38 @@
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using ThePage.Api;
-using ThePage.Core;
 
 namespace ThePage.UnitTests
 {
     public static partial class BookDataFactory
     {
-        public static List<Book> GetListBook4ElementsComplete()
+        public static ApiBookResponse GetListBook4ElementsComplete()
         {
-            return JsonConvert.DeserializeObject<List<Book>>(ListBook4ElementsComplete);
+            return JsonConvert.DeserializeObject<ApiBookResponse>(ListBook4ElementsComplete);
         }
 
-        public static List<Book> GetListBookEmpty()
+        public static ApiBookResponse GetListBookEmpty()
         {
-            return JsonConvert.DeserializeObject<List<Book>>(ListBookDataEmpty);
+            return JsonConvert.DeserializeObject<ApiBookResponse>(ListBookDataEmpty);
         }
 
-        public static Book GetSingleBook()
+        public static ApiBookDetailResponse GetSingleBook()
         {
-            return JsonConvert.DeserializeObject<Book>(SingleBookWithGenres);
+            return JsonConvert.DeserializeObject<ApiBookDetailResponse>(SingleBookWithGenres);
         }
 
-        public static CellBook GetSingleCellBookWith2Genres()
+        public static ApiBook GetSingleApiBook()
         {
-            var book = GetSingleBook();
-            var author = JsonConvert.DeserializeObject<Author>(SingleBookAuthor);
-            var genres = JsonConvert.DeserializeObject<List<Genre>>(SingleBookGenres);
-            return new CellBook(book, author, genres);
+            return JsonConvert.DeserializeObject<ApiBook>(SingleApiBook);
         }
 
-        public static CellBook GetSingleCellBookWithoutGenres()
+        public static ApiBookDetailResponse GetApiBookDetailResponseWithGenres()
         {
-            var book = GetSingleBook();
-            var author = JsonConvert.DeserializeObject<Author>(SingleBookAuthor);
-            var genres = new List<Genre>();
-            return new CellBook(book, author, genres);
+            return JsonConvert.DeserializeObject<ApiBookDetailResponse>(ApiBookDetailResponseWithGenres);
+        }
+
+        public static ApiBookDetailResponse GetApiBookDetailResponseNoGenres()
+        {
+            return JsonConvert.DeserializeObject<ApiBookDetailResponse>(ApiBookDetailResponseNoGenres);
         }
 
         public static OLObject GetSingleOLObject()

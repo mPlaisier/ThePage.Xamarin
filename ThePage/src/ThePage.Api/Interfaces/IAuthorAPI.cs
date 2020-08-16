@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
 
@@ -6,19 +5,24 @@ namespace ThePage.Api
 {
     public interface IAuthorAPI
     {
-        [Get("/authors")]
-        Task<List<Author>> GetAuthors();
+        [Get("/authors/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiAuthorResponse> GetAuthors();
 
-        [Get("/authors/{id}")]
-        Task<Author> GetAuthor(string id);
+        [Get("/authors/v2/{id}")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiAuthor> GetAuthor(string id);
 
-        [Post("/authors")]
-        Task<Author> AddAuthor([Body] Author author);
+        [Post("/authors/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiAuthor> AddAuthor([Body] ApiAuthorRequest author);
 
-        [Patch("/authors/{author.Id}")]
-        Task<Author> UpdateAuthor(Author author);
+        [Patch("/authors/v2/{id}")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiAuthor> UpdateAuthor([Body] ApiAuthorRequest author, string id);
 
-        [Delete("/authors/{author.Id}")]
-        Task DeleteAuthor(Author author);
+        [Delete("/authors/v2/{author.Id}")]
+        [Headers("Authorization: Bearer")]
+        Task DeleteAuthor(ApiAuthor author);
     }
 }
