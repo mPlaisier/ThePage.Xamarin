@@ -35,11 +35,11 @@ namespace ThePage.Core
 
         Task<ApiGenreResponse> GetAllGenres();
 
-        Task<bool> AddGenre(ApiGenreRequest author);
+        Task<bool> AddGenre(ApiGenreRequest genre);
 
         Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre);
 
-        Task<bool> DeleteGenre(ApiGenre author);
+        Task<bool> DeleteGenre(ApiGenre genre);
 
         #endregion
     }
