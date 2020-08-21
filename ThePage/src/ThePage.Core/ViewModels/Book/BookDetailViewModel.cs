@@ -43,7 +43,7 @@ namespace ThePage.Core
 
         public MvxObservableCollection<ICellBook> Items { get; set; } = new MvxObservableCollection<ICellBook>();
 
-        public override string Title => BookDetail != null ? BookDetail.Title : "Book detail";
+        public override string LblTitle => BookDetail != null ? BookDetail.Title : "Book detail";
 
         public ApiBookDetailResponse BookDetail { get; internal set; }
 

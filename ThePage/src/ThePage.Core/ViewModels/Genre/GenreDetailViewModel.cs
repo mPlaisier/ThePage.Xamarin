@@ -36,7 +36,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Genre Detail";
+        public override string LblTitle => "Genre Detail";
 
         public ApiGenre Genre { get; internal set; }
 

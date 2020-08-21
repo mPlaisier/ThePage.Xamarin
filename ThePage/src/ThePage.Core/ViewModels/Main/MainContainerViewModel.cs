@@ -2,11 +2,11 @@
 {
     public class MainContainerViewModel : BaseViewModel
     {
-        public override string Title => "";
+        public override string LblTitle => "";
     }
 
     public class MainContainerNoToolBarViewModel : BaseViewModel
     {
-        public override string Title => "";
+        public override string LblTitle => "";
     }
 }

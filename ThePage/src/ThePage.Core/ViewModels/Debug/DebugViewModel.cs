@@ -17,7 +17,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Debug Menu";
+        public override string LblTitle => "Debug Menu";
 
         public MvxObservableCollection<ICellDebug> Items { get; internal set; }
 
