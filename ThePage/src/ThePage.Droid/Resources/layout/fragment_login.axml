@@ -3,10 +3,11 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightbg"
     android:clickable="true" 
     android:focusableInTouchMode="true">
-
     <EditText
+        style="@style/authEditText"
         android:id="@+id/txtUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -17,21 +18,20 @@
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toTopOf="@+id/txtPassword"
         local:layout_constraintVertical_chainStyle="packed"
-        local:MvxBind="Text Username;Visibility InvertedVisibility(IsLoading)"/>
-
+        local:MvxBind="Text Username;Hint LblUsernameHint;Visibility InvertedVisibility(IsLoading)"/>
     <EditText
+        style="@style/authEditText"
         android:id="@+id/txtPassword"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
+        android:layout_marginTop="24dp"
         android:layout_marginRight="50dp"
         android:inputType="textPassword"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/txtUsername"
         local:layout_constraintBottom_toTopOf="@+id/btnLogin" 
-        local:MvxBind="Text Password;Visibility InvertedVisibility(IsLoading)"/>
-
+        local:MvxBind="Text Password;Hint LblPasswordHint;Visibility InvertedVisibility(IsLoading)"/>
     <TextView
         style="@style/PrimaryBtn"
         android:id="@+id/btnLogin"
@@ -42,7 +42,6 @@
         local:layout_constraintTop_toBottomOf="@+id/txtPassword"
         local:layout_constraintBottom_toTopOf="@+id/btnRegister"
         local:MvxBind="Text LblBtnLogin;Click LoginCommand;Enabled BtnLoginEnabled;Visibility InvertedVisibility(IsLoading)"/>
-
     <TextView
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
@@ -52,8 +51,7 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintTop_toBottomOf="@+id/btnLogin" 
         local:layout_constraintBottom_toBottomOf="parent"
-        local:MvxBind="Text LblRegister;Visibility InvertedVisibility(IsLoading)"/>
-
+        local:MvxBind="Text LblRegister;Visibility InvertedVisibility(IsLoading);Click RegisterCommand"/>
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:id="@+id/progressBar"
@@ -66,5 +64,4 @@
         local:layout_constraintTop_toTopOf="parent" 
         local:layout_constraintBottom_toBottomOf="parent"
         local:MvxBind="Text LblRegister;Visibility Visibility(IsLoading)"/>
-
 </android.support.constraint.ConstraintLayout>

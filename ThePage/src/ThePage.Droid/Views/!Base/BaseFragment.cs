@@ -56,7 +56,7 @@ namespace ThePage.Droid.Views
                     else
                         activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
 
-                    _toolbar.Title = ViewModel.Title;
+                    _toolbar.Title = ViewModel.LblTitle;
                 }
             }
         }

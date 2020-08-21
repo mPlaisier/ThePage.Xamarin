@@ -7,7 +7,7 @@ namespace ThePage.Core.ViewModels
 {
     public abstract class BaseViewModel : MvxViewModel
     {
-        public abstract string Title { get; }
+        public abstract string LblTitle { get; }
 
         bool _isLoading;
         public virtual bool IsLoading

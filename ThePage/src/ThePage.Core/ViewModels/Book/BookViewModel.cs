@@ -21,7 +21,7 @@ namespace ThePage.Core
 
         public List<ApiBook> Books { get; set; }
 
-        public override string Title => "Books";
+        public override string LblTitle => "Books";
 
         MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;

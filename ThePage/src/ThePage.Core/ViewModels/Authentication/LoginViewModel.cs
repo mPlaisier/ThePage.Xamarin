@@ -11,12 +11,17 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
-        public override string Title => string.Empty;
+        public override string LblTitle => string.Empty;
+
+        public string LblUsernameHint => "Username";
 
         public string Username { get; set; }
+
+        public string LblPasswordHint => "Password";
 
         public string Password { get; set; }
 
@@ -30,20 +35,21 @@ namespace ThePage.Core
 
         #region Commands
 
-        private MvxAsyncCommand _loginCommand;
+        MvxAsyncCommand _loginCommand;
         public IMvxAsyncCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxAsyncCommand(OnloginClick);
 
-        private MvxCommand _registerCommand;
+        MvxCommand _registerCommand;
         public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(OnRegisterClick);
 
         #endregion
 
         #region Constructor
 
-        public LoginViewModel(IMvxNavigationService navigationService, IAuthService authService)
+        public LoginViewModel(IMvxNavigationService navigationService, IAuthService authService, IUserInteraction userInteraction)
         {
             _navigationService = navigationService;
             _authService = authService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -67,26 +73,18 @@ namespace ThePage.Core
 
         async Task OnloginClick()
         {
-            //Start login
             IsLoading = true;
 
             var success = await _authService.Login(Username, Password);
-
             if (success)
-            {
                 await _navigationService.Navigate<MainViewModel>();
-            }
-            else
-            {
-                //TODO Show error
-                IsLoading = false;
-            }
+
+            IsLoading = false;
         }
 
         void OnRegisterClick()
         {
-            //TODO
-            //Navigate to Register VM
+            _navigationService.Navigate<RegisterViewModel>();
         }
 
         #endregion

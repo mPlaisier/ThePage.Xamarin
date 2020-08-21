@@ -20,7 +20,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "New Author";
+        public override string LblTitle => "New Author";
 
         public string LblName => "Name:";
 

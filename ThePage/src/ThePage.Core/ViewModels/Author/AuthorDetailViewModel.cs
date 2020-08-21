@@ -36,7 +36,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Author Detail";
+        public override string LblTitle => "Author Detail";
 
         public ApiAuthor Author { get; internal set; }
 

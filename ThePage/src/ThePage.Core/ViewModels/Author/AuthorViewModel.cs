@@ -16,7 +16,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Authors";
+        public override string LblTitle => "Authors";
 
         public List<ApiAuthor> Authors { get; set; }
 

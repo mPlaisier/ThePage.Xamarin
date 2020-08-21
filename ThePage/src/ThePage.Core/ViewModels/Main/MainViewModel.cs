@@ -21,7 +21,7 @@ namespace ThePage.Core.ViewModels.Main
 
         #region Properties
 
-        public override string Title => "ThePage";
+        public override string LblTitle => "ThePage";
 
         public List<CellMenu> Items { get; set; }
 

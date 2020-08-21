@@ -18,7 +18,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "New Genre";
+        public override string LblTitle => "New Genre";
 
         public string LblName => "Name:";
 

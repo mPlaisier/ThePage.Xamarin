@@ -31,7 +31,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Select Author";
+        public override string LblTitle => "Select Author";
 
         public override List<CellAuthorSelect> Items { get; set; }
 

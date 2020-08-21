@@ -8,18 +8,18 @@ using ThePage.Droid.Views;
 namespace ThePage.Droid
 {
     [MvxFragmentPresentation(typeof(MainContainerNoToolBarViewModel),
-       Resource.Id.content_frame,
-       AddToBackStack = true,
-       EnterAnimation = Resource.Animation.pull_in_down,
-       ExitAnimation = Resource.Animation.push_out_up,
-       PopEnterAnimation = Resource.Animation.pull_in_up,
-       PopExitAnimation = Resource.Animation.push_out_down
-   )]
-    public class LoginViewFragment : BaseFragment<LoginViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
+      Resource.Id.content_frame,
+      AddToBackStack = true,
+      EnterAnimation = Resource.Animation.pull_in_down,
+      ExitAnimation = Resource.Animation.push_out_up,
+      PopEnterAnimation = Resource.Animation.pull_in_up,
+      PopExitAnimation = Resource.Animation.push_out_down
+  )]
+    public class RegisterFragment : BaseFragment<RegisterViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
     {
         #region Properties
 
-        protected override int FragmentLayoutId => Resource.Layout.fragment_login;
+        protected override int FragmentLayoutId => Resource.Layout.fragment_register;
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Select Genre";
+        public override string LblTitle => "Select Genre";
 
         public override List<CellGenreSelect> Items { get; set; }
 

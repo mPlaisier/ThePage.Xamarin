@@ -16,7 +16,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Genres";
+        public override string LblTitle => "Genres";
 
         public List<ApiGenre> Genres { get; set; }
 
