@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightbg"
+    android:clickable="true" 
+    android:focusableInTouchMode="true">
+    <!-- Guidelines-->
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        local:layout_constraintGuide_percent="0.1" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintGuide_begin="50dp"
+        android:orientation="vertical" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintGuide_end="50dp"
+        android:orientation="vertical" />
+    <!-- Title and Disclaimer -->
+    <TextView
+        style="@style/authTextTitle"
+        android:id="@+id/lblTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toTopOf="@+id/guidelineTop"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Text LblTitle;Visibility InvertedVisibility(IsLoading)"
+        tools:text="Sign up" />
+    <TextView
+        style="@style/authTextBody"
+        android:id="@+id/lblDisclaimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toBottomOf="@+id/lblTitle"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Text LblDisclaimer;Visibility InvertedVisibility(IsLoading)"/>
+        tools:text="Create an account" />
+    <!-- EditTexts -->
+    <EditText
+        style="@style/authEditText"
+        android:id="@+id/txtUsername"
+        android:layout_width="0dp"
+        android:layout_marginTop="24dp"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/lblDisclaimer"
+        local:MvxBind="Text Username;Hint LblUsernameHint;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="Username"/>
+    <EditText
+        style="@style/authEditText"
+        android:id="@+id/txtEmail"
+        android:layout_width="0dp"
+        android:layout_marginTop="24dp"
+        android:inputType="textEmailAddress"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/txtUsername"
+        local:MvxBind="Text Email;Hint LblEmailHint;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="Email"/>
+    <EditText
+        style="@style/authEditText"
+        android:id="@+id/txtName"
+        android:layout_width="0dp"
+        android:layout_marginTop="24dp"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/txtEmail"
+        local:MvxBind="Text Name;Hint LblNameHint;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="First and lastname"/>
+    <EditText
+        style="@style/authEditText"
+        android:id="@+id/txtPassword"
+        android:layout_width="0dp"
+        android:layout_marginTop="24dp"
+        android:inputType="textPassword"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/txtName"
+        local:MvxBind="Text Password;Hint LblPasswordHint;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="Password"/>
+    <EditText
+        style="@style/authEditText"
+        android:id="@+id/txtRepeatPassword"
+        android:layout_width="0dp"
+        android:layout_marginTop="24dp"
+        android:inputType="textPassword"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/txtPassword"
+        local:MvxBind="Text RepeatPassword;Hint LblRepeatPasswordHint;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="Repeat Password"/>
+    <!-- Buttons -->
+    <TextView
+        style="@style/PrimaryBtn"
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:textAllCaps="true"
+        local:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        local:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        local:layout_constraintTop_toBottomOf="@+id/txtRepeatPassword"
+        local:MvxBind="Text LblBtnRegister;Click RegisterCommand;Enabled BtnRegisterEnabled;Visibility InvertedVisibility(IsLoading)"
+        tools:hint="Register"/>
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        local:layout_constraintTop_toBottomOf="@id/btnRegister"/>
+    <TextView
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintTop_toBottomOf="@+id/space"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:MvxBind="Text LblLogin;Click LoginCommand;Visibility InvertedVisibility(IsLoading)"
+        tools:text="Already have an account? Log in"/>
+</android.support.constraint.ConstraintLayout>
