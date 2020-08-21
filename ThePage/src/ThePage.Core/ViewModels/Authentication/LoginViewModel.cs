@@ -73,20 +73,13 @@ namespace ThePage.Core
 
         async Task OnloginClick()
         {
-            //Start login
             IsLoading = true;
 
             var success = await _authService.Login(Username, Password);
-
             if (success)
-            {
                 await _navigationService.Navigate<MainViewModel>();
-            }
-            else
-            {
-                _userInteraction.Confirm("Login failed",
-                                         () => IsLoading = false);
-            }
+
+            IsLoading = false;
         }
 
         void OnRegisterClick()

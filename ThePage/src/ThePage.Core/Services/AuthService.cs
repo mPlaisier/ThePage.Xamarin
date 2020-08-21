@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
 using MvvmCross;
+using Newtonsoft.Json;
 using Refit;
 using ThePage.Api;
 
@@ -61,6 +62,12 @@ namespace ThePage.Core
             {
                 result = await AuthManager.Register(new ApiRegisterRequest(username, name, email, password));
                 handleSuccessfullLogin(result);
+            }
+            catch (ApiException ex)
+            {
+                ApiError error = JsonConvert.DeserializeObject<ApiError>(ex.Content);
+
+                _userInteraction.Alert(error.Message, null, "Error");
             }
             catch (Exception ex)
             {

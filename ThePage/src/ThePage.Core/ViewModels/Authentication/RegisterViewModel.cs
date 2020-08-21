@@ -4,6 +4,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Core.ViewModels;
+using ThePage.Core.ViewModels.Main;
 
 namespace ThePage.Core
 {
@@ -11,6 +12,7 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
@@ -48,8 +50,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxCommand _registerCommand;
-        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(OnRegisterClick);
+        MvxAsyncCommand _registerCommand;
+        public IMvxAsyncCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxAsyncCommand(OnRegisterClick);
 
         MvxCommand _loginCommand;
         public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
@@ -61,10 +63,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public RegisterViewModel(IMvxNavigationService navigationService, IAuthService authService)
+        public RegisterViewModel(IMvxNavigationService navigationService, IAuthService authService, IUserInteraction userInteraction)
         {
             _navigationService = navigationService;
             _authService = authService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -82,9 +85,15 @@ namespace ThePage.Core
 
         #region Private
 
-        void OnRegisterClick()
+        async Task OnRegisterClick()
         {
+            IsLoading = true;
 
+            var success = await _authService.Register(Username, Name, Email, Password);
+            if (success)
+                await _navigationService.Navigate<MainViewModel>();
+
+            IsLoading = false;
         }
 
         bool ValidateInput()
