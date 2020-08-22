@@ -13,6 +13,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -50,8 +51,12 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxAsyncCommand _registerCommand;
-        public IMvxAsyncCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxAsyncCommand(OnRegisterClick);
+        MvxCommand _registerCommand;
+        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(() =>
+        {
+            _device.HideKeyboard();
+            OnRegisterClick().Forget();
+        });
 
         MvxCommand _loginCommand;
         public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
@@ -63,11 +68,15 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public RegisterViewModel(IMvxNavigationService navigationService, IAuthService authService, IUserInteraction userInteraction)
+        public RegisterViewModel(IMvxNavigationService navigationService,
+                              IAuthService authService,
+                              IUserInteraction userInteraction,
+                              IDevice device)
         {
             _navigationService = navigationService;
             _authService = authService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -91,9 +100,13 @@ namespace ThePage.Core
 
             var success = await _authService.Register(Username, Name, Email, Password);
             if (success)
+            {
+                _userInteraction.ToastMessage("Registration successfull, logging in...", EToastType.Success);
                 await _navigationService.Navigate<MainViewModel>();
-
-            IsLoading = false;
+                await _navigationService.Close(this);
+            }
+            else
+                IsLoading = false;
         }
 
         bool ValidateInput()
@@ -109,7 +122,6 @@ namespace ThePage.Core
                 return false;
 
             //TODO password min req
-
 
             return true;
         }
