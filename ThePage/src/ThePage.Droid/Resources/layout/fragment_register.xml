@@ -129,4 +129,16 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:MvxBind="Text LblLogin;Click LoginCommand;Visibility InvertedVisibility(IsLoading)"
         tools:text="Already have an account? Log in"/>
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"
+        android:indeterminate="true"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintTop_toTopOf="parent" 
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:MvxBind="Text LblRegister;Visibility Visibility(IsLoading)"/>
 </android.support.constraint.ConstraintLayout>

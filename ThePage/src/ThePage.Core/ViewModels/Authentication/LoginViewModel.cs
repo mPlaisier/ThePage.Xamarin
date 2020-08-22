@@ -40,12 +40,14 @@ namespace ThePage.Core
         public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
         {
             _device.HideKeyboard();
-
             OnloginClick().Forget();
         });
 
         MvxCommand _registerCommand;
-        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(OnRegisterClick);
+        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(() =>
+        {
+            _navigationService.Navigate<RegisterViewModel>();
+        });
 
         #endregion
 
@@ -90,14 +92,10 @@ namespace ThePage.Core
             {
                 _userInteraction.ToastMessage("Success", EToastType.Success);
                 await _navigationService.Navigate<MainViewModel>();
+                await _navigationService.Close(this);
             }
-
-            IsLoading = false;
-        }
-
-        void OnRegisterClick()
-        {
-            _navigationService.Navigate<RegisterViewModel>();
+            else
+                IsLoading = false;
         }
 
         #endregion
