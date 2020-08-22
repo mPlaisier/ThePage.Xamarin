@@ -12,6 +12,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -35,8 +36,13 @@ namespace ThePage.Core
 
         #region Commands
 
-        MvxAsyncCommand _loginCommand;
-        public IMvxAsyncCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxAsyncCommand(OnloginClick);
+        MvxCommand _loginCommand;
+        public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
+        {
+            _device.HideKeyboard();
+
+            OnloginClick().Forget();
+        });
 
         MvxCommand _registerCommand;
         public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(OnRegisterClick);
@@ -45,11 +51,15 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public LoginViewModel(IMvxNavigationService navigationService, IAuthService authService, IUserInteraction userInteraction)
+        public LoginViewModel(IMvxNavigationService navigationService,
+                              IAuthService authService,
+                              IUserInteraction userInteraction,
+                              IDevice device)
         {
             _navigationService = navigationService;
             _authService = authService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -77,7 +87,10 @@ namespace ThePage.Core
 
             var success = await _authService.Login(Username, Password);
             if (success)
+            {
+                _userInteraction.ToastMessage("Success", EToastType.Success);
                 await _navigationService.Navigate<MainViewModel>();
+            }
 
             IsLoading = false;
         }
