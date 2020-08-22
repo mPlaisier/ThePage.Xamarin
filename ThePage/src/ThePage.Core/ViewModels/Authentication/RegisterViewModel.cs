@@ -110,7 +110,6 @@ namespace ThePage.Core
 
             //TODO password min req
 
-
             return true;
         }
 

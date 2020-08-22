@@ -25,7 +25,6 @@ namespace ThePage.Core
 
         public AuthService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
         {
-
         }
 
         public AuthService(IUserInteraction userInteraction)
@@ -66,7 +65,6 @@ namespace ThePage.Core
             catch (ApiException ex)
             {
                 ApiError error = JsonConvert.DeserializeObject<ApiError>(ex.Content);
-
                 _userInteraction.Alert(error.Message, null, "Error");
             }
             catch (Exception ex)
@@ -131,21 +129,27 @@ namespace ThePage.Core
         //TODO Move to General handle exception class
         void HandleException(Exception ex)
         {
-            Crashes.TrackError(ex);
-
             if (ex is ApiException apiException)
             {
+                ApiError error = JsonConvert.DeserializeObject<ApiError>(apiException.Content);
+
                 if (apiException.StatusCode == HttpStatusCode.NotFound)
                 {
                     _userInteraction.Alert("Item not found", null, "Error");
                 }
                 else if (apiException.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    _userInteraction.Alert("Incorrect username or password", null, "Error");
+                    _userInteraction.ToastMessage(error.Message, EToastType.Error);
+                }
+                else
+                {
+                    _userInteraction.Alert(error.Message, null, "Error");
                 }
             }
             else
             {
+                Crashes.TrackError(ex);
+
                 _userInteraction.Alert(ex.Message, null, "Error");
             }
         }

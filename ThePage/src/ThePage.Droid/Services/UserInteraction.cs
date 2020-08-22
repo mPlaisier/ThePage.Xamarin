@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Graphics;
+using Android.Support.V4.Content;
+using Android.Views;
 using Android.Widget;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
@@ -164,10 +167,93 @@ namespace ThePage.Droid
                 if (CurrentActivity == null)
                     return;
 
-                Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
-
+                //Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
+                ToastMessage(message, EToastType.Error);
 
             }, null);
+        }
+
+        public void ToastMessage(string message, EToastType type)
+        {
+            LayoutInflater inflater = CurrentActivity.LayoutInflater;
+            var view = inflater.Inflate(Resource.Layout.custom_toast, null);
+
+            var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
+            var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
+            var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
+
+            //Set Layout values
+            layout.SetBackgroundColor(GetToastBackgroundColor(type));
+
+            //Set ImageView values
+            img.SetImageResource(GetToastTypeImage(type));
+            img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
+            img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
+
+            //Set TextView values
+            txt.Text = message;
+            txt.SetTextColor(GetToastTextColor(type));
+
+            //Show Toast
+            var toast = new Toast(CurrentActivity)
+            {
+                Duration = ToastLength.Short,
+                View = view
+            };
+            toast.Show();
+
+            static int GetToastTypeImage(EToastType type)
+            {
+                switch (type)
+                {
+                    case EToastType.Error:
+                        return Resource.Drawable.ic_error;
+                    case EToastType.Success:
+                        return Resource.Drawable.ic_check;
+                    case EToastType.Other:
+                        return 0;
+                    default:
+                        return Resource.Drawable.ic_error;
+                }
+            }
+
+            Color GetToastTextColor(EToastType type)
+            {
+                int resourceColor;
+                switch (type)
+                {
+                    case EToastType.Error:
+                        resourceColor = Resource.Color.primaryLightColorError;
+                        break;
+                    case EToastType.Success:
+                        resourceColor = Resource.Color.primaryLightColorSuccess;
+                        break;
+                    case EToastType.Other:
+                    default:
+                        resourceColor = Resource.Color.black;
+                        break;
+                }
+                return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
+            }
+
+            Color GetToastBackgroundColor(EToastType type)
+            {
+                int resourceColor;
+                switch (type)
+                {
+                    case EToastType.Error:
+                        resourceColor = Resource.Color.primaryDarkColorError;
+                        break;
+                    case EToastType.Success:
+                        resourceColor = Resource.Color.primaryDarkColorSuccess;
+                        break;
+                    case EToastType.Other:
+                    default:
+                        resourceColor = Resource.Color.white;
+                        break;
+                }
+                return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
+            }
         }
     }
 }
