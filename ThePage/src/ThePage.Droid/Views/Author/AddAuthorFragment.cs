@@ -21,6 +21,8 @@ namespace ThePage.Droid
 
         protected override int FragmentLayoutId => Resource.Layout.fragment_addauthor;
 
+        protected override EToolbarIcon ToolbarIcon => EToolbarIcon.Close;
+
         #endregion
 
         #region LifeCycle

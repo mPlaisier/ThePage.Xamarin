@@ -1,4 +1,8 @@
-﻿using Android.OS;
+﻿using Android.Graphics;
+using Android.Graphics.Drawables;
+using Android.OS;
+using Android.Support.V4.Content;
+using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Android.Views;
 using MvvmCross.Droid.Support.V4;
@@ -9,11 +13,20 @@ using ThePage.Droid.Views.Main;
 
 namespace ThePage.Droid.Views
 {
+    public enum EToolbarIcon
+    {
+        Logout,
+        Back,
+        Close
+    }
+
+
     public abstract class BaseFragment<TViewModel> : MvxFragment<TViewModel>
         where TViewModel : BaseViewModel, IMvxViewModel
     {
         protected abstract int FragmentLayoutId { get; }
         protected virtual bool ShowNavigationIcon => true;
+        protected virtual EToolbarIcon ToolbarIcon => EToolbarIcon.Back;
 
         Toolbar _toolbar;
 
@@ -52,13 +65,45 @@ namespace ThePage.Droid.Views
                     activity.SetSupportActionBar(_toolbar);
 
                     if (ShowNavigationIcon)
+                    {
                         activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+                        activity.SupportActionBar.SetHomeAsUpIndicator(GetDrawableForToolBar(ToolbarIcon));
+
+                        activity.ViewModel.IsLogOut = ToolbarIcon == EToolbarIcon.Logout;
+                    }
                     else
                         activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
 
                     _toolbar.Title = ViewModel.LblTitle;
                 }
             }
+        }
+
+        #endregion
+
+        #region Prvate
+
+        Drawable GetDrawableForToolBar(EToolbarIcon type)
+        {
+            Drawable icon;
+            switch (type)
+            {
+                case EToolbarIcon.Logout:
+                    icon = ResourcesCompat.GetDrawable(Resources, Resource.Drawable.ic_logout, null);
+                    break;
+                case EToolbarIcon.Close:
+                    icon = ResourcesCompat.GetDrawable(Resources, Resource.Drawable.ic_close, null);
+                    break;
+                case EToolbarIcon.Back:
+                default:
+                    icon = ResourcesCompat.GetDrawable(Resources, Resource.Drawable.ic_arrow_back_toolbar, null);
+                    break;
+
+            }
+            var color = new Color(ContextCompat.GetColor(Activity, Resource.Color.white));
+            icon.SetColorFilter(color, PorterDuff.Mode.SrcIn);
+
+            return icon;
         }
 
         #endregion

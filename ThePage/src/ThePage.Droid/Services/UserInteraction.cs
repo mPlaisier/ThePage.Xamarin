@@ -167,40 +167,41 @@ namespace ThePage.Droid
                 if (CurrentActivity == null)
                     return;
 
-                //Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
-                ToastMessage(message, EToastType.Error);
-
+                Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
             }, null);
         }
 
         public void ToastMessage(string message, EToastType type)
         {
-            LayoutInflater inflater = CurrentActivity.LayoutInflater;
-            var view = inflater.Inflate(Resource.Layout.custom_toast, null);
-
-            var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
-            var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
-            var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
-
-            //Set Layout values
-            layout.SetBackgroundColor(GetToastBackgroundColor(type));
-
-            //Set ImageView values
-            img.SetImageResource(GetToastTypeImage(type));
-            img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
-            img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
-
-            //Set TextView values
-            txt.Text = message;
-            txt.SetTextColor(GetToastTextColor(type));
-
-            //Show Toast
-            var toast = new Toast(CurrentActivity)
+            Application.SynchronizationContext.Post(ignored =>
             {
-                Duration = ToastLength.Short,
-                View = view
-            };
-            toast.Show();
+                LayoutInflater inflater = CurrentActivity.LayoutInflater;
+                var view = inflater.Inflate(Resource.Layout.custom_toast, null);
+
+                var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
+                var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
+                var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
+
+                //Set Layout values
+                layout.SetBackgroundColor(GetToastBackgroundColor(type));
+
+                //Set ImageView values
+                img.SetImageResource(GetToastTypeImage(type));
+                img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
+                img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
+
+                //Set TextView values
+                txt.Text = message;
+                txt.SetTextColor(GetToastTextColor(type));
+
+                //Show Toast
+                var toast = new Toast(CurrentActivity)
+                {
+                    Duration = ToastLength.Short,
+                    View = view
+                };
+                toast.Show();
+            }, null);
 
             static int GetToastTypeImage(EToastType type)
             {

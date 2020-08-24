@@ -38,10 +38,12 @@ namespace ThePage.Droid.Views.Main
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-
             if (item.ItemId == Android.Resource.Id.Home)
             {
-                OnBackPressed();
+                if (!ViewModel.IsLogOut)
+                    OnBackPressed();
+                else
+                    ViewModel.LogOutUser();
                 return true;
             }
             return base.OnOptionsItemSelected(item);
