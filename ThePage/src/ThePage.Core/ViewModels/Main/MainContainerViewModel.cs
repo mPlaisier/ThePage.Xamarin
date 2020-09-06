@@ -1,10 +1,14 @@
 ﻿using System;
+using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 
 namespace ThePage.Core.ViewModels.Main
 {
     public class MainContainerViewModel : BaseViewModel
     {
-        IUserInteraction _userInteraction;
+        readonly IMvxNavigationService _navigationService;
+        readonly IUserInteraction _userInteraction;
+        readonly IAuthService _authService;
 
         #region Properties
 
@@ -16,9 +20,11 @@ namespace ThePage.Core.ViewModels.Main
 
         #region Constructor
 
-        public MainContainerViewModel(IUserInteraction userInteraction)
+        public MainContainerViewModel(IMvxNavigationService navigationService, IUserInteraction userInteraction, IAuthService authService)
         {
+            _navigationService = navigationService;
             _userInteraction = userInteraction;
+            _authService = authService;
         }
 
         #endregion
@@ -27,7 +33,10 @@ namespace ThePage.Core.ViewModels.Main
         {
             _userInteraction.Confirm("Do you want to logout?", () =>
             {
-                _userInteraction.ToastMessage("Log off");
+                _authService.Logout().Forget();
+
+                _navigationService.Navigate<LoginViewModel>();
+                _navigationService.Close(this);
             });
         }
     }

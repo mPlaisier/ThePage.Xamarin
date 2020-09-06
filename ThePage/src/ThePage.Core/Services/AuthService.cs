@@ -54,6 +54,14 @@ namespace ThePage.Core
             return result != null;
         }
 
+        public async Task Logout()
+        {
+            var refreshtoken = await GetSessionToken();
+            await AuthManager.Logout(refreshtoken);
+
+            HandleCloseSession();
+        }
+
         public async Task<bool> Register(string username, string name, string email, string password)
         {
             ApiUserReponse result = null;
@@ -90,7 +98,7 @@ namespace ThePage.Core
                 return token;
 
             //Procedure when user session is expired
-            HandleSessionExpired();
+            HandleCloseSession();
 
             return null;
         }
@@ -119,10 +127,9 @@ namespace ThePage.Core
             return null;
         }
 
-        void HandleSessionExpired()
+        void HandleCloseSession()
         {
             IsLoggedIn = false;
-
             Barrel.Current.EmptyAll();
         }
 
