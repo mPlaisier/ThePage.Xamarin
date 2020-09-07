@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -126,7 +126,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Setup
             var isbn = "5456554412";
-            AddBookParameter param = new AddBookParameter(isbn, null);
+            var param = new AddBookParameter(isbn, null);
 
             //Execute
             LoadViewModel(param);
@@ -164,15 +164,8 @@ namespace ThePage.UnitTests.ViewModels.Book
                 Assert.False(item.IsValid);
         }
 
-        [Theory]
-        [InlineData("Valid name", "100", true)]
-        [InlineData("", "", false)]
-        [InlineData(null, null, false)]
-        [InlineData("Valid name", "", false)]
-        [InlineData("", "100", false)]
-        [InlineData(null, "100", false)]
-        [InlineData("Valid name", null, false)]
-        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, string pages, bool isValid)
+        [Theory, MemberData(nameof(InputDataForBooks))]
+        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Api.ApiAuthor author, string pages, bool isValid)
         {
             //Setup
             PrepareAuthorAndGenreData();
@@ -181,6 +174,9 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Execute
             var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
             cellTitle.TxtInput = title;
+
+            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
+            cellAuthor.Item = author;
 
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = pages;
@@ -198,7 +194,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             MockThePageService
-               .Setup(x => x.AddBook(It.IsAny<Api.Book>()))
+               .Setup(x => x.AddBook(It.IsAny<Api.ApiBookDetailRequest>()))
                .Returns(() => Task.FromResult(result));
 
             PrepareAuthorAndGenreData();
@@ -207,6 +203,9 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Execute
             var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
             cellTitle.TxtInput = "Valid Name";
+
+            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
+            cellAuthor.Item = AuthorDataFactory.GetSingleAuthor();
 
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = "500";
@@ -218,5 +217,20 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Assert
             Assert.Equal(result, _vm.IsLoading);
         }
+
+        public static IEnumerable<object[]> InputDataForBooks =>
+               new[]
+               {
+                new object[] {"Valid name",  AuthorDataFactory.GetSingleAuthor(), "100", true },
+                new object[] { "", null, "", false },
+                new object[] { null, null, null, false },
+                new object[] { "Valid name", null, "", false },
+                new object[] { "", null, "100", false },
+                new object[] { null, null, "100", false },
+                new object[] { "Valid name", null, null, false },
+                new object[] { null, AuthorDataFactory.GetSingleAuthor(), null, false },
+                new object[] { "Valid name", AuthorDataFactory.GetSingleAuthor(), null, false },
+                new object[] { null, AuthorDataFactory.GetSingleAuthor(), "100", false }
+        };
     }
 }

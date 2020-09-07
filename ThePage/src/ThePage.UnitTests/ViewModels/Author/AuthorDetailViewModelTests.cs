@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Moq;
 using ThePage.Core;
@@ -38,7 +37,7 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void AuthorValidationOK(string name, bool isValid)
         {
             //Arrange
-            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleAuthor()));
 
             //Execute
             _vm.TxtName = name;
@@ -51,7 +50,7 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void AuthorIsValidPropertyChangedTest()
         {
             //Arrange
-            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleAuthor()));
 
             //Execute
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
@@ -62,7 +61,7 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void AuthorViewEditIsDisabledAStart()
         {
             //Arrange
-            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleAuthor()));
 
             //Assert
             Assert.False(_vm.IsEditing);
@@ -75,9 +74,9 @@ namespace ThePage.UnitTests.ViewModels.Author
         {
             //Arrange
             MockThePageService
-                .Setup(x => x.UpdateAuthor(It.IsAny<Api.Author>()))
-                .Returns(() => result ? Task.FromResult(new Api.Author()) : Task.FromResult<Api.Author>(null));
-            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleCellAuthor()));
+                .Setup(x => x.UpdateAuthor(It.IsAny<string>(), It.IsAny<Api.ApiAuthorRequest>()))
+                .Returns(() => result ? Task.FromResult(new Api.ApiAuthor()) : Task.FromResult<Api.ApiAuthor>(null));
+            LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleAuthor()));
 
             //Execute
             _vm.UpdateAuthorCommand.Execute();

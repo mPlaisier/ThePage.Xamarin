@@ -11,51 +11,51 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public List<Genre> Genres { get; }
-
-        public List<Genre> SelectedGenres { get; }
+        public List<ApiGenre> SelectedGenres { get; }
 
         #endregion
 
         #region Constructor
 
-        public SelectedGenreParameters(List<Genre> genres, List<Genre> selectedGenres)
+        public SelectedGenreParameters(List<ApiGenre> selectedGenres)
         {
-            Genres = genres;
             SelectedGenres = selectedGenres;
         }
 
         #endregion
     }
 
-    public class SelectGenreViewModel : BaseViewModel<SelectedGenreParameters, Genre>
+    public class SelectGenreViewModel : BaseSelectMultipleItemsViewModel<SelectedGenreParameters, List<ApiGenre>, CellGenreSelect, ApiGenre>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        public override string Title => "Select Genre";
+        public override string LblTitle => "Select Genre";
 
-        public List<CellGenre> CellGenres { get; internal set; }
+        public override List<CellGenreSelect> Items { get; set; }
 
-        public List<Genre> SelectedGenres { get; internal set; }
+        public override List<ApiGenre> SelectedItems { get; internal set; }
 
         #endregion
 
         #region Commands
 
-        MvxCommand<CellGenre> _genreClickCommand;
-        public MvxCommand<CellGenre> GenreClickCommand => _genreClickCommand = _genreClickCommand ?? new MvxCommand<CellGenre>(HandleGenreClick);
+        IMvxCommand<CellGenreSelect> _commandSelectItem;
+        public override IMvxCommand<CellGenreSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellGenreSelect>(HandleGenreClick);
 
-        IMvxCommand _addGenreCommand;
-        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
-       {
-           var result = await _navigation.Navigate<AddGenreViewModel, bool>();
-           if (result)
-               await Refresh();
+        IMvxCommand _commandAddItem;
+        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        {
+            var result = await _navigation.Navigate<AddGenreViewModel, bool>();
+            if (result)
+                await LoadData();
 
-       });
+        });
+
+        IMvxCommand _commandConfirm;
+        public override IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
 
         #endregion
 
@@ -73,29 +73,51 @@ namespace ThePage.Core
 
         public override void Prepare(SelectedGenreParameters parameter)
         {
-            CellGenres = GenreBusinessLogic.GenresToCellGenres(parameter.Genres);
-            SelectedGenres = parameter.SelectedGenres;
+            SelectedItems = parameter.SelectedGenres;
+        }
+
+        public override Task Initialize()
+        {
+            LoadData().Forget();
+
+            return base.Initialize();
         }
 
         #endregion
 
         #region Private
 
-        void HandleGenreClick(CellGenre genre)
+        void HandleGenreClick(CellGenreSelect cellGenre)
         {
-            if (SelectedGenres.Contains(genre.Genre))
-                return;
+            if (cellGenre.IsSelected)
+            {
+                SelectedItems.Remove(cellGenre.Item);
 
-            _navigation.Close(this, genre.Genre);
+                cellGenre.IsSelected = false;
+
+            }
+            else
+            {
+                SelectedItems.Add(cellGenre.Item);
+                cellGenre.IsSelected = true;
+            }
         }
 
-        async Task Refresh()
+        void HandleConfirm()
+        {
+            _navigation.Close(this, SelectedItems);
+        }
+
+        public override async Task LoadData()
         {
             IsLoading = true;
 
-            CellGenres = GenreBusinessLogic.GenresToCellGenres(await _thePageService.GetAllGenres());
+            var genres = await _thePageService.GetAllGenres();
 
             IsLoading = false;
+
+            Items = new List<CellGenreSelect>();
+            genres.Docs.ForEach(x => Items.Add(new CellGenreSelect(x, SelectedItems.Contains(x))));
         }
 
         #endregion

@@ -18,7 +18,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "New Genre";
+        public override string LblTitle => "New Genre";
 
         public string LblName => "Name:";
 
@@ -75,7 +75,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddGenre(new Genre(TxtName.Trim()));
+            var result = await _thePageService.AddGenre(new ApiGenreRequest(TxtName.Trim()));
 
             if (result)
             {

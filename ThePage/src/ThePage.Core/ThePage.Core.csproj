@@ -14,6 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NodaTime" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Author\" />
@@ -30,6 +31,11 @@
     <Folder Include="Cells\Book\" />
     <Folder Include="Converters\" />
     <Folder Include="Cells\Base\" />
+    <Folder Include="Cells\Author\" />
+    <Folder Include="Cells\Genre\" />
+    <Folder Include="Utils\" />
+    <Folder Include="ViewModels\Authentication\" />
+    <Folder Include="Utils\MvvmCross\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

@@ -47,7 +47,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void LoadingAddGenreSuccessful(bool result, bool isLoading)
         {
             MockThePageService
-                .Setup(x => x.AddGenre(It.IsAny<Api.Genre>()))
+                .Setup(x => x.AddGenre(It.IsAny<Api.ApiGenreRequest>()))
                 .Returns(() => Task.FromResult(result));
 
             _vm.TxtName = "";

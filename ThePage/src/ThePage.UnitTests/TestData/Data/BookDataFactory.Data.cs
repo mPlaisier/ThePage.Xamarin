@@ -18,86 +18,114 @@ namespace ThePage.UnitTests
                 ""pages"": 279
             }";
 
-        const string SingleBookAuthor =
+        const string SingleApiBook =
             @"{
-                ""_id"":""5eaeaf3c40d0030017be788b"",
-                ""name"":""William Shakespeare""
+                ""title"": ""A title"",
+                ""author"": {
+                    ""name"": ""Tokien"",
+                    ""id"": ""5ebe620b77a70d9bb9fb5c20""
+                },
+                ""id"": ""5eda2b3a695c3574ce9c02bc""
             }";
 
-        const string SingleBookGenres =
-            @"[{
-                ""_id"":""5eaeaf3940d0030017be787d"",
-                ""name"":""Fiction"",
-                ""__v"":0},
+        const string ApiBookDetailResponseWithGenres =
+        @"{
+            ""genres"": [
             {
-                ""_id"":""5eaeaf3940d0030017be7879"",
-                ""name"":""Non-Fiction"",
-                ""__v"":0}
-            ]";
+                ""name"": ""Genre1"",
+                ""id"": ""5f2b035b162feb001791363a""
+            },
+            {
+                ""name"": ""Genre2"",
+                ""id"": ""5f2b0362162feb001791363b""
+            }],
+            ""title"": ""New"",
+            ""author"": {
+                ""name"": ""Mattias2"",
+                ""olkey"": ""123456"",
+                ""id"": ""5eda16f40e0f1e6d7765e824""
+            },
+            ""owned"": false,
+            ""read"": false,
+            ""pages"": 55,
+            ""id"": ""5f2b04c8162feb001791363e""
+        }";
 
-        const string SingleBookWithoutGenres =
-            @"{
-                ""genres"": [],
-                ""_id"": ""5eaeaf3c40d0030017be788c"",
-                ""title"": ""Book 1"",
-                ""author"": ""5eaeaf3c40d0030017be788b"",
-                ""isbn"": ""123456789"",
-                ""owned"": false,
-                ""read"": true,
-                ""pages"": 279
-            }";
+        const string ApiBookDetailResponseNoGenres =
+        @"{
+            ""genres"": [],
+            ""title"": ""New"",
+            ""author"": {
+                ""name"": ""Mattias2"",
+                ""olkey"": ""123456"",
+                ""id"": ""5eda16f40e0f1e6d7765e824""
+            },
+            ""owned"": false,
+            ""read"": false,
+            ""pages"": 55,
+            ""id"": ""5f2b04c8162feb001791363e""
+        }";
 
         const string ListBook4ElementsComplete =
-           @"[
-           {
-                ""genres"": [
-                    ""5eaeaf3940d0030017be787d"",
-                    ""5eaeaf3940d0030017be7879""
-                ],
-                ""_id"": ""5eaeaf3c40d0030017be788c"",
-                ""title"": ""Book 1"",
-                ""author"": ""5eaeaf3c40d0030017be788b"",
-                ""isbn"": ""123456789"",
-                ""owned"": false,
-                ""read"": true,
-                ""pages"": 279
-           },
-           {
-                ""genres"": [],
-                ""_id"": ""5eaeaf3c40d0030017be788d"",
-                ""title"": ""Book 2"",
-                ""author"": ""5eaeaf3b40d0030017be7885"",
-                ""isbn"": ""123456789"",
-                ""owned"": false,
-                ""read"": true,
-                ""pages"": 252
-           },
-           {
-                ""genres"": [
-                    ""5eaeaf3a40d0030017be7881"",
-                    ""5eaeaf3940d0030017be787d"",
-                    ""5eaeaf3940d0030017be787b""
-                ],
-                ""_id"": ""5eaeaf3c40d0030017be788e"",
-                ""title"": ""Book 3"",
-                ""author"": ""5eaeaf3b40d0030017be7888"",
-                ""isbn"": ""123456789"",
-                ""owned"": false,
-                ""read"": false,
-                ""pages"": 313
-           },
-           {
-                ""genres"": [],
-                ""_id"": ""5eaeaf3c40d0030017be788f"",
-                ""title"": ""Book 4"",
-                ""author"": ""5eaeaf3b40d0030017be7889"",
-                ""isbn"": ""123456789"",
-                ""owned"": true,
-                ""read"": true,
-                ""pages"": 138
-           }]";
+           @"{
+                ""docs"": [
+                {
+                  ""title"": ""Title1"",
+                  ""author"": {
+                    ""name"": ""Author1"",
+                    ""id"": ""5ebe620b77a70d9bb9fb5c20""
+                  },
+                  ""id"": ""5eda2fc8c3939e752b81d76b""
+                },
+                {
+                  ""title"": ""Title2"",
+                  ""author"": {
+                    ""name"": ""Author1"",
+                    ""id"": ""5ebe620b77a70d9bb9fb5c20""
+                  },
+                  ""id"": ""5eda2b3a695c3574ce9c02bc""
+                },
+                {
+                  ""title"": ""Title3"",
+                  ""author"": {
+                    ""name"": ""Author1"",
+                    ""id"": ""5ebe620b77a70d9bb9fb5c20""
+                  },
+                  ""id"": ""5eda29b141a1ab74802ba736""
+                },
+                {
+                  ""title"": ""Title4"",
+                  ""author"": {
+                    ""name"": ""Author2"",
+                    ""id"": ""5eda16f40e0f1e6d7765e824""
+                  },
+                  ""id"": ""5f2876e57e7cfd00174298f0""
+                }
+              ],
+              ""totalDocs"": 4,
+              ""limit"": 25,
+              ""totalPages"": 1,
+              ""page"": 1,
+              ""pagingCounter"": 1,
+              ""hasPrevPage"": false,
+              ""hasNextPage"": false,
+              ""prevPage"": null,
+              ""nextPage"": null
+            }";
 
-        const string ListBookDataEmpty = @"[]";
+        const string ListBookDataEmpty =
+           @"{
+              ""docs"": [],
+              ""totalDocs"": 0,
+              ""limit"": 25,
+              ""totalPages"": 1,
+              ""page"": 1,
+              ""pagingCounter"": 1,
+              ""hasPrevPage"": false,
+              ""hasNextPage"": false,
+              ""prevPage"": null,
+              ""nextPage"": null
+            }";
 
         const string SingleOLObject =
             @"{

@@ -6,6 +6,7 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -18,9 +19,9 @@ namespace ThePage.Core
 
         #region Properties
 
-        public List<CellBook> Books { get; set; }
+        public List<ApiBook> Books { get; set; }
 
-        public override string Title => "Books";
+        public override string LblTitle => "Books";
 
         MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
@@ -40,8 +41,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<CellBook> _itemClickCommand;
-        public IMvxCommand<CellBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellBook>(async (item) =>
+        IMvxCommand<ApiBook> _itemClickCommand;
+        public IMvxCommand<ApiBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBook>(async (item) =>
         {
             var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)
@@ -81,11 +82,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var books = await _thePageService.GetAllBooks();
-            var authors = await _thePageService.GetAllAuthors();
-            var genres = await _thePageService.GetAllGenres();
-
-            Books = BookBusinessLogic.BooksToCellBooks(books, authors, genres);
+            var apiBookResponse = await _thePageService.GetAllBooks();
+            Books = apiBookResponse.Docs;
 
             IsLoading = false;
         }
@@ -123,6 +121,5 @@ namespace ThePage.Core
         {
             public Action<string> ISBNCallback { get; set; }
         }
-
     }
 }

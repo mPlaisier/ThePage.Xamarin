@@ -23,6 +23,14 @@ namespace ThePage.Core
         Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe");
 
         void ToastMessage(string message);
+        void ToastMessage(string message, EToastType type);
+    }
+
+    public enum EToastType
+    {
+        Error,
+        Success,
+        Other
     }
 
     public class InputResponse

@@ -1,9 +1,7 @@
-using System;
 using Moq;
 using MvvmCross.Base;
 using MvvmCross.Navigation;
 using MvvmCross.Tests;
-using MvvmCross.Views;
 using ThePage.Core;
 
 namespace ThePage.UnitTests
@@ -14,6 +12,7 @@ namespace ThePage.UnitTests
 
         protected Mock<IMvxNavigationService> MockNavigation { get; private set; }
         protected Mock<IThePageService> MockThePageService { get; private set; }
+        protected Mock<IAuthService> MockAuthService { get; private set; }
         protected Mock<IUserInteraction> MockUserInteraction { get; private set; }
 
         #endregion
@@ -40,6 +39,9 @@ namespace ThePage.UnitTests
 
             var mockDevice = new Mock<IDevice>();
             Ioc.RegisterSingleton(mockDevice.Object);
+
+            MockAuthService = new Mock<IAuthService>();
+            Ioc.RegisterSingleton(MockAuthService.Object);
 
             var mockOpenLibrary = new Mock<IOpenLibraryService>();
             Ioc.RegisterSingleton(mockOpenLibrary.Object);

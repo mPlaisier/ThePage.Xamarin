@@ -8,25 +8,19 @@ namespace ThePage.UnitTests
 {
     public static partial class AuthorDataFactory
     {
-        public static List<Author> GetListAuthor4ElementsComplete()
+        public static ApiAuthorResponse GetListAuthor4ElementsComplete()
         {
-            return JsonConvert.DeserializeObject<List<Author>>(ListAuthor4ElementsComplete);
+            return JsonConvert.DeserializeObject<ApiAuthorResponse>(ListAuthor4ElementsComplete);
         }
 
-        public static List<Author> GetListAuthorEmpty()
+        public static ApiAuthorResponse GetListAuthorEmpty()
         {
-            return JsonConvert.DeserializeObject<List<Author>>(ListAuthorDataEmpty);
+            return JsonConvert.DeserializeObject<ApiAuthorResponse>(ListAuthorDataEmpty);
         }
 
-        public static Author GetSingleAuthor()
+        public static ApiAuthor GetSingleAuthor()
         {
-            return JsonConvert.DeserializeObject<Author>(SingleAuthor);
-        }
-
-        public static CellAuthor GetSingleCellAuthor()
-        {
-            var author = GetSingleAuthor();
-            return new CellAuthor(author);
+            return JsonConvert.DeserializeObject<ApiAuthor>(SingleAuthor);
         }
     }
 }

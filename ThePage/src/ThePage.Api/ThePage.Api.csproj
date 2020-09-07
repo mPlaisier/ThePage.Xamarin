@@ -5,17 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Managers\" />
     <Folder Include="Models\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Models\Response\" />
+    <Folder Include="Models\Request\" />
+    <Folder Include="Models\Response\Book\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Models\Request\Authentication\" />
+    <Folder Include="Models\Response\Author\" />
+    <Folder Include="Models\Response\Genre\" />
+    <Folder Include="Models\Request\Author\" />
+    <Folder Include="Models\Request\Genre\" />
+    <Folder Include="Models\Request\Book\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Refit" Version="5.1.27" />
+    <PackageReference Include="Refit" Version="5.1.67" />
     <PackageReference Include="Mobile.BuildTools" Version="1.4.0.638">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

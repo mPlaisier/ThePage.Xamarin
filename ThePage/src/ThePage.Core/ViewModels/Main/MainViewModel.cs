@@ -21,7 +21,7 @@ namespace ThePage.Core.ViewModels.Main
 
         #region Properties
 
-        public override string Title => "ThePage";
+        public override string LblTitle => "ThePage";
 
         public List<CellMenu> Items { get; set; }
 
@@ -68,7 +68,7 @@ namespace ThePage.Core.ViewModels.Main
                new CellMenuItem("Authors",EMenu.Authors),
                new CellMenuItem("Genres", EMenu.Genre),
                new CellMenuHeader("Other"),
-               new CellMenuItem("Debug",EMenu.Debug),
+               new CellMenuItem("Debug",EMenu.Debug)
             };
 #else
             Items = new List<CellMenu>

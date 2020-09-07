@@ -38,7 +38,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void GenreValidationOK(string name, bool isValid)
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleGenre()));
 
             //Execute
             _vm.TxtName = name;
@@ -51,7 +51,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void GenreIsValidPropertyChangedTest()
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleGenre()));
 
             //Execute
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
@@ -62,7 +62,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void GenreViewEditIsDisabledAStart()
         {
             //Arrange
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleGenre()));
 
             //Assert
             Assert.False(_vm.IsEditing);
@@ -75,11 +75,11 @@ namespace ThePage.UnitTests.ViewModels.Genre
         {
             //Arrange
             MockThePageService
-                .Setup(x => x.UpdateGenre(It.IsAny<Api.Genre>()))
-                .Returns(() => result ? Task.FromResult(new Api.Genre()) : Task.FromResult<Api.Genre>(null));
-            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleCellGenre()));
+                .Setup(x => x.UpdateGenre(It.IsAny<string>(), It.IsAny<Api.ApiGenreRequest>()))
+                .Returns(() => result ? Task.FromResult(new Api.ApiGenre()) : Task.FromResult<Api.ApiGenre>(null));
+            LoadGenreDetailViewModel(new GenreDetailParameter(GenreDataFactory.GetSingleGenre()));
 
-            //Execute
+            //Executev
             _vm.UpdateGenreCommand.Execute();
 
             //Assert

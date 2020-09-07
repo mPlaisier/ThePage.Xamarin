@@ -9,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddAuthorViewModel : BaseViewModel<Author, bool>, INotifyPropertyChanged
+    public class AddAuthorViewModel : BaseViewModel<ApiAuthor, bool>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -20,7 +20,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "New Author";
+        public override string LblTitle => "New Author";
 
         public string LblName => "Name:";
 
@@ -58,9 +58,9 @@ namespace ThePage.Core
 
         #region LifeCycle
 
-        public override void Prepare(Author parameter)
+        public override void Prepare(ApiAuthor parameter)
         {
-            _olkey = parameter.OLKey;
+            _olkey = parameter.Olkey;
             TxtName = parameter.Name;
         }
 
@@ -73,7 +73,6 @@ namespace ThePage.Core
 
         #endregion
 
-
         #region Private
 
         async Task AddAuthor()
@@ -83,9 +82,9 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var author = new Author(TxtName.Trim());
+            var author = new ApiAuthorRequest(TxtName.Trim());
             if (_olkey != null)
-                author.OLKey = _olkey;
+                author.Olkey = _olkey;
 
             var result = await _thePageService.AddAuthor(author);
 

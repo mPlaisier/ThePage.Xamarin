@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Graphics;
+using Android.Support.V4.Content;
+using Android.Views;
 using Android.Widget;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
@@ -24,7 +27,6 @@ namespace ThePage.Droid
 
         public void Confirm(string message, Action<bool> answer, string title = null, string okButton = "OK", string cancelButton = "Cancel")
         {
-            //Mvx.Resolve<IMvxMainThreadDispatcher>().RequestMainThreadAction();
             Application.SynchronizationContext.Post(ignored =>
             {
                 if (CurrentActivity == null)
@@ -34,13 +36,11 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(okButton, delegate
                         {
-                            if (answer != null)
-                                answer(true);
+                            answer?.Invoke(true);
                         })
                         .SetNegativeButton(cancelButton, delegate
                         {
-                            if (answer != null)
-                                answer(false);
+                            answer?.Invoke(false);
                         }).SetCancelable(false)
                         .Show();
             }, null);
@@ -65,18 +65,15 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(positive, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Positive);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Positive);
                         })
                         .SetNegativeButton(negative, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Negative);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Negative);
                         })
                         .SetNeutralButton(neutral, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Neutral);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Neutral);
                         })
                         .Show();
             }, null);
@@ -101,8 +98,7 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(okButton, delegate
                         {
-                            if (done != null)
-                                done();
+                            done?.Invoke();
                         })
                         .Show();
             }, null);
@@ -165,9 +161,75 @@ namespace ThePage.Droid
                     return;
 
                 Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
-
-
             }, null);
+        }
+
+        public void ToastMessage(string message, EToastType type)
+        {
+            Application.SynchronizationContext.Post(ignored =>
+            {
+                LayoutInflater inflater = CurrentActivity.LayoutInflater;
+                var view = inflater.Inflate(Resource.Layout.custom_toast, null);
+
+                var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
+                var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
+                var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
+
+                //Set Layout values
+                layout.SetBackgroundColor(GetToastBackgroundColor(type));
+
+                //Set ImageView values
+                img.SetImageResource(GetToastTypeImage(type));
+                img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
+                img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
+
+                //Set TextView values
+                txt.Text = message;
+                txt.SetTextColor(GetToastTextColor(type));
+
+                //Show Toast
+                var toast = new Toast(CurrentActivity)
+                {
+                    Duration = ToastLength.Short,
+                    View = view,
+                };
+                toast.SetGravity(GravityFlags.Bottom | GravityFlags.FillHorizontal, 0, 0);
+
+                toast.Show();
+            }, null);
+
+            static int GetToastTypeImage(EToastType type)
+            {
+                return type switch
+                {
+                    EToastType.Error => Resource.Drawable.ic_error,
+                    EToastType.Success => Resource.Drawable.ic_check,
+                    EToastType.Other => 0,
+                    _ => Resource.Drawable.ic_error,
+                };
+            }
+
+            Color GetToastTextColor(EToastType type)
+            {
+                var resourceColor = type switch
+                {
+                    EToastType.Error => Resource.Color.primaryLightColorError,
+                    EToastType.Success => Resource.Color.primaryLightColorSuccess,
+                    _ => Resource.Color.black,
+                };
+                return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
+            }
+
+            Color GetToastBackgroundColor(EToastType type)
+            {
+                var resourceColor = type switch
+                {
+                    EToastType.Error => Resource.Color.primaryDarkColorError,
+                    EToastType.Success => Resource.Color.primaryDarkColorSuccess,
+                    _ => Resource.Color.white,
+                };
+                return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
+            }
         }
     }
 }

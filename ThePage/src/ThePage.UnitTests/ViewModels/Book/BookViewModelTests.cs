@@ -70,14 +70,5 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Check
             Assert.Null(_vm.Books);
         }
-
-        [Fact]
-        public void StopLoadingAfterRefresh()
-        {
-            //Setup
-            LoadViewModel();
-
-            Assert.False(_vm.IsLoading);
-        }
     }
 }

@@ -11,13 +11,20 @@
     <color name="primaryTextColor">#212121</color>
     <color name="secondaryTextColor">#757575</color>
 
-
     <color name="primaryColorError">#c62828</color>
     <color name="primaryDarkColorError">#8e0000</color>
     <color name="primaryLightColorError">#ff5f52</color>
+
+    <color name="primaryColorSuccess">#388e3c</color>
+    <color name="primaryDarkColorSuccess">#00600f</color>
+    <color name="primaryLightColorSuccess">#6abf69</color>
 
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <!--    Authentication colors-->
+    <color name="lightbg">#f7f7f7</color>
 </resources>

@@ -69,22 +69,13 @@ namespace ThePage.UnitTests.ViewModels.Author
             //Arrange
             MockThePageService
                 .Setup(x => x.GetAllAuthors())
-                .Returns(() => Task.FromResult<List<Api.Author>>(null));
+                .Returns(() => Task.FromResult<Api.ApiAuthorResponse>(null));
 
             //Setup
             LoadViewModel();
 
             //Check
             Assert.Null(_vm.Authors);
-        }
-
-        [Fact]
-        public void StopLoadingAfterInit()
-        {
-            //Setup
-            LoadViewModel();
-
-            Assert.False(_vm.IsLoading);
         }
     }
 }

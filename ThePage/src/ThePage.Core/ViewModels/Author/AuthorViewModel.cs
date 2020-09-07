@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -15,9 +16,9 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Authors";
+        public override string LblTitle => "Authors";
 
-        public List<CellAuthor> Authors { get; set; }
+        public List<ApiAuthor> Authors { get; set; }
 
         #endregion
 
@@ -33,8 +34,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<CellAuthor> _itemClickCommand;
-        public IMvxCommand<CellAuthor> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellAuthor>(async (item) =>
+        IMvxCommand<ApiAuthor> _itemClickCommand;
+        public IMvxCommand<ApiAuthor> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiAuthor>(async (item) =>
         {
             var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
             if (result)
@@ -72,7 +73,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var authors = await _thePageService.GetAllAuthors();
-            Authors = AuthorBusinessLogic.AuthorsToCellAuthors(authors);
+            Authors = authors.Docs;
 
             IsLoading = false;
         }

@@ -1,8 +1,10 @@
-using System;
 namespace ThePage.Api
 {
     static class EndPoints
     {
+        //Auth
+        public const string BaseAuth = "/auth";
+
         //Book
         public const string GetBooks = "books";
         public const string GetBook = "books/";
