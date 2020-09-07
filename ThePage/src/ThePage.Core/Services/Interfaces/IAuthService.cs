@@ -8,6 +8,8 @@ namespace ThePage.Core
 
         Task<bool> Login(string username, string password);
 
+        Task<bool> IsAuthenticated();
+
         Task Logout();
 
         Task<bool> Register(string username, string name, string email, string password);
