@@ -16,6 +16,12 @@ namespace ThePage.Api
             return result;
         }
 
+        public static async Task Logout(string refreshtoken)
+        {
+            var _authApi = RestService.For<IAuthApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL));
+            await _authApi.Logout(new ApiTokenRequest(refreshtoken));
+        }
+
         public static async Task<ApiUserReponse> Register(ApiRegisterRequest request)
         {
             var _authApi = RestService.For<IAuthApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL));

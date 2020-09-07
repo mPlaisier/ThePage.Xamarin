@@ -27,7 +27,6 @@ namespace ThePage.Droid
 
         public void Confirm(string message, Action<bool> answer, string title = null, string okButton = "OK", string cancelButton = "Cancel")
         {
-            //Mvx.Resolve<IMvxMainThreadDispatcher>().RequestMainThreadAction();
             Application.SynchronizationContext.Post(ignored =>
             {
                 if (CurrentActivity == null)
@@ -37,13 +36,11 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(okButton, delegate
                         {
-                            if (answer != null)
-                                answer(true);
+                            answer?.Invoke(true);
                         })
                         .SetNegativeButton(cancelButton, delegate
                         {
-                            if (answer != null)
-                                answer(false);
+                            answer?.Invoke(false);
                         }).SetCancelable(false)
                         .Show();
             }, null);
@@ -68,18 +65,15 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(positive, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Positive);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Positive);
                         })
                         .SetNegativeButton(negative, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Negative);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Negative);
                         })
                         .SetNeutralButton(neutral, delegate
                         {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Neutral);
+                            answer?.Invoke(ConfirmThreeButtonsResponse.Neutral);
                         })
                         .Show();
             }, null);
@@ -104,8 +98,7 @@ namespace ThePage.Droid
                         .SetTitle(title)
                         .SetPositiveButton(okButton, delegate
                         {
-                            if (done != null)
-                                done();
+                            done?.Invoke();
                         })
                         .Show();
             }, null);
@@ -167,91 +160,74 @@ namespace ThePage.Droid
                 if (CurrentActivity == null)
                     return;
 
-                //Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
-                ToastMessage(message, EToastType.Error);
-
+                Toast.MakeText(CurrentActivity, message, ToastLength.Long).Show();
             }, null);
         }
 
         public void ToastMessage(string message, EToastType type)
         {
-            LayoutInflater inflater = CurrentActivity.LayoutInflater;
-            var view = inflater.Inflate(Resource.Layout.custom_toast, null);
-
-            var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
-            var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
-            var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
-
-            //Set Layout values
-            layout.SetBackgroundColor(GetToastBackgroundColor(type));
-
-            //Set ImageView values
-            img.SetImageResource(GetToastTypeImage(type));
-            img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
-            img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
-
-            //Set TextView values
-            txt.Text = message;
-            txt.SetTextColor(GetToastTextColor(type));
-
-            //Show Toast
-            var toast = new Toast(CurrentActivity)
+            Application.SynchronizationContext.Post(ignored =>
             {
-                Duration = ToastLength.Short,
-                View = view
-            };
-            toast.Show();
+                LayoutInflater inflater = CurrentActivity.LayoutInflater;
+                var view = inflater.Inflate(Resource.Layout.custom_toast, null);
+
+                var layout = view.FindViewById<LinearLayout>(Resource.Id.toast);
+                var img = view.FindViewById<ImageView>(Resource.Id.imgCustomToast);
+                var txt = view.FindViewById<TextView>(Resource.Id.txtCustomToast);
+
+                //Set Layout values
+                layout.SetBackgroundColor(GetToastBackgroundColor(type));
+
+                //Set ImageView values
+                img.SetImageResource(GetToastTypeImage(type));
+                img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
+                img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
+
+                //Set TextView values
+                txt.Text = message;
+                txt.SetTextColor(GetToastTextColor(type));
+
+                //Show Toast
+                var toast = new Toast(CurrentActivity)
+                {
+                    Duration = ToastLength.Short,
+                    View = view,
+                };
+                toast.SetGravity(GravityFlags.Bottom | GravityFlags.FillHorizontal, 0, 0);
+
+                toast.Show();
+            }, null);
 
             static int GetToastTypeImage(EToastType type)
             {
-                switch (type)
+                return type switch
                 {
-                    case EToastType.Error:
-                        return Resource.Drawable.ic_error;
-                    case EToastType.Success:
-                        return Resource.Drawable.ic_check;
-                    case EToastType.Other:
-                        return 0;
-                    default:
-                        return Resource.Drawable.ic_error;
-                }
+                    EToastType.Error => Resource.Drawable.ic_error,
+                    EToastType.Success => Resource.Drawable.ic_check,
+                    EToastType.Other => 0,
+                    _ => Resource.Drawable.ic_error,
+                };
             }
 
             Color GetToastTextColor(EToastType type)
             {
-                int resourceColor;
-                switch (type)
+                var resourceColor = type switch
                 {
-                    case EToastType.Error:
-                        resourceColor = Resource.Color.primaryLightColorError;
-                        break;
-                    case EToastType.Success:
-                        resourceColor = Resource.Color.primaryLightColorSuccess;
-                        break;
-                    case EToastType.Other:
-                    default:
-                        resourceColor = Resource.Color.black;
-                        break;
-                }
+                    EToastType.Error => Resource.Color.primaryLightColorError,
+                    EToastType.Success => Resource.Color.primaryLightColorSuccess,
+                    _ => Resource.Color.black,
+                };
                 return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
             }
 
             Color GetToastBackgroundColor(EToastType type)
             {
-                int resourceColor;
-                switch (type)
+                var resourceColor = type switch
                 {
-                    case EToastType.Error:
-                        resourceColor = Resource.Color.primaryDarkColorError;
-                        break;
-                    case EToastType.Success:
-                        resourceColor = Resource.Color.primaryDarkColorSuccess;
-                        break;
-                    case EToastType.Other:
-                    default:
-                        resourceColor = Resource.Color.white;
-                        break;
-                }
+                    EToastType.Error => Resource.Color.primaryDarkColorError,
+                    EToastType.Success => Resource.Color.primaryDarkColorSuccess,
+                    _ => Resource.Color.white,
+                };
                 return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
             }
         }

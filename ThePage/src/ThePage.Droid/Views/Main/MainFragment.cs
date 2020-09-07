@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using MvvmCross.Platforms.Android.Presenters.Attributes;
 using ThePage.Core.ViewModels.Main;
-using MvvmCross.Platforms.Android.Presenters.Attributes;
 
 namespace ThePage.Droid.Views.Main
 {
@@ -26,6 +15,6 @@ namespace ThePage.Droid.Views.Main
     {
         protected override int FragmentLayoutId => Resource.Layout.fragment_main;
 
-        protected override bool ShowNavigationIcon => false;
+        protected override EToolbarIcon ToolbarIcon => EToolbarIcon.Logout;
     }
 }

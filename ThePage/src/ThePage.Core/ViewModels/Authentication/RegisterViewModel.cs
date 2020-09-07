@@ -61,7 +61,7 @@ namespace ThePage.Core
         MvxCommand _loginCommand;
         public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
         {
-            _navigationService.Close(this);
+            _navigationService.Navigate<LoginViewModel>();
         });
 
         #endregion
@@ -103,7 +103,6 @@ namespace ThePage.Core
             {
                 _userInteraction.ToastMessage("Registration successfull, logging in...", EToastType.Success);
                 await _navigationService.Navigate<MainViewModel>();
-                await _navigationService.Close(this);
             }
             else
                 IsLoading = false;

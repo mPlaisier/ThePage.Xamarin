@@ -15,12 +15,6 @@ namespace ThePage.Core
         readonly IUserInteraction _userInteraction;
         const string LoginKey = "LoginKey";
 
-        #region Properties
-
-        public bool IsLoggedIn { get; internal set; }
-
-        #endregion
-
         #region Constructor
 
         public AuthService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
@@ -52,6 +46,19 @@ namespace ThePage.Core
             }
 
             return result != null;
+        }
+
+        public async Task<bool> IsAuthenticated()
+        {
+            return await GetSessionToken() != null;
+        }
+
+        public async Task Logout()
+        {
+            var refreshtoken = await GetSessionToken();
+            HandleCloseSession();
+
+            await AuthManager.Logout(refreshtoken);
         }
 
         public async Task<bool> Register(string username, string name, string email, string password)
@@ -90,7 +97,7 @@ namespace ThePage.Core
                 return token;
 
             //Procedure when user session is expired
-            HandleSessionExpired();
+            HandleCloseSession();
 
             return null;
         }
@@ -101,7 +108,6 @@ namespace ThePage.Core
 
         void handleSuccessfullLogin(ApiUserReponse response)
         {
-            IsLoggedIn = true;
             Barrel.Current.Add(LoginKey, response.Tokens, TimeSpan.FromDays(30));
         }
 
@@ -119,10 +125,8 @@ namespace ThePage.Core
             return null;
         }
 
-        void HandleSessionExpired()
+        void HandleCloseSession()
         {
-            IsLoggedIn = false;
-
             Barrel.Current.EmptyAll();
         }
 

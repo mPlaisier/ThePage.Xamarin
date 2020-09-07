@@ -26,7 +26,6 @@
     <style name="AppTheme.Splash" parent="AppTheme.Splash.Base">
     </style>
 
-
     <style name="PrimaryBtn">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
