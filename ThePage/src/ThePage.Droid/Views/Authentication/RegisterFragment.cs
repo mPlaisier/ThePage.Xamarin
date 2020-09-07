@@ -7,7 +7,7 @@ using ThePage.Droid.Views;
 
 namespace ThePage.Droid
 {
-    [MvxFragmentPresentation(typeof(MainContainerNoToolBarViewModel),
+    [MvxFragmentPresentation(typeof(MainContainerViewModel),
       Resource.Id.content_frame,
       AddToBackStack = true,
       EnterAnimation = Resource.Animation.pull_in_down,
@@ -20,6 +20,8 @@ namespace ThePage.Droid
         #region Properties
 
         protected override int FragmentLayoutId => Resource.Layout.fragment_register;
+
+        protected override bool ShowToolbar => false;
 
         #endregion
 

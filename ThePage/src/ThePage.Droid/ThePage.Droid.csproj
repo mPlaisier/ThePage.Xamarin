@@ -91,7 +91,6 @@
     <Compile Include="Bindings\TextViewDrawableRightBinding.cs" />
     <Compile Include="Views\Author\AuthorSelectFragment.cs" />
     <Compile Include="Views\Authentication\LoginViewFragment.cs" />
-    <Compile Include="Views\Main\MainContainerNoToolbarActivity.cs" />
     <Compile Include="Views\Authentication\RegisterFragment.cs" />
   </ItemGroup>
   <ItemGroup>

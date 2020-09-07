@@ -25,8 +25,10 @@ namespace ThePage.Droid.Views
         where TViewModel : BaseViewModel, IMvxViewModel
     {
         protected abstract int FragmentLayoutId { get; }
+
         protected virtual bool ShowNavigationIcon => true;
         protected virtual EToolbarIcon ToolbarIcon => EToolbarIcon.Back;
+        protected virtual bool ShowToolbar => true;
 
         Toolbar _toolbar;
 
@@ -58,24 +60,36 @@ namespace ThePage.Droid.Views
         {
             if (Activity is MainContainerActivity activity)
             {
-                _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
-
-                if (_toolbar != null)
+                if (ShowToolbar)
                 {
-                    activity.SetSupportActionBar(_toolbar);
+                    _toolbar = activity.FindViewById<Toolbar>(Resource.Id.toolbar);
 
-                    if (ShowNavigationIcon)
+                    if (_toolbar != null)
                     {
-                        activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-                        activity.SupportActionBar.SetHomeAsUpIndicator(GetDrawableForToolBar(ToolbarIcon));
+                        var toolbarLayout = activity.FindViewById<View>(Resource.Id.layout_toolbar);
+                        toolbarLayout.Visibility = ViewStates.Visible;
 
-                        activity.ViewModel.IsLogOut = ToolbarIcon == EToolbarIcon.Logout;
+                        activity.SetSupportActionBar(_toolbar);
+
+                        if (ShowNavigationIcon)
+                        {
+                            activity.SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+                            activity.SupportActionBar.SetHomeAsUpIndicator(GetDrawableForToolBar(ToolbarIcon));
+
+                            activity.ViewModel.IsLogOut = ToolbarIcon == EToolbarIcon.Logout;
+                        }
+                        else
+                            activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
+                        _toolbar.Title = ViewModel.LblTitle;
                     }
-                    else
-                        activity.SupportActionBar.SetDisplayHomeAsUpEnabled(false);
-
-                    _toolbar.Title = ViewModel.LblTitle;
                 }
+                else
+                {
+                    var toolbarLayout = activity.FindViewById<View>(Resource.Id.layout_toolbar);
+                    toolbarLayout.Visibility = ViewStates.Gone;
+                }
+
             }
         }
 

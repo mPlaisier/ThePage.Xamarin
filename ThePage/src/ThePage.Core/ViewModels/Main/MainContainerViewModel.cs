@@ -1,6 +1,4 @@
-﻿using System;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
+﻿using MvvmCross.Navigation;
 
 namespace ThePage.Core.ViewModels.Main
 {
@@ -36,13 +34,7 @@ namespace ThePage.Core.ViewModels.Main
                 _authService.Logout().Forget();
 
                 _navigationService.Navigate<LoginViewModel>();
-                _navigationService.Close(this);
             });
         }
-    }
-
-    public class MainContainerNoToolBarViewModel : BaseViewModel
-    {
-        public override string LblTitle => "";
     }
 }
