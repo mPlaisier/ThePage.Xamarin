@@ -20,7 +20,6 @@ namespace ThePage.Droid.Views
         Close
     }
 
-
     public abstract class BaseFragment<TViewModel> : MvxFragment<TViewModel>
         where TViewModel : BaseViewModel, IMvxViewModel
     {
