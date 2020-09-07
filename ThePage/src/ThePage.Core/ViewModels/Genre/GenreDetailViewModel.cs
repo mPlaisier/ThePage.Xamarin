@@ -13,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public Genre Genre { get; }
+        public ApiGenre Genre { get; }
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailParameter(Genre genre)
+        public GenreDetailParameter(ApiGenre genre)
         {
             Genre = genre;
         }
@@ -36,9 +36,9 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string Title => "Genre Detail";
+        public override string LblTitle => "Genre Detail";
 
-        public Genre Genre { get; internal set; }
+        public ApiGenre Genre { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -117,7 +117,9 @@ namespace ThePage.Core
             TxtName = TxtName.Trim();
             Genre.Name = TxtName;
 
-            var genre = await _thePageService.UpdateGenre(Genre);
+            var request = new ApiGenreRequest(TxtName);
+            var genre = await _thePageService.UpdateGenre(Genre.Id, request);
+
             if (genre != null)
                 _userInteraction.ToastMessage("Genre updated");
             else

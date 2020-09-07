@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
@@ -13,46 +11,56 @@ namespace ThePage.Core
     public class ThePageService : IThePageService
     {
         readonly IUserInteraction _userInteraction;
+        readonly IAuthService _authService;
 
         #region Constructor
 
-        public ThePageService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
+        public ThePageService() :
+            this(Mvx.IoCProvider.Resolve<IUserInteraction>(),
+                 Mvx.IoCProvider.Resolve<IAuthService>())
         {
-
         }
 
-        public ThePageService(IUserInteraction userInteraction)
+        public ThePageService(IUserInteraction userInteraction, IAuthService authService)
         {
             _userInteraction = userInteraction;
+            _authService = authService;
+
             Barrel.ApplicationId = "thepageapplication";
             Barrel.EncryptionKey = "encryptionKey";
         }
 
         #endregion
+
         #region Public(Books)
 
-        public async Task<List<Book>> GetAllBooks()
+        public async Task<ApiBookResponse> GetAllBooks()
         {
-            List<Book> result = null;
+            ApiBookResponse result = null;
             try
             {
-                result = await BookManager.Get();
-                result = result.OrderBy(x => x.Title).ToList();
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.Get(token);
             }
             catch (Exception ex)
             {
                 HandleException(ex);
 
             }
-            return result.SortByTitle();
+            return result;
         }
 
-        public async Task<Book> GetBook(string id)
+        public async Task<ApiBookDetailResponse> GetBook(string id)
         {
-            Book result = null;
+            ApiBookDetailResponse result = null;
             try
             {
-                result = await BookManager.Get(id);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.Get(token, id);
             }
             catch (Exception ex)
             {
@@ -61,12 +69,15 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> AddBook(Book book)
+        public async Task<bool> AddBook(ApiBookDetailRequest book)
         {
-            Book result = null;
+            ApiBookDetailRequest result = null;
             try
             {
-                result = await BookManager.Add(book);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.Add(token, book);
             }
             catch (Exception ex)
             {
@@ -75,12 +86,15 @@ namespace ThePage.Core
             return result != null;
         }
 
-        public async Task<Book> UpdateBook(Book book)
+        public async Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book)
         {
-            Book result = null;
+            ApiBookDetailResponse result = null;
             try
             {
-                result = await BookManager.Update(book);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.Update(token, id, book);
             }
             catch (Exception ex)
             {
@@ -89,11 +103,14 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteBook(Book content)
+        public async Task<bool> DeleteBook(ApiBookDetailResponse content)
         {
             try
             {
-                return await BookManager.Delete(content);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    return await BookManager.Delete(token, content);
             }
             catch (Exception ex)
             {
@@ -106,40 +123,15 @@ namespace ThePage.Core
 
         #region Authors
 
-        public async Task<List<Author>> GetAllAuthors()
+        public async Task<ApiAuthorResponse> GetAllAuthors()
         {
-            List<Author> result = null;
+            ApiAuthorResponse result = null;
             try
             {
-                result = await AuthorManager.Get();
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            return result.SortByName();
-        }
+                var token = await _authService.GetSessionToken();
 
-        public async Task<bool> AddAuthor(Author author)
-        {
-            Author result = null;
-            try
-            {
-                result = await AuthorManager.Add(author);
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            return result != null;
-        }
-
-        public async Task<Author> UpdateAuthor(Author author)
-        {
-            Author result = null;
-            try
-            {
-                result = await AuthorManager.Update(author);
+                if (token != null)
+                    result = await AuthorManager.Get(token);
             }
             catch (Exception ex)
             {
@@ -148,11 +140,48 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteAuthor(Author author)
+        public async Task<bool> AddAuthor(ApiAuthorRequest author)
+        {
+            ApiAuthor result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await AuthorManager.Add(token, author);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result != null;
+        }
+
+        public async Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author)
+        {
+            ApiAuthor result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await AuthorManager.Update(token, id, author);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
+        public async Task<bool> DeleteAuthor(ApiAuthor author)
         {
             try
             {
-                return await AuthorManager.Delete(author);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    return await AuthorManager.Delete(token, author);
             }
             catch (Exception ex)
             {
@@ -165,40 +194,15 @@ namespace ThePage.Core
 
         #region Genres
 
-        public async Task<List<Genre>> GetAllGenres()
+        public async Task<ApiGenreResponse> GetAllGenres()
         {
-            List<Genre> result = null;
+            ApiGenreResponse result = null;
             try
             {
-                result = await GenreManager.Get();
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            return result.SortByName();
-        }
+                var token = await _authService.GetSessionToken();
 
-        public async Task<bool> AddGenre(Genre genre)
-        {
-            Genre result = null;
-            try
-            {
-                result = await GenreManager.Add(genre);
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            return result != null;
-        }
-
-        public async Task<Genre> UpdateGenre(Genre genre)
-        {
-            Genre result = null;
-            try
-            {
-                result = await GenreManager.Update(genre);
+                if (token != null)
+                    result = await GenreManager.Get(token);
             }
             catch (Exception ex)
             {
@@ -207,11 +211,48 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteGenre(Genre genre)
+        public async Task<bool> AddGenre(ApiGenreRequest genre)
+        {
+            ApiGenre result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await GenreManager.Add(token, genre);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result != null;
+        }
+
+        public async Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre)
+        {
+            ApiGenre result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await GenreManager.Update(token, id, genre);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
+        public async Task<bool> DeleteGenre(ApiGenre genre)
         {
             try
             {
-                return await GenreManager.Delete(genre);
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    return await GenreManager.Delete(token, genre);
             }
             catch (Exception ex)
             {

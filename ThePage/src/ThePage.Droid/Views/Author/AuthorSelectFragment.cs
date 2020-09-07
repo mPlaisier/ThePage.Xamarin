@@ -1,4 +1,3 @@
-using System;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
@@ -10,5 +9,6 @@ namespace ThePage.Droid
     public class AuthorSelectFragment : BaseFragment<AuthorSelectViewModel>
     {
         protected override int FragmentLayoutId => Resource.Layout.fragment_author_select;
+        protected override EToolbarIcon ToolbarIcon => EToolbarIcon.Close;
     }
 }

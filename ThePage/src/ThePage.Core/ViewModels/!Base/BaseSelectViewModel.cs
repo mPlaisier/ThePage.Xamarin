@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
+using PropertyChanged;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -16,6 +17,7 @@ namespace ThePage.Core
     {
         #region Properties
 
+        [SuppressPropertyChangedWarnings]
         public abstract List<TObject> Items { get; set; }
 
         #endregion
@@ -46,6 +48,7 @@ namespace ThePage.Core
     {
         #region Properties
 
+        [SuppressPropertyChangedWarnings]
         public abstract TResult SelectedItem { get; internal set; }
 
         #endregion
@@ -64,8 +67,10 @@ namespace ThePage.Core
     {
         #region Properties
 
+        [SuppressPropertyChangedWarnings]
         public abstract List<TObject> Items { get; set; }
 
+        [SuppressPropertyChangedWarnings]
         public abstract TResult SelectedItems { get; internal set; }
 
         #endregion

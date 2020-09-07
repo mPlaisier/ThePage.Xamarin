@@ -11,12 +11,18 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
+        readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
-        public override string Title => string.Empty;
+        public override string LblTitle => string.Empty;
+
+        public string LblUsernameHint => "Username";
 
         public string Username { get; set; }
+
+        public string LblPasswordHint => "Password";
 
         public string Password { get; set; }
 
@@ -30,20 +36,32 @@ namespace ThePage.Core
 
         #region Commands
 
-        private MvxAsyncCommand _loginCommand;
-        public IMvxAsyncCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxAsyncCommand(OnloginClick);
+        MvxCommand _loginCommand;
+        public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
+        {
+            _device.HideKeyboard();
+            OnloginClick().Forget();
+        });
 
-        private MvxCommand _registerCommand;
-        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(OnRegisterClick);
+        MvxCommand _registerCommand;
+        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(() =>
+        {
+            _navigationService.Navigate<RegisterViewModel>();
+        });
 
         #endregion
 
         #region Constructor
 
-        public LoginViewModel(IMvxNavigationService navigationService, IAuthService authService)
+        public LoginViewModel(IMvxNavigationService navigationService,
+                              IAuthService authService,
+                              IUserInteraction userInteraction,
+                              IDevice device)
         {
             _navigationService = navigationService;
             _authService = authService;
+            _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -67,25 +85,17 @@ namespace ThePage.Core
 
         async Task OnloginClick()
         {
-            //Start login
             IsLoading = true;
 
             var success = await _authService.Login(Username, Password);
-
             if (success)
             {
+                _userInteraction.ToastMessage("Success", EToastType.Success);
                 await _navigationService.Navigate<MainViewModel>();
+                await _navigationService.Close(this);
             }
             else
-            {
-                //Show error
                 IsLoading = false;
-            }
-        }
-
-        void OnRegisterClick()
-        {
-            //Navigate to Register VM
         }
 
         #endregion

@@ -4,6 +4,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    //TODO check if still required
     public class CellBook : MvxNotifyPropertyChanged, ICellBase
     {
         #region Properties

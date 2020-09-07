@@ -11,13 +11,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public List<Genre> SelectedGenres { get; }
+        public List<ApiGenre> SelectedGenres { get; }
 
         #endregion
 
         #region Constructor
 
-        public SelectedGenreParameters(List<Genre> selectedGenres)
+        public SelectedGenreParameters(List<ApiGenre> selectedGenres)
         {
             SelectedGenres = selectedGenres;
         }
@@ -25,18 +25,18 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class SelectGenreViewModel : BaseSelectMultipleItemsViewModel<SelectedGenreParameters, List<Genre>, CellGenreSelect, Genre>
+    public class SelectGenreViewModel : BaseSelectMultipleItemsViewModel<SelectedGenreParameters, List<ApiGenre>, CellGenreSelect, ApiGenre>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
 
         #region Properties
 
-        public override string Title => "Select Genre";
+        public override string LblTitle => "Select Genre";
 
         public override List<CellGenreSelect> Items { get; set; }
 
-        public override List<Genre> SelectedItems { get; internal set; }
+        public override List<ApiGenre> SelectedItems { get; internal set; }
 
         #endregion
 
@@ -117,7 +117,7 @@ namespace ThePage.Core
             IsLoading = false;
 
             Items = new List<CellGenreSelect>();
-            genres.ForEach(x => Items.Add(new CellGenreSelect(x, SelectedItems.Contains(x))));
+            genres.Docs.ForEach(x => Items.Add(new CellGenreSelect(x, SelectedItems.Contains(x))));
         }
 
         #endregion

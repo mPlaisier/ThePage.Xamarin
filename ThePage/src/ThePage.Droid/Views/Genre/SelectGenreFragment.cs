@@ -10,5 +10,6 @@ namespace ThePage.Droid
     public class SelectGenreFragment : BaseFragment<SelectGenreViewModel>
     {
         protected override int FragmentLayoutId => Resource.Layout.fragment_selectgenre;
+        protected override EToolbarIcon ToolbarIcon => EToolbarIcon.Close;
     }
 }

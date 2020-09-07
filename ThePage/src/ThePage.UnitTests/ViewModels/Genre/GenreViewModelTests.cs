@@ -38,7 +38,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
                 .Setup(x => x.GetAllGenres())
                 .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
 
-            //Setup
+            //Execute
             LoadViewModel();
 
             //Check
@@ -55,7 +55,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
                 .Setup(x => x.GetAllGenres())
                 .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
 
-            //Setup
+            //Execute
             LoadViewModel();
 
             //Check
@@ -64,21 +64,17 @@ namespace ThePage.UnitTests.ViewModels.Genre
         }
 
         [Fact]
-        public void ShowNullGenresNoDataAvailable()
-        {
-            //Setup
-            LoadViewModel();
-
-            //Check
-            Assert.Null(_vm.Genres);
-        }
-
-        [Fact]
         public void StopLoadingAfterRefresh()
         {
-            //Setup
+            //Arrange
+            MockThePageService
+                .Setup(x => x.GetAllGenres())
+                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
+
+            //Execute
             LoadViewModel();
 
+            //Assert
             Assert.False(_vm.IsLoading);
         }
 

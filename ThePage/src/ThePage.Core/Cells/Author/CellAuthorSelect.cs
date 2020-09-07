@@ -2,11 +2,11 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class CellAuthorSelect : ICellBaseSelect<Author>
+    public class CellAuthorSelect : ICellBaseSelect<ApiAuthor>
     {
         #region Properties
 
-        public Author Item { get; set; }
+        public ApiAuthor Item { get; set; }
 
         public bool IsSelected { get; set; }
 
@@ -16,7 +16,7 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellAuthorSelect(Author author, bool isSelected = false)
+        public CellAuthorSelect(ApiAuthor author, bool isSelected = false)
         {
             Item = author;
 

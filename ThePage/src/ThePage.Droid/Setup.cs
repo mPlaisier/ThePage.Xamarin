@@ -4,12 +4,16 @@ using Android.Widget;
 using MvvmCross;
 using MvvmCross.Binding.Bindings.Target.Construction;
 using MvvmCross.Droid.Support.V7.AppCompat;
+using MvvmCross.Logging;
+using Serilog;
 using ThePage.Core;
 
 namespace ThePage.Droid
 {
     public class Setup : MvxAppCompatSetup<App>
     {
+        public override MvxLogProviderType GetDefaultLogProviderType() => MvxLogProviderType.Serilog;
+
         protected override void InitializeFirstChance()
         {
             base.InitializeFirstChance();
@@ -29,6 +33,15 @@ namespace ThePage.Droid
 
             registry.RegisterCustomBindingFactory<TextView>("DrawableRight",
                view => new TextViewDrawableRightBinding(view));
+        }
+
+        protected override IMvxLogProvider CreateLogProvider()
+        {
+            Log.Logger = new LoggerConfiguration()
+                                .MinimumLevel.Debug()
+                                .WriteTo.AndroidLog()
+                                .CreateLogger();
+            return base.CreateLogProvider();
         }
     }
 }

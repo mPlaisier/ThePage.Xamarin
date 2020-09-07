@@ -3,11 +3,11 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class CellGenreSelect : MvxNotifyPropertyChanged, ICellBaseSelect<Genre>
+    public class CellGenreSelect : MvxNotifyPropertyChanged, ICellBaseSelect<ApiGenre>
     {
         #region Properties
 
-        public Genre Item { get; set; }
+        public ApiGenre Item { get; set; }
 
         public bool IsSelected { get; set; }
 
@@ -17,7 +17,7 @@ namespace ThePage.Core
 
         #region Contructor
 
-        public CellGenreSelect(Genre genre, bool isSelected = false)
+        public CellGenreSelect(ApiGenre genre, bool isSelected = false)
         {
             Item = genre;
 

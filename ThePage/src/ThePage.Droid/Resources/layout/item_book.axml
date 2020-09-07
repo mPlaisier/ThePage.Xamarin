@@ -15,7 +15,7 @@
 		android:textSize="20dp"
 		local:layout_constraintTop_toTopOf="parent"
 		local:layout_constraintBottom_toTopOf="@+id/lblAuthor"
-		local:MvxBind="Text Book.Title"/>
+		local:MvxBind="Text Title" />
 	<TextView
 		android:id="@+id/lblAuthor"
 		android:layout_width="match_parent"
@@ -23,15 +23,12 @@
 		android:textSize="14dp"
 		local:layout_constraintTop_toBottomOf="@+id/lblName"
 		local:layout_constraintBottom_toBottomOf="parent"
-		local:MvxBind="Text Author.Name"/>
-
+		local:MvxBind="Text Author.Name" />
 	<ImageView
 		android:layout_width="30dp"
 		android:layout_height="30dp"
 		android:src="@drawable/ic_arrow_right"
 		local:layout_constraintTop_toTopOf="@+id/lblName"
 		local:layout_constraintBottom_toBottomOf="@id/lblAuthor"
-		local:layout_constraintEnd_toEndOf="parent"    />
-
-    
+		local:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>
