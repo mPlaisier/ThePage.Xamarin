@@ -42,5 +42,11 @@ namespace ThePage.Core
         Task<bool> DeleteGenre(ApiGenre genre);
 
         #endregion
+
+        #region BookShelf
+
+        Task<ApiBookShelfResponse> GetAllBookShelves();
+
+        #endregion
     }
 }
