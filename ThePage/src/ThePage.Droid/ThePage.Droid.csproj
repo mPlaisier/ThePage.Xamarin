@@ -92,6 +92,7 @@
     <Compile Include="Views\Author\AuthorSelectFragment.cs" />
     <Compile Include="Views\Authentication\LoginViewFragment.cs" />
     <Compile Include="Views\Authentication\RegisterFragment.cs" />
+    <Compile Include="Views\BookShelf\BookShelfFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -480,6 +481,14 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_bookshelf.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_bookshelf_item.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -525,6 +534,7 @@
     <Folder Include="Bindings\" />
     <Folder Include="Resources\anim\" />
     <Folder Include="Views\Authentication\" />
+    <Folder Include="Views\BookShelf\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
