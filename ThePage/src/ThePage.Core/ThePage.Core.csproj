@@ -36,7 +36,7 @@
     <Folder Include="Utils\" />
     <Folder Include="ViewModels\Authentication\" />
     <Folder Include="Utils\MvvmCross\" />
-    <Folder Include="ViewModels\Bookshelf\" />
+    <Folder Include="ViewModels\BookShelf\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

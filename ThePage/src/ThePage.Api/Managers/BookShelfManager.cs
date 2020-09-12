@@ -25,7 +25,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IBookshelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
 
                 result = await api.GetBookShelfs();
                 Barrel.Current.Add(FetchBookShelfsKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
