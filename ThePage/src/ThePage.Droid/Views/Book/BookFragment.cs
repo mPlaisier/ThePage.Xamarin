@@ -26,7 +26,6 @@ namespace ThePage.Droid
 
         protected override int FragmentLayoutId => Resource.Layout.fragment_book;
 
-
         IMvxInteraction<GetIsbnCode> _isbnInteraction;
         public IMvxInteraction<GetIsbnCode> ISBNInteraction
         {
