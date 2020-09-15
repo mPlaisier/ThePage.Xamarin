@@ -5,8 +5,9 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
+using ThePage.Core.ViewModels;
 
-namespace ThePage.Core.ViewModels.Main
+namespace ThePage.Core
 {
     public class BookShelfViewModel : BaseViewModel, INotifyPropertyChanged
     {
@@ -42,8 +43,8 @@ namespace ThePage.Core.ViewModels.Main
         IMvxCommand _addBookShelfCommand;
         public IMvxCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxCommand(() =>
        {
-            //TODO in #121
-        });
+           //TODO in #121
+       });
 
         #endregion
 
