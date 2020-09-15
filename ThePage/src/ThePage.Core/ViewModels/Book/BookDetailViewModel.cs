@@ -149,8 +149,12 @@ namespace ThePage.Core
 
             BookDetail = await _thePageService.GetBook(_book.Id);
 
-            Items = BookBusinessLogic.CreateCellBookDetailCells(BookDetail, UpdateValidation, RemoveGenre, DeleteBook, _navigation, _device);
-
+            Items = new MvxObservableCollection<ICellBook>(BookBusinessLogic.CreateCellsBookDetail(BookDetail,
+                                                                                                       UpdateValidation,
+                                                                                                       RemoveGenre,
+                                                                                                       DeleteBook,
+                                                                                                       _navigation,
+                                                                                                       _device));
             IsLoading = false;
             UpdateValidation();
         }
@@ -221,7 +225,7 @@ namespace ThePage.Core
         ApiBookDetailRequest UpdateBookCellData()
         {
             //Create update object
-            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id, BookDetail);
+            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items, BookDetail.Id, BookDetail);
 
             if (updatedBook == null)
                 return null;
