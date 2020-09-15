@@ -111,19 +111,21 @@ namespace ThePage.Core
                 return;
 
             _device.HideKeyboard();
-
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            Genre.Name = TxtName;
+            if (!Genre.Name.Equals(TxtName))
+            {
+                Genre.Name = TxtName;
 
-            var request = new ApiGenreRequest(TxtName);
-            var genre = await _thePageService.UpdateGenre(Genre.Id, request);
+                var request = new ApiGenreRequest(TxtName);
+                var genre = await _thePageService.UpdateGenre(Genre.Id, request);
 
-            if (genre != null)
-                _userInteraction.ToastMessage("Genre updated");
-            else
-                _userInteraction.Alert("Failure updating genre");
+                if (genre != null)
+                    _userInteraction.ToastMessage("Genre updated", EToastType.Success);
+                else
+                    _userInteraction.Alert("Failure updating genre");
+            }
 
             IsEditing = false;
             IsLoading = false;
