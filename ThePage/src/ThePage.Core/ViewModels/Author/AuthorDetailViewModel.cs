@@ -111,19 +111,20 @@ namespace ThePage.Core
                 return;
 
             _device.HideKeyboard();
-
             IsLoading = true;
 
             TxtName = TxtName.Trim();
-            Author.Name = TxtName;
+            if (!Author.Name.Equals(TxtName))
+            {
+                Author.Name = TxtName;
+                var request = new ApiAuthorRequest(TxtName);
 
-            var request = new ApiAuthorRequest(TxtName);
-
-            var author = await _thePageService.UpdateAuthor(Author.Id, request);
-            if (author != null)
-                _userInteraction.ToastMessage("Author updated");
-            else
-                _userInteraction.Alert("Failure updating author");
+                var author = await _thePageService.UpdateAuthor(Author.Id, request);
+                if (author != null)
+                    _userInteraction.ToastMessage("Author updated", EToastType.Success);
+                else
+                    _userInteraction.Alert("Failure updating author");
+            }
 
             IsEditing = false;
             IsLoading = false;

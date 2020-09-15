@@ -179,7 +179,11 @@ namespace ThePage.Api
 
             public ApiBookDetailRequest Build()
             {
-                return new ApiBookDetailRequest(_id,
+                return _title == null && _authorId == null && _genres == null
+                    && _iSBN == null && _owned == null && _read == null && _pages == null
+                    && _ebook == null && _olkey == null && _olCover == null
+                    ? null
+                    : new ApiBookDetailRequest(_id,
                                                 _title,
                                                 _authorId,
                                                 _genres,

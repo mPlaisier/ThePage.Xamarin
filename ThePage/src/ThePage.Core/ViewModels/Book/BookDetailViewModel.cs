@@ -100,12 +100,15 @@ namespace ThePage.Core
 
             var request = UpdateBookCellData();
 
-            var result = await _thePageService.UpdateBook(BookDetail.Id, request);
+            if (request != null)
+            {
+                var result = await _thePageService.UpdateBook(BookDetail.Id, request);
 
-            if (result != null)
-                _userInteraction.ToastMessage("Book updated");
-            else
-                _userInteraction.Alert("Failure updating book");
+                if (result != null)
+                    _userInteraction.ToastMessage("Book updated", EToastType.Success);
+                else
+                    _userInteraction.Alert("Failure updating book");
+            }
 
             ToggleEditValue();
             IsLoading = false;
@@ -217,12 +220,19 @@ namespace ThePage.Core
 
         ApiBookDetailRequest UpdateBookCellData()
         {
+            //Create update object
             var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id, BookDetail);
 
-            BookDetail.Title = updatedBook.Title;
-            BookDetail.Author = author;
+            if (updatedBook == null)
+                return null;
 
-            _book.Title = updatedBook.Title;
+            if (updatedBook.Title != null)
+            {
+                BookDetail.Title = updatedBook.Title;
+                _book.Title = updatedBook.Title;
+            }
+
+            BookDetail.Author = author;
             _book.Author = author;
 
             if (genres == null)
