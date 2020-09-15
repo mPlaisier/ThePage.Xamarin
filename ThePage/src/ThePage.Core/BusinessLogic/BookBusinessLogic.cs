@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
 using ThePage.Api;
 using static ThePage.Core.CellBookInput;
 
@@ -13,7 +12,7 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static (ApiBookDetailRequest, ApiAuthor, IEnumerable<ApiGenre>) CreateBookFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
+        public static (ApiBookDetailRequest request, ApiAuthor author, IEnumerable<ApiGenre> genres) CreateBookDetailRequestFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
         {
             //Title
             var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
@@ -71,14 +70,14 @@ namespace ThePage.Core
 
         #region Public BookDetail
 
-        public static MvxObservableCollection<ICellBook> CreateCellBookDetailCells(ApiBookDetailResponse response,
+        public static IEnumerable<ICellBook> CreateCellsBookDetail(ApiBookDetailResponse response,
                                                                      Action updateValidation,
                                                                      Action<CellBookGenreItem> removeGenre,
                                                                      Func<Task> deleteBook,
                                                                      IMvxNavigationService navigation,
                                                                      IDevice device)
         {
-            var items = new MvxObservableCollection<ICellBook>
+            var items = new List<ICellBook>
             {
                 new CellBookTextView("Title",response.Title, EBookInputType.Title,updateValidation),
                 new CellBookAuthor(response.Author,navigation, device, updateValidation),

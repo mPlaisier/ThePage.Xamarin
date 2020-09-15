@@ -103,7 +103,7 @@ namespace ThePage.Core
 
             _device.HideKeyboard();
 
-            var (book, author, genres) = BookBusinessLogic.CreateBookFromInput(Items);
+            var (book, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
             if (result)
