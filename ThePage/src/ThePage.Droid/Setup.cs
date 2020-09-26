@@ -33,6 +33,9 @@ namespace ThePage.Droid
 
             registry.RegisterCustomBindingFactory<TextView>("DrawableRight",
                view => new TextViewDrawableRightBinding(view));
+
+            registry.RegisterCustomBindingFactory<TextView>("DrawableLeft",
+               view => new TextViewDrawableLeftBinding(view));
         }
 
         protected override IMvxLogProvider CreateLogProvider()

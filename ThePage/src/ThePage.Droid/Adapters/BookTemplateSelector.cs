@@ -4,7 +4,7 @@ using ThePage.Core;
 
 namespace ThePage.Droid
 {
-    public class BookTemplateSelector : MvxTemplateSelector<ICellBook>
+    public class BookTemplateSelector : MvxTemplateSelector<ICell>
     {
         #region Properties
 
@@ -14,7 +14,7 @@ namespace ThePage.Droid
 
         #region Protected
 
-        protected override int SelectItemViewType(ICellBook forItemObject)
+        protected override int SelectItemViewType(ICell forItemObject)
         {
             switch (forItemObject)
             {
@@ -40,6 +40,5 @@ namespace ThePage.Droid
         }
 
         #endregion
-
     }
 }
