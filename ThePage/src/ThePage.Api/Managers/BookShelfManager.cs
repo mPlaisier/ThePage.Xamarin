@@ -34,5 +34,18 @@ namespace ThePage.Api
         }
 
         #endregion
+
+        #region ADD
+
+        public static async Task<ApiBookShelf> Add(string token, ApiBookShelfRequest bookshelf)
+        {
+            //Clear cache
+            Barrel.Current.Empty(FetchBookShelfsKey);
+
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.AddBookShelf(bookshelf);
+        }
+
+        #endregion
     }
 }
