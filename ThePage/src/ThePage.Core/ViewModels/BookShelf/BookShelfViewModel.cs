@@ -18,7 +18,7 @@ namespace ThePage.Core
 
         public override string LblTitle => "Bookshelfs";
 
-        public List<ApiBookShelf> BookShelves { get; set; }
+        public List<ApiBookShelf> BookShelves { get; internal set; }
 
         #endregion
 
@@ -36,15 +36,12 @@ namespace ThePage.Core
 
         IMvxCommand<ApiBookShelf> _itemClickCommand;
         public IMvxCommand<ApiBookShelf> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBookShelf>((item) =>
-       {
-           //TODO in #119
-       });
+        {
+            //TODO in #119
+        });
 
-        IMvxCommand _addBookShelfCommand;
-        public IMvxCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxCommand(() =>
-       {
-           //TODO in #121
-       });
+        IMvxAsyncCommand _addBookShelfCommand;
+        public IMvxAsyncCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxAsyncCommand(AddBookShelf);
 
         #endregion
 
@@ -71,6 +68,13 @@ namespace ThePage.Core
             BookShelves = apiBookShelfResponse.Docs;
 
             IsLoading = false;
+        }
+
+        async Task AddBookShelf()
+        {
+            var result = await _navigation.Navigate<AddBookShelfViewModel, bool>();
+            if (result)
+                await Refresh();
         }
 
         #endregion

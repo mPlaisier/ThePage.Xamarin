@@ -42,9 +42,9 @@ namespace ThePage.Core
     /// </summary>
     /// <typeparam name="TParameter"></typeparam>
     /// <typeparam name="TResult"></typeparam>
-    public abstract class BaseSelectSingleItemViewModel<TParameter, TResult, TObject>
-        : BaseSelectViewModel<TParameter, TResult, TObject>
-         where TObject : ICellBaseSelect<TResult>
+    public abstract class BaseSelectSingleItemViewModel<TParameter, TResult, TSelectObject>
+        : BaseSelectViewModel<TParameter, TResult, TSelectObject>
+         where TSelectObject : ICellBaseSelect<TResult>
     {
         #region Properties
 
@@ -59,16 +59,16 @@ namespace ThePage.Core
     /// </summary>
     /// <typeparam name="TParameter"></typeparam>
     /// <typeparam name="TResult"></typeparam>
-    /// <typeparam name="TObject"></typeparam>
-    public abstract class BaseSelectMultipleItemsViewModel<TParameter, TResult, TObject, TResultObject>
+    /// <typeparam name="TSelectObject"></typeparam>
+    public abstract class BaseSelectMultipleItemsViewModel<TParameter, TResult, TSelectObject, TSelectResultObject>
         : BaseViewModel<TParameter, TResult>
-        where TResult : List<TResultObject>
-        where TObject : ICellBaseSelect<TResultObject>
+        where TResult : List<TSelectResultObject>
+        where TSelectObject : ICellBaseSelect<TSelectResultObject>
     {
         #region Properties
 
         [SuppressPropertyChangedWarnings]
-        public abstract List<TObject> Items { get; set; }
+        public abstract List<TSelectObject> Items { get; set; }
 
         [SuppressPropertyChangedWarnings]
         public abstract TResult SelectedItems { get; internal set; }
@@ -77,7 +77,7 @@ namespace ThePage.Core
 
         #region Commands
 
-        public abstract IMvxCommand<TObject> CommandSelectItem { get; }
+        public abstract IMvxCommand<TSelectObject> CommandSelectItem { get; }
 
         public virtual IMvxCommand CommandAddItem { get; }
 

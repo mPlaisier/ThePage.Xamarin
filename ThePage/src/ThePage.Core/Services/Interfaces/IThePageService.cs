@@ -47,6 +47,8 @@ namespace ThePage.Core
 
         Task<ApiBookShelfResponse> GetAllBookShelves();
 
+        Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf);
+
         #endregion
     }
 }

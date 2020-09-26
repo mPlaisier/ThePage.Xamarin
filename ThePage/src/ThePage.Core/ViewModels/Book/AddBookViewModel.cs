@@ -150,7 +150,7 @@ namespace ThePage.Core
                 new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
                 new CellBookAuthor(_navigation, _device, UpdateValidation,true),
                 new CellBookTitle("Genres"),
-                new CellBookAddGenre(() => AddGenreAction().Forget()),
+                new CellBookAddGenre(AddGenreAction),
                 new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, true,true),
                 new CellBookNumberTextView("ISBN", _isbn, EBookInputType.ISBN, UpdateValidation, false, true),
                 new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
@@ -193,7 +193,7 @@ namespace ThePage.Core
                     new CellBookTextView("Title",_olBook.Title, EBookInputType.Title,UpdateValidation,true, true),
                     new CellBookAuthor(_navigation, _device, UpdateValidation,true),
                     new CellBookTitle("Genres"),
-                    new CellBookAddGenre(() => AddGenreAction().Forget()),
+                    new CellBookAddGenre(AddGenreAction),
                     new CellBookNumberTextView("Pages", _olBook.Pages.ToString(), EBookInputType.Pages, UpdateValidation, true,true),
                     new CellBookNumberTextView("ISBN",_isbn, EBookInputType.ISBN, UpdateValidation, false, true),
                     new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
@@ -216,7 +216,9 @@ namespace ThePage.Core
 
         async Task AddGenreAction()
         {
-            var selectedGenres = Items.Where(g => g is CellBookGenreItem).OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+            var selectedGenres = Items.Where(g => g is CellBookGenreItem)
+                    .OfType<CellBookGenreItem>()
+                    .Select(i => i.Genre).ToList();
             var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<ApiGenre>>(new SelectedGenreParameters(selectedGenres));
 
             if (genres != null)

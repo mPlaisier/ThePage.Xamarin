@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using MvvmCross.Commands;
 using ThePage.Api;
 
@@ -37,23 +38,13 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class CellBookAddGenre : ICellBook
+    public class CellBookAddGenre : BaseCellClickableText, ICellBook
     {
-        Action _addGenre;
-        #region Properties
-
-        public string Label => "Add Genre";
-
-        IMvxCommand _addGenreCommand;
-        public IMvxCommand AddGenreCommand => _addGenreCommand = _addGenreCommand ?? new MvxCommand(() => _addGenre?.Invoke());
-
-        #endregion
-
         #region Constructor
 
-        public CellBookAddGenre(Action addGenre)
+        public CellBookAddGenre(Func<Task> action)
+            : base("Add Genre", action)
         {
-            _addGenre = addGenre;
         }
 
         #endregion

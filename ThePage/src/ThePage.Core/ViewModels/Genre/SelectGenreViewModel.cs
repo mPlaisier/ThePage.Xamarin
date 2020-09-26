@@ -51,7 +51,6 @@ namespace ThePage.Core
             var result = await _navigation.Navigate<AddGenreViewModel, bool>();
             if (result)
                 await LoadData();
-
         });
 
         IMvxCommand _commandConfirm;
