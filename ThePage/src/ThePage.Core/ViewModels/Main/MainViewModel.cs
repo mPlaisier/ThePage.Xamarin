@@ -68,7 +68,7 @@ namespace ThePage.Core.ViewModels.Main
                new CellMenuItem("Books",EMenu.Book),
                new CellMenuItem("Authors",EMenu.Author),
                new CellMenuItem("Genres", EMenu.Genre),
-               new CellMenuItem("Bookshelfs", EMenu.BookShelf),
+               new CellMenuItem("Bookshelves", EMenu.BookShelf),
                new CellMenuHeader("Other"),
                new CellMenuItem("Debug",EMenu.Debug)
             };
@@ -78,7 +78,7 @@ namespace ThePage.Core.ViewModels.Main
                 new CellMenuItem("Books",EMenu.Book),
                 new CellMenuItem("Authors",EMenu.Author),
                 new CellMenuItem("Genres", EMenu.Genre),
-                new CellMenuItem("Bookshelfs", EMenu.BookShelf)
+                new CellMenuItem("Bookshelves", EMenu.BookShelf)
             };
 #endif
         }

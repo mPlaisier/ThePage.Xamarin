@@ -16,7 +16,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string LblTitle => "Bookshelfs";
+        public override string LblTitle => "Bookshelves";
 
         public List<ApiBookShelf> BookShelves { get; internal set; }
 
