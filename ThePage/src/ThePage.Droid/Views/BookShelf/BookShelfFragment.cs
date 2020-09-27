@@ -1,4 +1,5 @@
 using MvvmCross.Platforms.Android.Presenters.Attributes;
+using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
 using ThePage.Droid.Views;
 

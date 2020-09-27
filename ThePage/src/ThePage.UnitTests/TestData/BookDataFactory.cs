@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using ThePage.Api;
+using ThePage.Core;
 
 namespace ThePage.UnitTests
 {
@@ -8,6 +9,11 @@ namespace ThePage.UnitTests
         public static ApiBookResponse GetListBook4ElementsComplete()
         {
             return JsonConvert.DeserializeObject<ApiBookResponse>(ListBook4ElementsComplete);
+        }
+
+        public static ApiBookResponse GetListBook1ElementsComplete()
+        {
+            return JsonConvert.DeserializeObject<ApiBookResponse>(ListBook1ElementsComplete);
         }
 
         public static ApiBookResponse GetListBookEmpty()
@@ -39,6 +45,12 @@ namespace ThePage.UnitTests
         {
             var olObject = JsonConvert.DeserializeObject<OLObject>(SingleOLObject);
             return olObject;
+        }
+
+        public static CellBookSelect GetCellBookSelect(bool isSelected = false)
+        {
+            var book = GetSingleApiBook();
+            return new CellBookSelect(book, isSelected);
         }
     }
 }

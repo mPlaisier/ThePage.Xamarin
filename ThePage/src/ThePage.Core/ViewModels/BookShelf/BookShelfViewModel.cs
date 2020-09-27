@@ -5,8 +5,9 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
+using ThePage.Core.ViewModels;
 
-namespace ThePage.Core.ViewModels.Main
+namespace ThePage.Core
 {
     public class BookShelfViewModel : BaseViewModel, INotifyPropertyChanged
     {
@@ -15,9 +16,9 @@ namespace ThePage.Core.ViewModels.Main
 
         #region Properties
 
-        public override string LblTitle => "Bookshelfs";
+        public override string LblTitle => "Bookshelves";
 
-        public List<ApiBookShelf> BookShelves { get; set; }
+        public List<ApiBookShelf> BookShelves { get; internal set; }
 
         #endregion
 
@@ -35,15 +36,12 @@ namespace ThePage.Core.ViewModels.Main
 
         IMvxCommand<ApiBookShelf> _itemClickCommand;
         public IMvxCommand<ApiBookShelf> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBookShelf>((item) =>
-       {
-           //TODO in #119
-       });
-
-        IMvxCommand _addBookShelfCommand;
-        public IMvxCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxCommand(() =>
-       {
-            //TODO in #121
+        {
+            //TODO in #119
         });
+
+        IMvxAsyncCommand _addBookShelfCommand;
+        public IMvxAsyncCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxAsyncCommand(AddBookShelf);
 
         #endregion
 
@@ -70,6 +68,13 @@ namespace ThePage.Core.ViewModels.Main
             BookShelves = apiBookShelfResponse.Docs;
 
             IsLoading = false;
+        }
+
+        async Task AddBookShelf()
+        {
+            var result = await _navigation.Navigate<AddBookShelfViewModel, bool>();
+            if (result)
+                await Refresh();
         }
 
         #endregion

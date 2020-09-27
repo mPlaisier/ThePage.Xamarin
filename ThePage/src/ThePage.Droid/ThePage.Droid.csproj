@@ -93,6 +93,10 @@
     <Compile Include="Views\Authentication\LoginViewFragment.cs" />
     <Compile Include="Views\Authentication\RegisterFragment.cs" />
     <Compile Include="Views\BookShelf\BookShelfFragment.cs" />
+    <Compile Include="Views\BookShelf\AddBookShelfFragment.cs" />
+    <Compile Include="Bindings\TextViewDrawableLeftBinding.cs" />
+    <Compile Include="Adapters\BookShelfTemplateSelector.cs" />
+    <Compile Include="Views\Book\BookSelectFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -190,10 +194,6 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\item_author.axml">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable\ic_add.png">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
@@ -486,6 +486,42 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cell_bookshelf_item.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_addbookshelf.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_add.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_book_select.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_base_title.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_base_textview.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_base_clickabletext.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_base_keyvalue_listitem.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_book_select.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_base_select_keyvalue.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

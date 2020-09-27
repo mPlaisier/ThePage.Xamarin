@@ -33,6 +33,8 @@
 		<Folder Include="Cells\Book\" />
 		<Folder Include="ViewModels\Authentication\" />
 		<Folder Include="BusinessLogic\" />
+		<Folder Include="ViewModels\BookShelf\" />
+		<Folder Include="Cells\Base\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

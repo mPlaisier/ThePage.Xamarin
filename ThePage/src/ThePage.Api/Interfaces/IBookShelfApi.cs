@@ -7,6 +7,10 @@ namespace ThePage.Api
     {
         [Get("/shelfs/v2")]
         [Headers("Authorization: Bearer")]
-        Task<ApiBookShelfResponse> GetBookShelfs();
+        Task<ApiBookShelfResponse> GetBookShelves();
+
+        [Post("/shelfs/v2")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiBookShelf> AddBookShelf([Body] ApiBookShelfRequest book);
     }
 }

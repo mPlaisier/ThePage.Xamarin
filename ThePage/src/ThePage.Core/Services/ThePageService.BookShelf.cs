@@ -22,5 +22,22 @@ namespace ThePage.Core
             }
             return result;
         }
+
+        public async Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf)
+        {
+            ApiBookShelf result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookShelfManager.Add(token, bookshelf);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result != null;
+        }
     }
 }

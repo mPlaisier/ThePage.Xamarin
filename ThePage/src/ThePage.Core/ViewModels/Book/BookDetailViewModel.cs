@@ -210,7 +210,7 @@ namespace ThePage.Core
             if (IsEditing)
             {
                 var index = Items.FindIndex(x => x is CellBookNumberTextView y && y.InputType == EBookInputType.Pages);
-                Items.Insert(index, new CellBookAddGenre(() => AddGenreAction().Forget()));
+                Items.Insert(index, new CellBookAddGenre(AddGenreAction));
 
                 Items.Add(new CellBookButton("Update Book", UpdateBook));
                 UpdateValidation();

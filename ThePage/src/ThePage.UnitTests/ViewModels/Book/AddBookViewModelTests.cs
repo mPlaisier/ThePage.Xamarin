@@ -210,7 +210,6 @@ namespace ThePage.UnitTests.ViewModels.Book
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = "500";
 
-
             //Execute
             _vm.AddBookCommand.Execute();
 

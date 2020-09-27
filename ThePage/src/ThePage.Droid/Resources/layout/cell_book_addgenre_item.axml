@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
+    style="@style/clickableText"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textStyle="bold"
     android:layout_margin="4dp"
-    local:MvxBind="Text Label;Click AddGenreCommand;"/>
+    local:MvxBind="Text Label;Click CommandClick;DrawableLeft Icon;"/>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:layout_marginTop="10dp"
+    android:padding="4dp"
+    local:MvxBind="Click CommandClick">
+    <TextView
+        android:id="@+id/lblKey"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        local:layout_constraintTop_toTopOf="parent"
+        local:layout_constraintBottom_toTopOf="@+id/lblValue"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintWidth_percent="0.5"
+        local:MvxBind="Text Key" />
+    <TextView
+        android:id="@+id/lblValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toBottomOf="@+id/lblKey"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintStart_toStartOf="parent"
+        local:MvxBind="Text Value;"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        local:layout_constraintTop_toTopOf="parent"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintStart_toEndOf="@id/lblKey"
+        android:tint="@color/primaryColor"
+        local:MvxBind="ResourceName If(IsEdit, Icon, '')"/>
+</android.support.constraint.ConstraintLayout>
