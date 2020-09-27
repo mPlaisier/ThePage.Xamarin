@@ -3,17 +3,18 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class ApiBookShelfRequest
     {
         #region Properties
 
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("books", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("books")]
         public List<string> Books { get; set; }
 
         #endregion
