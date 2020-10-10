@@ -20,5 +20,9 @@ namespace ThePage.Api
         [Patch("/shelfs/v2/{Id}")]
         [Headers("Authorization: Bearer")]
         Task<ApiBookShelfDetailResponse> UpdateBookShelf([Body] ApiBookShelfRequest bookShelf, string id);
+
+        [Delete("/shelfs/v2/{bookShelf.Id}")]
+        [Headers("Authorization: Bearer")]
+        Task DeleteBookShelf(ApiBookShelfDetailResponse bookShelf);
     }
 }
