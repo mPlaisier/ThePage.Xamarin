@@ -37,6 +37,7 @@ namespace ThePage.Core
 
         IMvxAsyncCommand _addBookShelfCommand;
         public IMvxAsyncCommand CommandAddBookShelf => _addBookShelfCommand ??= new MvxAsyncCommand(AddBookShelf);
+
         #endregion
 
         #region Constructor
@@ -109,7 +110,7 @@ namespace ThePage.Core
                 return;
             IsLoading = true;
 
-            var request = BookShelfBusinessLogic.CreateApiBookShelfRequestFromInput(Items);
+            var request = BookShelfBusinessLogic.CreateApiBookShelfRequestFromInput(Items).request;
             var result = await _thePageService.AddBookShelf(request);
 
             if (result)

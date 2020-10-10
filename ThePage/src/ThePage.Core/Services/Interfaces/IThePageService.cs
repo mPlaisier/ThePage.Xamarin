@@ -49,6 +49,10 @@ namespace ThePage.Core
 
         Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf);
 
+        Task<ApiBookShelfDetailResponse> GetBookShelf(string id);
+
+        Task<ApiBookShelfDetailResponse> UpdateBookShelf(string id, ApiBookShelfRequest bookshelf);
+
         #endregion
     }
 }
