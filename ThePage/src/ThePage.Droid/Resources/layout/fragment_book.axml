@@ -14,8 +14,7 @@
         local:MvxBind="Click AddBookCommand;Visibility InvertedVisibility(IsLoading)"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent" />
-
-       <android.support.design.widget.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabBarcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
