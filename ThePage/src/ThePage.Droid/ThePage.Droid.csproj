@@ -97,6 +97,7 @@
     <Compile Include="Bindings\TextViewDrawableLeftBinding.cs" />
     <Compile Include="Adapters\BookShelfTemplateSelector.cs" />
     <Compile Include="Views\Book\BookSelectFragment.cs" />
+    <Compile Include="Views\BookShelf\BookShelfDetailFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -522,6 +523,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cell_base_select_keyvalue.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_bookshelfdetail.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

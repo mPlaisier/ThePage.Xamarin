@@ -23,6 +23,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiBookShelfDetailResponse> GetBookShelf(string id)
+        {
+            ApiBookShelfDetailResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookShelfManager.Get(token, id);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf)
         {
             ApiBookShelf result = null;
@@ -38,6 +55,23 @@ namespace ThePage.Core
                 HandleException(ex);
             }
             return result != null;
+        }
+
+        public async Task<ApiBookShelfDetailResponse> UpdateBookShelf(string id, ApiBookShelfRequest bookshelf)
+        {
+            ApiBookShelfDetailResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookShelfManager.Update(token, id, bookshelf);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
         }
     }
 }

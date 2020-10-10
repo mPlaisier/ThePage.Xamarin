@@ -25,7 +25,6 @@ namespace ThePage.Core
             return result;
         }
 
-
         public async Task<ApiBookDetailResponse> GetBook(string id)
         {
             ApiBookDetailResponse result = null;

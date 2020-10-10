@@ -34,11 +34,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand<ApiBookShelf> _itemClickCommand;
-        public IMvxCommand<ApiBookShelf> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBookShelf>((item) =>
-        {
-            //TODO in #119
-        });
+        IMvxAsyncCommand<ApiBookShelf> _itemClickCommand;
+        public IMvxAsyncCommand<ApiBookShelf> ItemClickCommand => _itemClickCommand ??= new MvxAsyncCommand<ApiBookShelf>(GoToBookShelfDetail);
 
         IMvxAsyncCommand _addBookShelfCommand;
         public IMvxAsyncCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxAsyncCommand(AddBookShelf);
@@ -73,6 +70,13 @@ namespace ThePage.Core
         async Task AddBookShelf()
         {
             var result = await _navigation.Navigate<AddBookShelfViewModel, bool>();
+            if (result)
+                await Refresh();
+        }
+
+        async Task GoToBookShelfDetail(ApiBookShelf bookshelf)
+        {
+            var result = await _navigation.Navigate<BookShelfDetailViewModel, ApiBookShelf, bool>(bookshelf);
             if (result)
                 await Refresh();
         }

@@ -33,6 +33,24 @@ namespace ThePage.Api
             return result;
         }
 
+        public static async Task<ApiBookShelfDetailResponse> Get(string token, string id, bool forceRefresh = false)
+        {
+            var bookShelfKey = GetSingleBookShelfKey + id;
+            ApiBookShelfDetailResponse result = null;
+
+            if (!forceRefresh && Barrel.Current.Exists(bookShelfKey) && !Barrel.Current.IsExpired(bookShelfKey))
+                result = Barrel.Current.Get<ApiBookShelfDetailResponse>(bookShelfKey);
+
+            if (result == null)
+            {
+                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                result = await api.GetBookShelf(id);
+
+                Barrel.Current.Add(bookShelfKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+            }
+            return result;
+        }
+
         #endregion
 
         #region ADD
@@ -44,6 +62,21 @@ namespace ThePage.Api
 
             var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.AddBookShelf(bookshelf);
+        }
+
+        #endregion
+
+        #region PATCH
+
+        public static async Task<ApiBookShelfDetailResponse> Update(string token, string id, ApiBookShelfRequest bookShelf)
+        {
+            //Clear cache
+            var bookShelfKey = GetSingleBookShelfKey + id;
+            Barrel.Current.Empty(bookShelfKey);
+            Barrel.Current.Empty(FetchBookShelvesKey);
+
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            return await api.UpdateBookShelf(bookShelf, id);
         }
 
         #endregion

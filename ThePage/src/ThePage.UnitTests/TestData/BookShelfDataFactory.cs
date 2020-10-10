@@ -14,5 +14,25 @@ namespace ThePage.UnitTests
         {
             return JsonConvert.DeserializeObject<ApiBookShelfResponse>(ListBookShelf2Elements);
         }
+
+        public static ApiBookShelfDetailResponse GetApiBookShelfDetailResponseWithBooks()
+        {
+            return JsonConvert.DeserializeObject<ApiBookShelfDetailResponse>(BookShelfDetailResponseWithBooks);
+        }
+
+        public static ApiBookShelfDetailResponse GetApiBookShelfDetailResponseWithoutBooks()
+        {
+            return JsonConvert.DeserializeObject<ApiBookShelfDetailResponse>(BookShelfDetailResponseWithoutBooks);
+        }
+
+        public static ApiBookShelf GetSingleBookfShelfWithBooks()
+        {
+            return JsonConvert.DeserializeObject<ApiBookShelf>(SingleBookfShelfWithBooks);
+        }
+
+        public static ApiBookShelf GetSingleBookfShelfWithoutBooks()
+        {
+            return JsonConvert.DeserializeObject<ApiBookShelf>(SingleBookfShelfWithoutBooks);
+        }
     }
 }
