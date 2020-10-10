@@ -46,6 +46,9 @@ namespace ThePage.Core
         IMvxAsyncCommand _commandUpdateBookShelf;
         public IMvxAsyncCommand CommandUpdateBookShelf => _commandUpdateBookShelf ??= new MvxAsyncCommand(UpdateBookShelf);
 
+        IMvxAsyncCommand _commandDeleteBookShelf;
+        public IMvxAsyncCommand CommandDeleteBookShelf => _commandDeleteBookShelf ??= new MvxAsyncCommand(DeleteBookShelf);
+
         #endregion
 
         #region Constructor
@@ -180,6 +183,31 @@ namespace ThePage.Core
 
             ToggleEditValue();
             IsLoading = false;
+        }
+
+        async Task DeleteBookShelf()
+        {
+            if (IsLoading)
+                return;
+
+            var answer = await _userInteraction.ConfirmAsync("Remove bookshelf?", "Confirm", "DELETE");
+            if (answer)
+            {
+                IsLoading = true;
+
+                var result = await _thePageService.DeleteBookShelf(BookShelfDetail);
+
+                if (result)
+                {
+                    _userInteraction.ToastMessage("Bookshelf removed", EToastType.Success);
+                    await _navigation.Close(this, true);
+                }
+                else
+                {
+                    _userInteraction.Alert("Failure removing bookshelf");
+                    IsLoading = false;
+                }
+            }
         }
 
         ApiBookShelfRequest UpdateBookShelfCellData()

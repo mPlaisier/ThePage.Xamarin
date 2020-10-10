@@ -53,6 +53,8 @@ namespace ThePage.Core
 
         Task<ApiBookShelfDetailResponse> UpdateBookShelf(string id, ApiBookShelfRequest bookshelf);
 
+        Task<bool> DeleteBookShelf(ApiBookShelfDetailResponse content);
+
         #endregion
     }
 }

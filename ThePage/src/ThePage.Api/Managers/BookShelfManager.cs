@@ -80,5 +80,22 @@ namespace ThePage.Api
         }
 
         #endregion
+
+        #region DELETE
+
+        public static async Task<bool> Delete(string token, ApiBookShelfDetailResponse bookShelf)
+        {
+            //Clear cache
+            var bookShelfKey = GetSingleBookShelfKey + bookShelf.Id;
+            Barrel.Current.Empty(bookShelfKey);
+            Barrel.Current.Empty(FetchBookShelvesKey);
+
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            await api.DeleteBookShelf(bookShelf);
+
+            return true;
+        }
+
+        #endregion
     }
 }

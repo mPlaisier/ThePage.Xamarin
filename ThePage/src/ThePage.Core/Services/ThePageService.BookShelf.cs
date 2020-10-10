@@ -73,5 +73,21 @@ namespace ThePage.Core
             }
             return result;
         }
+
+        public async Task<bool> DeleteBookShelf(ApiBookShelfDetailResponse content)
+        {
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    return await BookShelfManager.Delete(token, content);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return false;
+        }
     }
 }
