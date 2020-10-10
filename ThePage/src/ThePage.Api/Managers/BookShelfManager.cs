@@ -10,7 +10,7 @@ namespace ThePage.Api
     {
         #region CachingKeys
 
-        const string FetchBookShelvesKey = "GetBookShelvesKey";
+        public const string FetchBookShelvesKey = "GetBookShelvesKey";
         const string GetSingleBookShelfKey = "GetBookShelfKey";
 
         #endregion
