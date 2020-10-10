@@ -136,7 +136,6 @@ namespace ThePage.Core
                     _userInteraction.Alert("Failure removing book");
                     IsLoading = false;
                 }
-
             }
         }
 
