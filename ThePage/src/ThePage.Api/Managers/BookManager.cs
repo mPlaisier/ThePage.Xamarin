@@ -91,7 +91,6 @@ namespace ThePage.Api
             Barrel.Current.Empty(FetchBooksKey);
             Barrel.Current.Empty(BookShelfManager.FetchBookShelvesKey);
 
-
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             await api.DeleteBook(book);
 
