@@ -24,15 +24,7 @@ namespace ThePage.Api
         public int Count => Books == null ? 0 : Books.Count;
 
         [JsonIgnore]
-        public string LblCount
-        {
-            get
-            {
-                if (Count == 1)
-                    return $"{Count} book";
-                return $"{Count} books";
-            }
-        }
+        public string LblCount => Count == 1 ? $"{Count} book" : $"{Count} books";
 
         #endregion
     }
