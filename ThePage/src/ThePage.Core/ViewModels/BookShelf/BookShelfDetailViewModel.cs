@@ -195,7 +195,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBookShelf(BookShelfDetail);
+                var result = await _thePageService.DeleteBookShelf(BookShelfDetail.Id);
 
                 if (result)
                 {

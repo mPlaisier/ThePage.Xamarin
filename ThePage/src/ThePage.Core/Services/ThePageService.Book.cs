@@ -76,14 +76,14 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteBook(ApiBookDetailResponse content)
+        public async Task<bool> DeleteBook(string id)
         {
             try
             {
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    return await BookManager.Delete(token, content);
+                    return await BookManager.Delete(token, id);
             }
             catch (Exception ex)
             {

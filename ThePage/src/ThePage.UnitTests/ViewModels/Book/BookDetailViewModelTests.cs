@@ -302,7 +302,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Arrange
             PrepareThePageServiceResults();
             MockThePageService
-               .Setup(x => x.DeleteBook(It.IsAny<Api.ApiBookDetailResponse>()))
+               .Setup(x => x.DeleteBook(It.IsAny<string>()))
                .Returns(() => Task.FromResult(result));
             MockUserInteraction
                  .Setup(x => x.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
