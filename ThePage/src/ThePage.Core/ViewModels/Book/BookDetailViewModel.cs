@@ -124,7 +124,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookDetail);
+                var result = await _thePageService.DeleteBook(BookDetail.Id);
 
                 if (result)
                 {

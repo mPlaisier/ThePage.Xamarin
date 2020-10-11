@@ -15,7 +15,7 @@ namespace ThePage.Core
 
         Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book);
 
-        Task<bool> DeleteBook(ApiBookDetailResponse book);
+        Task<bool> DeleteBook(string id);
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace ThePage.Core
 
         Task<ApiBookShelfDetailResponse> UpdateBookShelf(string id, ApiBookShelfRequest bookshelf);
 
-        Task<bool> DeleteBookShelf(ApiBookShelfDetailResponse content);
+        Task<bool> DeleteBookShelf(string id);
 
         #endregion
     }

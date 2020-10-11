@@ -83,16 +83,16 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> Delete(string token, ApiBookDetailResponse book)
+        public static async Task<bool> Delete(string token, string id)
         {
             //Clear cache
-            var bookKey = GetSingleBookKey + book.Id;
+            var bookKey = GetSingleBookKey + id;
             Barrel.Current.Empty(bookKey);
             Barrel.Current.Empty(FetchBooksKey);
             Barrel.Current.Empty(BookShelfManager.FetchBookShelvesKey);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
-            await api.DeleteBook(book);
+            await api.DeleteBook(id);
 
             return true;
         }
