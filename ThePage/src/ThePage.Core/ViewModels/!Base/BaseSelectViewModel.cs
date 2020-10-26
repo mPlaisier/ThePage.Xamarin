@@ -87,7 +87,7 @@ namespace ThePage.Core
 
         #region Public
 
-        public abstract Task LoadData();
+        public abstract Task LoadData(string item = default);
 
         #endregion
     }

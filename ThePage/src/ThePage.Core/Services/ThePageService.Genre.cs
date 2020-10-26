@@ -25,7 +25,7 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> AddGenre(ApiGenreRequest genre)
+        public async Task<ApiGenre> AddGenre(ApiGenreRequest genre)
         {
             ApiGenre result = null;
             try
@@ -39,7 +39,7 @@ namespace ThePage.Core
             {
                 HandleException(ex);
             }
-            return result != null;
+            return result;
         }
 
         public async Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre)

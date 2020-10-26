@@ -25,7 +25,7 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> AddAuthor(ApiAuthorRequest author)
+        public async Task<ApiAuthor> AddAuthor(ApiAuthorRequest author)
         {
             ApiAuthor result = null;
             try
@@ -39,7 +39,7 @@ namespace ThePage.Core
             {
                 HandleException(ex);
             }
-            return result != null;
+            return result;
         }
 
         public async Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author)

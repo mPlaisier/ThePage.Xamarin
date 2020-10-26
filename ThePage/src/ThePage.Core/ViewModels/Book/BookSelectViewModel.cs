@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -29,9 +30,9 @@ namespace ThePage.Core
         IMvxCommand _commandAddItem;
         public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddBookViewModel, bool>();
-            if (result)
-                await LoadData();
+            var result = await _navigation.Navigate<AddBookViewModel, string>();
+            if (result != null)
+                await LoadData(result);
         });
 
         IMvxCommand _commandConfirm;
@@ -67,14 +68,20 @@ namespace ThePage.Core
 
         #region Public
 
-        public override async Task LoadData()
+        public override async Task LoadData(string id = null)
         {
             IsLoading = true;
 
             var books = await _thePageService.GetAllBooks();
 
+            //Add new created book to Selected list
+            if (id != null)
+                SelectedItems.Add(books.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
+
+            //Create select cells with the already selected books = true
             Items = new List<CellBookSelect>();
-            books.Docs.ForEach(x => Items.Add(new CellBookSelect(x, SelectedItems.Contains(x))));
+            books.Docs.ForEach(x => Items.Add(
+                new CellBookSelect(x, SelectedItems.Contains(x))));
 
             IsLoading = false;
         }

@@ -53,8 +53,8 @@ namespace ThePage.Core
         IMvxCommand _addbookCommand;
         public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddBookViewModel, bool>();
-            if (result)
+            var result = await _navigation.Navigate<AddBookViewModel, string>();
+            if (result != null)
                 await Refresh();
         });
 
@@ -94,8 +94,8 @@ namespace ThePage.Core
 
             var olBook = await _openLibraryService.GetBookByISBN(isbn);
 
-            var result = await _navigation.Navigate<AddBookViewModel, AddBookParameter, bool>(new AddBookParameter(isbn, olBook));
-            if (result)
+            var result = await _navigation.Navigate<AddBookViewModel, AddBookParameter, string>(new AddBookParameter(isbn, olBook));
+            if (result != null)
                 await Refresh();
             else
                 IsLoading = false;
