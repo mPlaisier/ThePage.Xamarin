@@ -11,7 +11,7 @@ namespace ThePage.Droid
 #else
     [Application(Debuggable = false)]
 #endif
-    public class MainApplication : MvxAndroidApplication<Setup, App> //MvxAppCompatApplication<Setup, App>
+    public class MainApplication : MvxAndroidApplication<Setup, App>
     {
         public MainApplication(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
