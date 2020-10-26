@@ -33,7 +33,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AddBookViewModel : BaseViewModel<AddBookParameter, bool>, INotifyPropertyChanged
+    public class AddBookViewModel : BaseViewModel<AddBookParameter, string>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -106,10 +106,10 @@ namespace ThePage.Core
             var (book, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items);
             var result = await _thePageService.AddBook(book);
 
-            if (result)
+            if (result != null)
             {
                 _userInteraction.ToastMessage("Book added");
-                await _navigation.Close(this, true);
+                await _navigation.Close(this, result.Id);
             }
             else
             {
@@ -131,7 +131,7 @@ namespace ThePage.Core
             if (_authors == null || _genres == null)
             {
                 _userInteraction.Alert("Error retrieving data from Server", null, "Error");
-                await _navigation.Close(this, true);
+                await _navigation.Close(this, null);
             }
 
             if (_olBook != null)
@@ -179,7 +179,7 @@ namespace ThePage.Core
                     Name = olAuthor.Name,
                     Olkey = olkey
                 };
-                var isAdded = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, bool>(author);
+                var isAdded = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor>(author);
 
                 if (!isAdded)
                     return;

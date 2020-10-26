@@ -9,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddGenreViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
+    public class AddGenreViewModel : BaseViewModelResult<string>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -76,11 +76,10 @@ namespace ThePage.Core
             IsLoading = true;
 
             var result = await _thePageService.AddGenre(new ApiGenreRequest(TxtName.Trim()));
-
-            if (result)
+            if (result != null)
             {
                 _userInteraction.ToastMessage("Genre added");
-                await _navigation.Close(this, true);
+                await _navigation.Close(this, result.Id);
             }
             else
             {

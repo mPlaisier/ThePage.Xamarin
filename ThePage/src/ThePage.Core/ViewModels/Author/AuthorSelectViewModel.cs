@@ -50,9 +50,9 @@ namespace ThePage.Core
         IMvxCommand _commandAddItem;
         public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
-            var result = await _navigationService.Navigate<AddAuthorViewModel, bool>();
-            if (result)
-                await LoadData();
+            var result = await _navigationService.Navigate<AddAuthorViewModel, ApiAuthor>();
+            if (result != null)
+                await _navigationService.Close(this, result);
 
         });
 

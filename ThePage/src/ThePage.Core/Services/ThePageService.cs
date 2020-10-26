@@ -13,12 +13,6 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public ThePageService() :
-            this(Mvx.IoCProvider.Resolve<IUserInteraction>(),
-                 Mvx.IoCProvider.Resolve<IAuthService>())
-        {
-        }
-
         public ThePageService(IUserInteraction userInteraction, IAuthService authService)
         {
             _userInteraction = userInteraction;

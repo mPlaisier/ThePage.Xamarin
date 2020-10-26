@@ -42,7 +42,7 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> AddBook(ApiBookDetailRequest book)
+        public async Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book)
         {
             ApiBookDetailRequest result = null;
             try
@@ -56,7 +56,7 @@ namespace ThePage.Core
             {
                 HandleException(ex);
             }
-            return result != null;
+            return result;
         }
 
         public async Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book)

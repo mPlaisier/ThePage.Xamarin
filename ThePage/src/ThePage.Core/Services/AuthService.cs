@@ -17,10 +17,6 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthService() : this(Mvx.IoCProvider.Resolve<IUserInteraction>())
-        {
-        }
-
         public AuthService(IUserInteraction userInteraction)
         {
             _userInteraction = userInteraction;

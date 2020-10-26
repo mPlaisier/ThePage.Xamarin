@@ -46,8 +46,8 @@ namespace ThePage.Core
         IMvxCommand _addAuthorCommand;
         public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddAuthorViewModel, bool>();
-            if (result)
+            var result = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor>();
+            if (result != null)
                 await Refresh();
         });
 
