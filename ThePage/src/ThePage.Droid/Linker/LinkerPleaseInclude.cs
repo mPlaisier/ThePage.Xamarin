@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Android.App;
 using Android.Runtime;
-using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using AndroidX.RecyclerView.Widget;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Commands;
 using MvvmCross.Core;
-using MvvmCross.Droid.Support.V7.RecyclerView;
+using MvvmCross.DroidX.RecyclerView;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -149,9 +149,9 @@ namespace ThePage.Droid.Linker
             _ = new MvxChildViewModelCache();
         }
 
-        public void Include(MvvmCross.Droid.Support.V7.RecyclerView.ItemTemplates.MvxDefaultTemplateSelector injector)
+        public void Include(MvvmCross.DroidX.RecyclerView.ItemTemplates.MvxDefaultTemplateSelector injector)
         {
-            _ = new MvvmCross.Droid.Support.V7.RecyclerView.ItemTemplates.MvxDefaultTemplateSelector();
+            _ = new MvvmCross.DroidX.RecyclerView.ItemTemplates.MvxDefaultTemplateSelector();
         }
 
         public void Include(RecyclerView.ViewHolder vh, MvxRecyclerView list)
