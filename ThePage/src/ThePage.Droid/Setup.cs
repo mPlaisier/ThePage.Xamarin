@@ -3,14 +3,15 @@ using System.Reflection;
 using Android.Widget;
 using MvvmCross;
 using MvvmCross.Binding.Bindings.Target.Construction;
-using MvvmCross.Droid.Support.V7.AppCompat;
+using MvvmCross.DroidX.RecyclerView;
 using MvvmCross.Logging;
+using MvvmCross.Platforms.Android.Core;
 using Serilog;
 using ThePage.Core;
 
 namespace ThePage.Droid
 {
-    public class Setup : MvxAppCompatSetup<App>
+    public class Setup : MvxAndroidSetup<App>
     {
         public override MvxLogProviderType GetDefaultLogProviderType() => MvxLogProviderType.Serilog;
 
@@ -24,7 +25,7 @@ namespace ThePage.Droid
 
         protected override IEnumerable<Assembly> AndroidViewAssemblies => new List<Assembly>(base.AndroidViewAssemblies)
         {
-            typeof(MvvmCross.Droid.Support.V7.RecyclerView.MvxRecyclerView).Assembly
+            typeof(MvxRecyclerView).Assembly
         };
 
         protected override void FillTargetFactories(IMvxTargetBindingFactoryRegistry registry)
