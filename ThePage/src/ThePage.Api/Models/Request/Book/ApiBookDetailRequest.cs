@@ -3,42 +3,42 @@ using Newtonsoft.Json;
 
 namespace ThePage.Api
 {
-    //TODO check todo ignore via top level
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class ApiBookDetailRequest
     {
         #region Properties
 
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("id")]
         public string Id { get; internal set; }
 
-        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("title")]
         public string Title { get; internal set; }
 
-        [JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("author")]
         public string AuthorId { get; internal set; }
 
-        [JsonProperty("genres", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("genres")]
         public List<string> Genres { get; internal set; }
 
-        [JsonProperty("isbn", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("isbn")]
         public string ISBN { get; internal set; }
 
-        [JsonProperty("owned", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("owned")]
         public bool? Owned { get; internal set; }
 
-        [JsonProperty("read", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("read")]
         public bool? Read { get; internal set; }
 
-        [JsonProperty("pages", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("pages")]
         public int? Pages { get; internal set; }
 
-        [JsonProperty("ebook", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("ebook")]
         public bool? Ebook { get; internal set; }
 
-        [JsonProperty("olkey", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("olkey")]
         public string Olkey { get; internal set; }
 
-        [JsonProperty("olcover", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("olcover")]
         public Olcover OlCover { get; internal set; }
 
         #endregion
@@ -179,7 +179,11 @@ namespace ThePage.Api
 
             public ApiBookDetailRequest Build()
             {
-                return new ApiBookDetailRequest(_id,
+                return _title == null && _authorId == null && _genres == null
+                    && _iSBN == null && _owned == null && _read == null && _pages == null
+                    && _ebook == null && _olkey == null && _olCover == null
+                    ? null
+                    : new ApiBookDetailRequest(_id,
                                                 _title,
                                                 _authorId,
                                                 _genres,

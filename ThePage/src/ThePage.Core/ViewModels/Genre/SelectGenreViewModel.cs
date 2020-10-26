@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;
-using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
@@ -48,10 +48,9 @@ namespace ThePage.Core
         IMvxCommand _commandAddItem;
         public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddGenreViewModel, bool>();
-            if (result)
-                await LoadData();
-
+            var result = await _navigation.Navigate<AddGenreViewModel, string>();
+            if (result != null)
+                await LoadData(result);
         });
 
         IMvxCommand _commandConfirm;
@@ -92,9 +91,7 @@ namespace ThePage.Core
             if (cellGenre.IsSelected)
             {
                 SelectedItems.Remove(cellGenre.Item);
-
                 cellGenre.IsSelected = false;
-
             }
             else
             {
@@ -108,16 +105,20 @@ namespace ThePage.Core
             _navigation.Close(this, SelectedItems);
         }
 
-        public override async Task LoadData()
+        public override async Task LoadData(string id = null)
         {
             IsLoading = true;
 
             var genres = await _thePageService.GetAllGenres();
 
-            IsLoading = false;
+            //Add new created genre to Selected list
+            if (id != null)
+                SelectedItems.Add(genres.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
 
             Items = new List<CellGenreSelect>();
             genres.Docs.ForEach(x => Items.Add(new CellGenreSelect(x, SelectedItems.Contains(x))));
+
+            IsLoading = false;
         }
 
         #endregion

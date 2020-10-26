@@ -187,37 +187,6 @@ namespace ThePage.UnitTests.ViewModels.Book
                 Assert.Equal(isValid, item.IsValid);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void LoadingSetCorrectAfterAddBook(bool result)
-        {
-            //Arrange
-            MockThePageService
-               .Setup(x => x.AddBook(It.IsAny<Api.ApiBookDetailRequest>()))
-               .Returns(() => Task.FromResult(result));
-
-            PrepareAuthorAndGenreData();
-            _vm.Initialize();
-
-            //Execute
-            var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
-            cellTitle.TxtInput = "Valid Name";
-
-            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
-            cellAuthor.Item = AuthorDataFactory.GetSingleAuthor();
-
-            var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
-            cellPages.TxtInput = "500";
-
-
-            //Execute
-            _vm.AddBookCommand.Execute();
-
-            //Assert
-            Assert.Equal(result, _vm.IsLoading);
-        }
-
         public static IEnumerable<object[]> InputDataForBooks =>
                new[]
                {

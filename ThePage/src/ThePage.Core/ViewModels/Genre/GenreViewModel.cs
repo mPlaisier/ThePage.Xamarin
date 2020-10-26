@@ -46,8 +46,8 @@ namespace ThePage.Core
         IMvxCommand _addGenreCommand;
         public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddGenreViewModel, bool>();
-            if (result)
+            var result = await _navigation.Navigate<AddGenreViewModel, string>();
+            if (result != null)
                 await Refresh();
         });
 

@@ -100,12 +100,15 @@ namespace ThePage.Core
 
             var request = UpdateBookCellData();
 
-            var result = await _thePageService.UpdateBook(BookDetail.Id, request);
+            if (request != null)
+            {
+                var result = await _thePageService.UpdateBook(BookDetail.Id, request);
 
-            if (result != null)
-                _userInteraction.ToastMessage("Book updated");
-            else
-                _userInteraction.Alert("Failure updating book");
+                if (result != null)
+                    _userInteraction.ToastMessage("Book updated", EToastType.Success);
+                else
+                    _userInteraction.Alert("Failure updating book");
+            }
 
             ToggleEditValue();
             IsLoading = false;
@@ -121,7 +124,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookDetail);
+                var result = await _thePageService.DeleteBook(BookDetail.Id);
 
                 if (result)
                 {
@@ -133,7 +136,6 @@ namespace ThePage.Core
                     _userInteraction.Alert("Failure removing book");
                     IsLoading = false;
                 }
-
             }
         }
 
@@ -146,8 +148,12 @@ namespace ThePage.Core
 
             BookDetail = await _thePageService.GetBook(_book.Id);
 
-            Items = BookBusinessLogic.CreateCellBookDetailCells(BookDetail, UpdateValidation, RemoveGenre, DeleteBook, _navigation, _device);
-
+            Items = new MvxObservableCollection<ICellBook>(BookBusinessLogic.CreateCellsBookDetail(BookDetail,
+                                                                                                       UpdateValidation,
+                                                                                                       RemoveGenre,
+                                                                                                       DeleteBook,
+                                                                                                       _navigation,
+                                                                                                       _device));
             IsLoading = false;
             UpdateValidation();
         }
@@ -203,7 +209,7 @@ namespace ThePage.Core
             if (IsEditing)
             {
                 var index = Items.FindIndex(x => x is CellBookNumberTextView y && y.InputType == EBookInputType.Pages);
-                Items.Insert(index, new CellBookAddGenre(() => AddGenreAction().Forget()));
+                Items.Insert(index, new CellBookAddGenre(AddGenreAction));
 
                 Items.Add(new CellBookButton("Update Book", UpdateBook));
                 UpdateValidation();
@@ -217,12 +223,19 @@ namespace ThePage.Core
 
         ApiBookDetailRequest UpdateBookCellData()
         {
-            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookFromInput(Items, BookDetail.Id, BookDetail);
+            //Create update object
+            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items, BookDetail.Id, BookDetail);
 
-            BookDetail.Title = updatedBook.Title;
+            if (updatedBook == null)
+                return null;
+
+            if (updatedBook.Title != null)
+            {
+                BookDetail.Title = updatedBook.Title;
+                _book.Title = updatedBook.Title;
+            }
+
             BookDetail.Author = author;
-
-            _book.Title = updatedBook.Title;
             _book.Author = author;
 
             if (genres == null)

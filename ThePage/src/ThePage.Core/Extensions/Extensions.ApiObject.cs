@@ -48,5 +48,18 @@ namespace ThePage.Core
         }
 
         #endregion
+
+        #region Bookshelf
+
+        public static List<string> GetIdStrings(this IEnumerable<ApiBook> books, bool nullAllowed = false)
+        {
+            return books == null && nullAllowed
+                ? null
+                : books == null
+                    ? new List<string>()
+                    : books.Select(b => b.Id).ToList();
+        }
+
+        #endregion
     }
 }

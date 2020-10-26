@@ -11,11 +11,11 @@ namespace ThePage.Core
 
         Task<ApiBookDetailResponse> GetBook(string id);
 
-        Task<bool> AddBook(ApiBookDetailRequest book);
+        Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book);
 
         Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book);
 
-        Task<bool> DeleteBook(ApiBookDetailResponse book);
+        Task<bool> DeleteBook(string id);
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace ThePage.Core
 
         Task<ApiAuthorResponse> GetAllAuthors();
 
-        Task<bool> AddAuthor(ApiAuthorRequest author);
+        Task<ApiAuthor> AddAuthor(ApiAuthorRequest author);
 
         Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author);
 
@@ -35,11 +35,25 @@ namespace ThePage.Core
 
         Task<ApiGenreResponse> GetAllGenres();
 
-        Task<bool> AddGenre(ApiGenreRequest genre);
+        Task<ApiGenre> AddGenre(ApiGenreRequest genre);
 
         Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre);
 
         Task<bool> DeleteGenre(ApiGenre genre);
+
+        #endregion
+
+        #region BookShelf
+
+        Task<ApiBookShelfResponse> GetAllBookShelves();
+
+        Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf);
+
+        Task<ApiBookShelfDetailResponse> GetBookShelf(string id);
+
+        Task<ApiBookShelfDetailResponse> UpdateBookShelf(string id, ApiBookShelfRequest bookshelf);
+
+        Task<bool> DeleteBookShelf(string id);
 
         #endregion
     }

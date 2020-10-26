@@ -11,9 +11,10 @@ namespace ThePage.Core.ViewModels.Main
     {
         public enum EMenu
         {
-            Books,
-            Authors,
+            Book,
+            Author,
             Genre,
+            BookShelf,
             Debug
         }
 
@@ -64,18 +65,20 @@ namespace ThePage.Core.ViewModels.Main
             Items = new List<CellMenu>
             {
                new CellMenuHeader("ThePage"),
-               new CellMenuItem("Books",EMenu.Books),
-               new CellMenuItem("Authors",EMenu.Authors),
+               new CellMenuItem("Books",EMenu.Book),
+               new CellMenuItem("Authors",EMenu.Author),
                new CellMenuItem("Genres", EMenu.Genre),
+               new CellMenuItem("Bookshelves", EMenu.BookShelf),
                new CellMenuHeader("Other"),
                new CellMenuItem("Debug",EMenu.Debug)
             };
 #else
             Items = new List<CellMenu>
             {
-                new CellMenuItem("Books",EMenu.Books),
-                new CellMenuItem("Authors",EMenu.Authors),
-                new CellMenuItem("Genres", EMenu.Genre)
+                new CellMenuItem("Books",EMenu.Book),
+                new CellMenuItem("Authors",EMenu.Author),
+                new CellMenuItem("Genres", EMenu.Genre),
+                new CellMenuItem("Bookshelves", EMenu.BookShelf)
             };
 #endif
         }
@@ -86,20 +89,23 @@ namespace ThePage.Core.ViewModels.Main
             {
                 switch (item.Menu)
                 {
-                    case EMenu.Books:
+                    case EMenu.Book:
                         _navigationService.Navigate<BookViewModel>();
                         break;
-                    case EMenu.Authors:
+                    case EMenu.Author:
                         _navigationService.Navigate<AuthorViewModel>();
                         break;
                     case EMenu.Genre:
                         _navigationService.Navigate<GenreViewModel>();
                         break;
+                    case EMenu.BookShelf:
+                        _navigationService.Navigate<BookShelfViewModel>();
+                        break;
                     case EMenu.Debug:
                         _navigationService.Navigate<DebugViewModel>();
                         break;
                     default:
-                        throw new NotSupportedException("Unknown Menu item");
+                        throw new NotSupportedException($"{nameof(MainViewModel)}: OnItemClick - Unknown Menu item: {item.Menu}");
                 }
             }
         }

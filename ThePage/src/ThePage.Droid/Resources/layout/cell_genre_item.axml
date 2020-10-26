@@ -10,17 +10,19 @@
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/lblName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="20dp"
+        local:layout_constraintStart_toStartOf="parent"
+		local:layout_constraintEnd_toStartOf="@+id/imgArrow"
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toBottomOf="parent"
         local:MvxBind="Text Name"/>
-
     <ImageView
+        android:id="@id/imgArrow"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/ic_arrow_right"
+        android:src="@drawable/ic_chevron_right"
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toEndOf="parent"    />

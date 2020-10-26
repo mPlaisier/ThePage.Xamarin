@@ -20,12 +20,12 @@ namespace ThePage.UnitTests
 
         const string SingleApiBook =
             @"{
-                ""title"": ""A title"",
-                ""author"": {
-                    ""name"": ""Tokien"",
+                ""title"": ""Title1"",
+                  ""author"": {
+                    ""name"": ""Author1"",
                     ""id"": ""5ebe620b77a70d9bb9fb5c20""
-                },
-                ""id"": ""5eda2b3a695c3574ce9c02bc""
+                  },
+                  ""id"": ""5eda2fc8c3939e752b81d76b""
             }";
 
         const string ApiBookDetailResponseWithGenres =
@@ -103,6 +103,29 @@ namespace ThePage.UnitTests
                 }
               ],
               ""totalDocs"": 4,
+              ""limit"": 25,
+              ""totalPages"": 1,
+              ""page"": 1,
+              ""pagingCounter"": 1,
+              ""hasPrevPage"": false,
+              ""hasNextPage"": false,
+              ""prevPage"": null,
+              ""nextPage"": null
+            }";
+
+        const string ListBook1ElementsComplete =
+            @"{
+                ""docs"": [
+                {
+                  ""title"": ""Title1"",
+                  ""author"": {
+                    ""name"": ""Author1"",
+                    ""id"": ""5ebe620b77a70d9bb9fb5c20""
+                  },
+                  ""id"": ""5eda2fc8c3939e752b81d76b""
+                }
+              ],
+              ""totalDocs"": 1,
               ""limit"": 25,
               ""totalPages"": 1,
               ""page"": 1,

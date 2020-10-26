@@ -175,23 +175,13 @@ namespace ThePage.Core
 
                 var authors = await _thePageService.GetAllAuthors();
                 var genres = await _thePageService.GetAllGenres();
+                var bookshelves = await _thePageService.GetAllBookShelves();
                 var books = await _thePageService.GetAllBooks();
 
-                foreach (var author in authors.Docs)
-                {
-                    await _thePageService.DeleteAuthor(author);
-                }
-
-                foreach (var genre in genres.Docs)
-                {
-                    await _thePageService.DeleteGenre(genre);
-                }
-
-                //TODO
-                //foreach (var book in books.Docs)
-                //{
-                //    await _thePageService.DeleteBook(book);
-                //}
+                authors.Docs.ForEach(async x => await _thePageService.DeleteAuthor(x));
+                genres.Docs.ForEach(async x => await _thePageService.DeleteGenre(x));
+                bookshelves.Docs.ForEach(async x => await _thePageService.DeleteBookShelf(x.Id));
+                books.Docs.ForEach(async x => await _thePageService.DeleteBook(x.Id));
 
                 IsLoading = false;
             }

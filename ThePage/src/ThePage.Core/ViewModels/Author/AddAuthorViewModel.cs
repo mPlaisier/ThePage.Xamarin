@@ -9,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddAuthorViewModel : BaseViewModel<ApiAuthor, bool>, INotifyPropertyChanged
+    public class AddAuthorViewModel : BaseViewModel<ApiAuthor, ApiAuthor>, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -88,10 +88,10 @@ namespace ThePage.Core
 
             var result = await _thePageService.AddAuthor(author);
 
-            if (result)
+            if (result != null)
             {
                 _userInteraction.ToastMessage("Author added");
-                await _navigation.Close(this, true);
+                await _navigation.Close(this, result);
             }
             else
             {
