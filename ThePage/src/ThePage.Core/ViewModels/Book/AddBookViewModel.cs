@@ -179,13 +179,14 @@ namespace ThePage.Core
                     Name = olAuthor.Name,
                     Olkey = olkey
                 };
-                var isAdded = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor>(author);
-
-                if (!isAdded)
-                    return;
-
-                _authors = await _thePageService.GetAllAuthors();
-                author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
+                var newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+                if (newAuthor != null)
+                    author = newAuthor;
+                else
+                {
+                    _authors = await _thePageService.GetAllAuthors();
+                    author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
+                }
             }
 
             Items = new MvxObservableCollection<ICellBook>
