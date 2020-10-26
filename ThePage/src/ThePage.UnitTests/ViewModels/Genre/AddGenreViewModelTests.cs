@@ -40,23 +40,5 @@ namespace ThePage.UnitTests.ViewModels.Genre
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
                 () => _vm.TxtName = "input");
         }
-
-        [Theory]
-        [InlineData(true, true)]
-        [InlineData(false, false)]
-        public void LoadingAddGenreSuccessful(bool result, bool isLoading)
-        {
-            MockThePageService
-                .Setup(x => x.AddGenre(It.IsAny<Api.ApiGenreRequest>()))
-                .Returns(() => Task.FromResult(result));
-
-            _vm.TxtName = "";
-            _vm.AddGenreCommand.Execute();
-
-            //Execute
-            Assert.Equal(isLoading, _vm.IsLoading);
-        }
-
-
     }
 }

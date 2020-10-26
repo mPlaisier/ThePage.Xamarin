@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using ThePage.Api;
@@ -40,22 +41,6 @@ namespace ThePage.UnitTests.ViewModels.Author
             //Execute
             Assert.PropertyChanged(_vm, nameof(_vm.IsValid),
                 () => _vm.TxtName = "input");
-        }
-
-        [Theory]
-        [InlineData(true, true)]
-        [InlineData(false, false)]
-        public void LoadingAddAuthorSuccessful(bool result, bool isLoading)
-        {
-            MockThePageService
-                .Setup(x => x.AddAuthor(It.IsAny<ApiAuthorRequest>()))
-                .Returns(() => Task.FromResult(result));
-
-            _vm.TxtName = "";
-            _vm.AddAuthorCommand.Execute();
-
-            //Execute
-            Assert.Equal(isLoading, _vm.IsLoading);
         }
     }
 }
