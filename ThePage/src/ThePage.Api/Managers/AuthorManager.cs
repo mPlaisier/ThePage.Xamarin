@@ -8,30 +8,32 @@ namespace ThePage.Api
 {
     public class AuthorManager
     {
-        const string GetAuthorsKey = "GetAuthorsKey";
-        const string GetSingleAuthorKey = "GetAuthorKey";
+        const string AUTHORS_KEY = "GetAuthorsKey";
+        const string AUTHORS_SINGLE_KEY = "GetAuthorKey";
 
         #region FETCH
 
-        public static async Task<ApiAuthorResponse> Get(string token, bool forceRefresh = false)
+        public static async Task<ApiAuthorResponse> Get(string token, int? page = null, bool forceRefresh = false)
         {
+            var barrelkey = AUTHORS_KEY + (page ?? 1);
+
             ApiAuthorResponse result = null;
-            if (!forceRefresh && Barrel.Current.Exists(GetAuthorsKey) && !Barrel.Current.IsExpired(GetAuthorsKey))
-                result = Barrel.Current.Get<ApiAuthorResponse>(GetAuthorsKey);
+            if (!forceRefresh && Barrel.Current.Exists(barrelkey) && !Barrel.Current.IsExpired(barrelkey))
+                result = Barrel.Current.Get<ApiAuthorResponse>(barrelkey);
 
             if (result == null)
             {
                 var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
 
-                result = await api.GetAuthors();
-                Barrel.Current.Add(GetAuthorsKey, result, TimeSpan.FromMinutes(Constants.AuthorExpirationTimeInMinutes));
+                result = await api.GetAuthors(new ApiPageRequest(page));
+                Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.AuthorExpirationTimeInMinutes));
             }
             return result;
         }
 
         public static async Task<ApiAuthor> Get(string token, string id, bool forceRefresh = false)
         {
-            var authorKey = GetSingleAuthorKey + id;
+            var authorKey = AUTHORS_SINGLE_KEY + id;
             ApiAuthor result = null;
 
             if (!forceRefresh && Barrel.Current.Exists(authorKey) && !Barrel.Current.IsExpired(authorKey))
@@ -55,7 +57,7 @@ namespace ThePage.Api
         public static async Task<ApiAuthor> Add(string token, ApiAuthorRequest author)
         {
             //Clear cache
-            Barrel.Current.Empty(GetAuthorsKey);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.AddAuthor(author);
@@ -68,7 +70,9 @@ namespace ThePage.Api
         public static async Task<ApiAuthor> Update(string token, string id, ApiAuthorRequest author)
         {
             //Clear cache
-            Barrel.Current.Empty(GetAuthorsKey);
+            var authorKey = AUTHORS_SINGLE_KEY + author.Id;
+            Barrel.Current.Empty(authorKey);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.UpdateAuthor(author, id);
@@ -81,7 +85,9 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, ApiAuthor author)
         {
             //Clear cache
-            Barrel.Current.Empty(GetAuthorsKey);
+            var authorKey = AUTHORS_SINGLE_KEY + author.Id;
+            Barrel.Current.Empty(authorKey);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             await api.DeleteAuthor(author);

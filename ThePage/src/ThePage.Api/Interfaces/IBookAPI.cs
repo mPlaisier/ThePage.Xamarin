@@ -7,7 +7,7 @@ namespace ThePage.Api
     {
         [Get("/books/v2")]
         [Headers("Authorization: Bearer")]
-        Task<ApiBookResponse> GetBooks();
+        Task<ApiBookResponse> GetBooks([Body] ApiPageRequest page);
 
         [Get("/books/v2/{id}")]
         [Headers("Authorization: Bearer")]

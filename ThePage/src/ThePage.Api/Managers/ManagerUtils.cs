@@ -1,0 +1,23 @@
+using MonkeyCache.LiteDB;
+
+namespace ThePage.Api
+{
+    public static class ManagerUtils
+    {
+        public static void ClearPageBarrels(string key)
+        {
+            var page = 1;
+            var barrelkey = key + page;
+
+            bool barrelFound = Barrel.Current.Exists(barrelkey);
+            while (barrelFound)
+            {
+                Barrel.Current.Empty(barrelkey);
+
+                page++;
+                barrelkey = key + page;
+                barrelFound = Barrel.Current.Exists(barrelkey);
+            }
+        }
+    }
+}

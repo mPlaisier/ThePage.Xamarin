@@ -10,32 +10,34 @@ namespace ThePage.Api
     {
         #region CachingKeys
 
-        const string FetchBooksKey = "GetBooksKey";
-        const string GetSingleBookKey = "GetBookKey";
+        const string BOOKS_KEY = "GetBooksKey";
+        const string BOOKS_SINGLE_KEY = "GetBookKey";
 
         #endregion
 
         #region FETCH
 
-        public static async Task<ApiBookResponse> Get(string token, bool forceRefresh = false)
+        public static async Task<ApiBookResponse> Get(string token, int? page = null, bool forceRefresh = false)
         {
+            var barrelkey = BOOKS_KEY + (page ?? 1);
+
             ApiBookResponse result = null;
-            if (!forceRefresh && !Barrel.Current.Exists(FetchBooksKey) && !Barrel.Current.IsExpired(FetchBooksKey))
-                result = Barrel.Current.Get<ApiBookResponse>(FetchBooksKey);
+            if (!forceRefresh && Barrel.Current.Exists(barrelkey) && !Barrel.Current.IsExpired(barrelkey))
+                result = Barrel.Current.Get<ApiBookResponse>(barrelkey);
 
             if (result == null)
             {
                 var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
 
-                result = await api.GetBooks();
-                Barrel.Current.Add(FetchBooksKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
+                result = await api.GetBooks(new ApiPageRequest(page));
+                Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
             }
             return result;
         }
 
         public static async Task<ApiBookDetailResponse> Get(string token, string id, bool forceRefresh = false)
         {
-            var bookKey = GetSingleBookKey + id;
+            var bookKey = BOOKS_SINGLE_KEY + id;
             ApiBookDetailResponse result = null;
 
             if (!forceRefresh && Barrel.Current.Exists(bookKey) && !Barrel.Current.IsExpired(bookKey))
@@ -58,7 +60,7 @@ namespace ThePage.Api
         public static async Task<ApiBookDetailRequest> Add(string token, ApiBookDetailRequest book)
         {
             //Clear cache
-            Barrel.Current.Empty(FetchBooksKey);
+            ManagerUtils.ClearPageBarrels(BOOKS_KEY);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.AddBook(book);
@@ -71,9 +73,9 @@ namespace ThePage.Api
         public static async Task<ApiBookDetailResponse> Update(string token, string id, ApiBookDetailRequest book)
         {
             //Clear cache
-            var bookKey = GetSingleBookKey + id;
+            var bookKey = BOOKS_SINGLE_KEY + id;
             Barrel.Current.Empty(bookKey);
-            Barrel.Current.Empty(FetchBooksKey);
+            ManagerUtils.ClearPageBarrels(BOOKS_KEY);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.UpdateBook(book, id);
@@ -86,10 +88,10 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, string id)
         {
             //Clear cache
-            var bookKey = GetSingleBookKey + id;
+            var bookKey = BOOKS_SINGLE_KEY + id;
             Barrel.Current.Empty(bookKey);
-            Barrel.Current.Empty(FetchBooksKey);
-            Barrel.Current.Empty(BookShelfManager.FetchBookShelvesKey);
+            ManagerUtils.ClearPageBarrels(BOOKS_KEY);
+            Barrel.Current.Empty(BookShelfManager.BOOKSHELVES_KEY);
 
             var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             await api.DeleteBook(id);
