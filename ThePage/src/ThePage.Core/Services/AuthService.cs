@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
-using MvvmCross;
+using MvvmCross.Navigation;
 using Newtonsoft.Json;
 using Refit;
 using ThePage.Api;
@@ -13,13 +13,15 @@ namespace ThePage.Core
     public class AuthService : IAuthService
     {
         readonly IUserInteraction _userInteraction;
-        const string LoginKey = "LoginKey";
+
+        const string SESSION_KEY = "LoginKey";
 
         #region Constructor
 
         public AuthService(IUserInteraction userInteraction)
         {
             _userInteraction = userInteraction;
+
             Barrel.ApplicationId = "thepageapplication";
             Barrel.EncryptionKey = "encryptionKey";
         }
@@ -81,9 +83,9 @@ namespace ThePage.Core
         public async Task<string> GetSessionToken()
         {
             string token = null;
-            if (Barrel.Current.Exists(LoginKey))
+            if (Barrel.Current.Exists(SESSION_KEY))
             {
-                var result = Barrel.Current.Get<ApiTokens>(LoginKey);
+                var result = Barrel.Current.Get<ApiTokens>(SESSION_KEY);
                 token = result.Access.Expires > DateTime.UtcNow
                     ? result.Access.Token
                     : await UpdateSessionToken(result.Refresh);
@@ -104,17 +106,17 @@ namespace ThePage.Core
 
         void handleSuccessfullLogin(ApiUserReponse response)
         {
-            Barrel.Current.Add(LoginKey, response.Tokens, TimeSpan.FromDays(30));
+            Barrel.Current.Add(SESSION_KEY, response.Tokens, TimeSpan.FromDays(30));
         }
 
         async Task<string> UpdateSessionToken(TokenObject token)
         {
-            if (token.Expires < DateTime.Now)
+            if (token.Expires > DateTime.UtcNow)
             {
                 var result = await AuthManager.RefreshTokens(token.Token);
                 if (result != null)
                 {
-                    Barrel.Current.Add(LoginKey, result, TimeSpan.FromDays(30));
+                    Barrel.Current.Add(SESSION_KEY, result, TimeSpan.FromDays(30));
                     return result.Access.Token;
                 }
             }
