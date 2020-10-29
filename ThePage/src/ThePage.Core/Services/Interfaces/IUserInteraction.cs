@@ -30,6 +30,7 @@ namespace ThePage.Core
     {
         Error,
         Success,
+        Info,
         Other
     }
 
