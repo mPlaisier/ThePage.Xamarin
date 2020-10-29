@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
-using MvvmCross.Navigation;
 using Newtonsoft.Json;
 using Refit;
 using ThePage.Api;
