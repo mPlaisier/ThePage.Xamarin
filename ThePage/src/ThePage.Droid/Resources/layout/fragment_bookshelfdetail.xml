@@ -13,23 +13,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toTopOf="parent"
-        local:layout_constraintBottom_toTopOf="@+id/space"
+        local:layout_constraintBottom_toTopOf="@+id/btnUpdate"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constrainedHeight="true"
         local:MvxTemplateSelector="ThePage.Droid.BookShelfTemplateSelector, ThePage.Droid"
         local:MvxBind="ItemsSource Items;" />
-    <Space
-        android:id="@+id/space"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        local:layout_constraintTop_toBottomOf="@+id/lstItems"
-        local:layout_constraintBottom_toTopOf="@+id/btnUpdate" />
     <TextView
         style="@style/PrimaryBtn"
         android:id="@+id/btnUpdate"
         local:layout_constraintEnd_toEndOf="parent"
         local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintTop_toBottomOf="@+id/space"
+        local:layout_constraintTop_toBottomOf="@+id/lstItems"
         local:layout_constraintBottom_toTopOf="@+id/btnDelete"
         local:MvxBind="Text LblBtnUpdate;Click CommandUpdateBookShelf;Enabled IsValid;Visibility Visibility(IsEditing)"/>
     <TextView
