@@ -25,6 +25,7 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Click CommandAddItem"/>
     <MvxRecyclerView
+        android:id="@+id/lstItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         local:MvxItemTemplate="@layout/cell_genre_select_item"
