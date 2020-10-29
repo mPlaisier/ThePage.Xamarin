@@ -8,7 +8,7 @@ namespace ThePage.Api
     {
         [Get("/genres/v2")]
         [Headers("Authorization: Bearer")]
-        Task<ApiGenreResponse> Get();
+        Task<ApiGenreResponse> Get([Body] ApiPageRequest page);
 
         [Get("/genres/v2/{id}")]
         [Headers("Authorization: Bearer")]

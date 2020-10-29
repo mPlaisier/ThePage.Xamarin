@@ -98,6 +98,8 @@
     <Compile Include="Adapters\BookShelfTemplateSelector.cs" />
     <Compile Include="Views\Book\BookSelectFragment.cs" />
     <Compile Include="Views\BookShelf\BookShelfDetailFragment.cs" />
+    <Compile Include="Utils\OnScrollListener.cs" />
+    <Compile Include="Views\!Base\BaseListFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -516,6 +518,10 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\ic_info_outline.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -543,6 +549,10 @@
     <ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj">
       <Project>{29292AFB-84A1-450F-8FCD-0E699EF915C3}</Project>
       <Name>ThePage.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj">
+      <Project>{CF352E55-0E85-4F6B-8118-228B38667261}</Project>
+      <Name>ThePage.Api</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiBookShelfResponse> GetNextBookshelves(int page)
+        {
+            ApiBookShelfResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookShelfManager.Get(token, page);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<ApiBookShelfDetailResponse> GetBookShelf(string id)
         {
             ApiBookShelfDetailResponse result = null;

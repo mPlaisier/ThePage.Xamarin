@@ -1,7 +1,7 @@
+using System.ComponentModel;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
-using ThePage.Droid.Views;
 
 namespace ThePage.Droid
 {
@@ -13,11 +13,24 @@ namespace ThePage.Droid
         PopEnterAnimation = Resource.Animation.pull_in_left,
         PopExitAnimation = Resource.Animation.push_out_right
     )]
-    public class BookShelfFragment : BaseFragment<BookShelfViewModel>
+    public class BookShelfFragment : BaseListFragment<BookShelfViewModel>
     {
         #region Properties
 
         protected override int FragmentLayoutId => Resource.Layout.fragment_bookshelf;
+
+        #endregion
+
+        #region Protected
+
+        protected override void OnScrollListener_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_scrolllistener.BottomReached))
+            {
+                if (_scrolllistener.BottomReached)
+                    ViewModel.LoadNextPage().Forget();
+            }
+        }
 
         #endregion
 

@@ -204,6 +204,7 @@ namespace ThePage.Droid
                 {
                     EToastType.Error => Resource.Drawable.ic_error,
                     EToastType.Success => Resource.Drawable.ic_check,
+                    EToastType.Info => Resource.Drawable.ic_info_outline,
                     EToastType.Other => 0,
                     _ => Resource.Drawable.ic_error,
                 };
@@ -215,6 +216,7 @@ namespace ThePage.Droid
                 {
                     EToastType.Error => Resource.Color.primaryLightColorError,
                     EToastType.Success => Resource.Color.primaryLightColorSuccess,
+                    EToastType.Info => Resource.Color.black,
                     _ => Resource.Color.black,
                 };
                 return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));
@@ -226,6 +228,7 @@ namespace ThePage.Droid
                 {
                     EToastType.Error => Resource.Color.primaryDarkColorError,
                     EToastType.Success => Resource.Color.primaryDarkColorSuccess,
+                    EToastType.Info => Resource.Color.primaryLightColor,
                     _ => Resource.Color.white,
                 };
                 return new Color(ContextCompat.GetColor(CurrentActivity, resourceColor));

@@ -21,6 +21,7 @@
     <Folder Include="Models\Request\Book\" />
     <Folder Include="Models\Response\BookShelf\" />
     <Folder Include="Models\Request\BookShelf\" />
+    <Folder Include="Models\Request\Base\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

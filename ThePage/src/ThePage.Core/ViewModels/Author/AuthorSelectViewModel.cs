@@ -28,6 +28,7 @@ namespace ThePage.Core
     {
         readonly IThePageService _thePageService;
         readonly IMvxNavigationService _navigationService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
@@ -60,10 +61,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorSelectViewModel(IThePageService thePageService, IMvxNavigationService navigationService)
+        public AuthorSelectViewModel(IThePageService thePageService, IMvxNavigationService navigationService, IUserInteraction userInteraction)
         {
             _thePageService = thePageService;
             _navigationService = navigationService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -93,9 +95,31 @@ namespace ThePage.Core
             var authors = await _thePageService.GetAllAuthors();
 
             Items = new List<CellAuthorSelect>();
-            authors.Docs.ForEach(x => Items.Add(new CellAuthorSelect(x, x == SelectedItem)));
+            authors.Docs.ForEach(x => Items.Add(
+                new CellAuthorSelect(x, x == SelectedItem)));
 
+            _currentPage = authors.Page;
+            _hasNextPage = authors.HasNextPage;
             IsLoading = false;
+        }
+
+        public override async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiAuthorResponse = await _thePageService.GetNextAuthors(_currentPage + 1);
+                apiAuthorResponse.Docs.ForEach(x => Items.Add(
+                    new CellAuthorSelect(x, x == SelectedItem)));
+
+                _currentPage = apiAuthorResponse.Page;
+                _hasNextPage = apiAuthorResponse.HasNextPage;
+                _isLoadingNextPage = false;
+
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
         }
 
         #endregion

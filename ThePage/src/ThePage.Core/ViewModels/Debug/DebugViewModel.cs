@@ -12,6 +12,11 @@ namespace ThePage.Core
 {
     public class DebugViewModel : BaseViewModel
     {
+        const int AMOUNT_AUTHORS = 60;
+        const int AMOUNT_GENRES = 35;
+        const int AMOUNT_BOOKS = 80;
+        const int AMOUNT_BOOKSHELVES = 30;
+
         readonly IUserInteraction _userInteraction;
         readonly IThePageService _thePageService;
 
@@ -208,6 +213,23 @@ namespace ThePage.Core
                 //Create books
                 await CreateBooks(genres.Docs, authors.Docs);
 
+                var bookReponse = await _thePageService.GetAllBooks();
+                var books = bookReponse.Docs;
+
+                var hasNextPage = bookReponse.HasNextPage;
+                var page = bookReponse.Page + 1;
+                while (hasNextPage)
+                {
+                    var result = await _thePageService.GetNextBooks(page);
+                    books.AddRange(result.Docs);
+
+                    hasNextPage = result.HasNextPage;
+                    page = result.Page + 1;
+                }
+
+
+                await CreateBookShelves(books);
+
                 IsLoading = false;
             }
 
@@ -215,9 +237,7 @@ namespace ThePage.Core
 
         async Task CreateGenres()
         {
-            int amountOfGenres = 10;
-
-            for (int i = 0; i < amountOfGenres; i++)
+            for (int i = 0; i < AMOUNT_GENRES; i++)
             {
                 await _thePageService.AddGenre(new ApiGenreRequest($"Genre {i + 1}"));
             }
@@ -225,8 +245,7 @@ namespace ThePage.Core
 
         async Task CreateAuthors()
         {
-            int amountOfAuthors = 10;
-            for (int i = 0; i < amountOfAuthors; i++)
+            for (int i = 0; i < AMOUNT_AUTHORS; i++)
             {
                 await _thePageService.AddAuthor(new ApiAuthorRequest($"Author {i + 1}"));
             }
@@ -235,11 +254,10 @@ namespace ThePage.Core
         async Task CreateBooks(List<ApiGenre> genres, List<ApiAuthor> authors)
         {
             var random = new Random();
-            int amountOfBooks = 25;
             int minGenres = 0;
             int maxGenres = 4;
 
-            for (int i = 0; i < amountOfBooks; i++)
+            for (int i = 0; i < AMOUNT_BOOKS; i++)
             {
                 var amountGenres = random.Next(minGenres, maxGenres);
                 var selectedgenres = new List<ApiGenre>();
@@ -255,15 +273,37 @@ namespace ThePage.Core
                 var book = new ApiBookDetailRequest($"Book {i + 1}",
                                                     author.Id,
                                                     selectedgenres.GetIdStrings().ToList(),
-                                                    "",
+                                                    null,
                                                     false,
                                                     true,
                                                     random.Next(50, 500),
                                                     false,
-                                                    string.Empty,
+                                                    null,
                                                     null);
 
                 await _thePageService.AddBook(book);
+            }
+        }
+
+        async Task CreateBookShelves(List<ApiBook> books)
+        {
+            var random = new Random();
+            int minBooks = 0;
+            int maxBooks = 25;
+
+            for (int i = 0; i < AMOUNT_BOOKSHELVES; i++)
+            {
+                var amountBooks = random.Next(minBooks, maxBooks);
+                var selectedBooks = new List<ApiBook>();
+                while (selectedBooks.Count < amountBooks)
+                {
+                    var genre = books[random.Next(0, books.Count() - 1)];
+                    if (!selectedBooks.Contains(genre))
+                        selectedBooks.Add(genre);
+                }
+
+                var bookshelf = new ApiBookShelfRequest(null, $"Book {i + 1}", selectedBooks.GetIdStrings());
+                await _thePageService.AddBookShelf(bookshelf);
             }
         }
 

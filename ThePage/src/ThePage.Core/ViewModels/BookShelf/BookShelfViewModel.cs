@@ -13,6 +13,11 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
+
+        int _currentPage;
+        bool _hasNextPage;
+        bool _isLoadingNextPage;
 
         #region Properties
 
@@ -24,10 +29,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public BookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -55,6 +61,28 @@ namespace ThePage.Core
 
         #endregion
 
+        #region Public
+
+        public async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiBookShelfResponse = await _thePageService.GetNextBookshelves(_currentPage + 1);
+                BookShelves.AddRange(apiBookShelfResponse.Docs);
+
+                _currentPage = apiBookShelfResponse.Page;
+                _hasNextPage = apiBookShelfResponse.HasNextPage;
+
+                _isLoadingNextPage = false;
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        #endregion
+
         #region Private
 
         async Task Refresh()
@@ -64,6 +92,8 @@ namespace ThePage.Core
             var apiBookShelfResponse = await _thePageService.GetAllBookShelves();
             BookShelves = apiBookShelfResponse.Docs;
 
+            _currentPage = apiBookShelfResponse.Page;
+            _hasNextPage = apiBookShelfResponse.HasNextPage;
             IsLoading = false;
         }
 
