@@ -73,9 +73,7 @@ namespace ThePage.Api
         public static async Task<ApiBookShelfDetailResponse> Update(string token, string id, ApiBookShelfRequest bookShelf)
         {
             //Clear cache
-            var bookShelfKey = BOOKSHELVES_SINGLE_KEY + id;
-            Barrel.Current.Empty(bookShelfKey);
-            ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY);
+            ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY, BOOKSHELVES_SINGLE_KEY, id);
 
             var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.UpdateBookShelf(bookShelf, id);
@@ -88,9 +86,7 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, string id)
         {
             //Clear cache
-            var bookShelfKey = BOOKSHELVES_SINGLE_KEY + id;
-            Barrel.Current.Empty(bookShelfKey);
-            ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY);
+            ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY, BOOKSHELVES_SINGLE_KEY, id);
 
             var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             await api.DeleteBookShelf(id);

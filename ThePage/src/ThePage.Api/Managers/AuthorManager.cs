@@ -70,9 +70,7 @@ namespace ThePage.Api
         public static async Task<ApiAuthor> Update(string token, string id, ApiAuthorRequest author)
         {
             //Clear cache
-            var authorKey = AUTHORS_SINGLE_KEY + author.Id;
-            Barrel.Current.Empty(authorKey);
-            ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, author.Id);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             return await api.UpdateAuthor(author, id);
@@ -85,9 +83,7 @@ namespace ThePage.Api
         public static async Task<bool> Delete(string token, ApiAuthor author)
         {
             //Clear cache
-            var authorKey = AUTHORS_SINGLE_KEY + author.Id;
-            Barrel.Current.Empty(authorKey);
-            ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, author.Id);
 
             var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
             await api.DeleteAuthor(author);

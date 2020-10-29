@@ -4,7 +4,7 @@ namespace ThePage.Api
 {
     public static class ManagerUtils
     {
-        public static void ClearPageBarrels(string key)
+        public static void ClearPageBarrels(string key, string singleKey = null, string id = null)
         {
             var page = 1;
             var barrelkey = key + page;
@@ -17,6 +17,12 @@ namespace ThePage.Api
                 page++;
                 barrelkey = key + page;
                 barrelFound = Barrel.Current.Exists(barrelkey);
+            }
+
+            if (singleKey != null && id != null)
+            {
+                singleKey += id;
+                Barrel.Current.Empty(singleKey);
             }
         }
     }
