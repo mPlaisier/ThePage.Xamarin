@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -11,12 +12,13 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
         public override string LblTitle => "Select Book";
 
-        public override List<CellBookSelect> Items { get; set; }
+        public override MvxObservableCollection<CellBookSelect> Items { get; set; }
 
         public override List<ApiBook> SelectedItems { get; internal set; }
 
@@ -42,10 +44,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService)
+        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigationService;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -79,11 +82,32 @@ namespace ThePage.Core
                 SelectedItems.Add(books.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
 
             //Create select cells with the already selected books = true
-            Items = new List<CellBookSelect>();
+            Items = new MvxObservableCollection<CellBookSelect>();
             books.Docs.ForEach(x => Items.Add(
                 new CellBookSelect(x, SelectedItems.Contains(x))));
 
+            _currentPage = books.Page;
+            _hasNextPage = books.HasNextPage;
             IsLoading = false;
+        }
+
+        public override async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiBookResponse = await _thePageService.GetNextBooks(_currentPage + 1);
+                apiBookResponse.Docs.ForEach(x => Items.Add(
+                    new CellBookSelect(x, SelectedItems.Contains(x))));
+
+                _currentPage = apiBookResponse.Page;
+                _hasNextPage = apiBookResponse.HasNextPage;
+                _isLoadingNextPage = false;
+
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
         }
 
         #endregion

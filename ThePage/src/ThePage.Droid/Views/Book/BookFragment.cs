@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using Android.OS;
+using Android.Views;
+using AndroidX.RecyclerView.Widget;
 using MvvmCross.Base;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using MvvmCross.ViewModels;
@@ -17,7 +21,7 @@ namespace ThePage.Droid
         PopEnterAnimation = Resource.Animation.pull_in_left,
         PopExitAnimation = Resource.Animation.push_out_right
     )]
-    public class BookFragment : BaseFragment<BookViewModel>
+    public class BookFragment : BaseListFragment<BookViewModel>
     {
         GetIsbnCode _getIsbnCode;
         string _isbnCode;
@@ -90,6 +94,15 @@ namespace ThePage.Droid
 
                 _getIsbnCode = null;
                 _isbnCode = null;
+            }
+        }
+
+        protected override void OnScrollListener_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_scrolllistener.BottomReached))
+            {
+                if (_scrolllistener.BottomReached)
+                    ViewModel.LoadNextPage().Forget();
             }
         }
 

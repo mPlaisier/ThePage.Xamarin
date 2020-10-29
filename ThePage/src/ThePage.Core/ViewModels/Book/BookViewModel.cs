@@ -16,10 +16,15 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IOpenLibraryService _openLibraryService;
+        readonly IUserInteraction _userInteraction;
+
+        int _currentPage;
+        bool _hasNextPage;
+        bool _isLoadingNextPage;
 
         #region Properties
 
-        public List<ApiBook> Books { get; set; }
+        public MvxObservableCollection<ApiBook> Books { get; set; }
 
         public override string LblTitle => "Books";
 
@@ -30,11 +35,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IOpenLibraryService openLibraryService)
+        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IOpenLibraryService openLibraryService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _openLibraryService = openLibraryService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -76,6 +82,28 @@ namespace ThePage.Core
 
         #endregion
 
+        #region Public
+
+        public async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiBookResponse = await _thePageService.GetNextBooks(_currentPage + 1);
+                Books.AddRange(apiBookResponse.Docs);
+
+                _currentPage = apiBookResponse.Page;
+                _hasNextPage = apiBookResponse.HasNextPage;
+                _isLoadingNextPage = false;
+
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        #endregion
+
         #region Private
 
         async Task Refresh()
@@ -83,7 +111,9 @@ namespace ThePage.Core
             IsLoading = true;
 
             var apiBookResponse = await _thePageService.GetAllBooks();
-            Books = apiBookResponse.Docs;
+            Books = new MvxObservableCollection<ApiBook>(apiBookResponse.Docs);
+            _currentPage = apiBookResponse.Page;
+            _hasNextPage = apiBookResponse.HasNextPage;
 
             IsLoading = false;
         }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
+using MvvmCross.ViewModels;
 using PropertyChanged;
 using ThePage.Core.ViewModels;
 
@@ -15,6 +16,10 @@ namespace ThePage.Core
         : BaseViewModel<TParameter, TResult>
         where TObject : ICellBaseSelect<TResult>
     {
+        protected int _currentPage;
+        protected bool _hasNextPage;
+        protected bool _isLoadingNextPage;
+
         #region Properties
 
         [SuppressPropertyChangedWarnings]
@@ -33,6 +38,8 @@ namespace ThePage.Core
         #region Public
 
         public abstract Task LoadData();
+
+        public abstract Task LoadNextPage();
 
         #endregion
     }
@@ -65,10 +72,14 @@ namespace ThePage.Core
         where TResult : List<TSelectResultObject>
         where TSelectObject : ICellBaseSelect<TSelectResultObject>
     {
+        protected int _currentPage;
+        protected bool _hasNextPage;
+        protected bool _isLoadingNextPage;
+
         #region Properties
 
         [SuppressPropertyChangedWarnings]
-        public abstract List<TSelectObject> Items { get; set; }
+        public abstract MvxObservableCollection<TSelectObject> Items { get; set; }
 
         [SuppressPropertyChangedWarnings]
         public abstract TResult SelectedItems { get; internal set; }
@@ -88,6 +99,8 @@ namespace ThePage.Core
         #region Public
 
         public abstract Task LoadData(string item = default);
+
+        public abstract Task LoadNextPage();
 
         #endregion
     }

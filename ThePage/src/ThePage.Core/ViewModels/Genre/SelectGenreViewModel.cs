@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -29,12 +30,13 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
 
         #region Properties
 
         public override string LblTitle => "Select Genre";
 
-        public override List<CellGenreSelect> Items { get; set; }
+        public override MvxObservableCollection<CellGenreSelect> Items { get; set; }
 
         public override List<ApiGenre> SelectedItems { get; internal set; }
 
@@ -60,10 +62,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public SelectGenreViewModel(IMvxNavigationService navigationService, IThePageService thePageService)
+        public SelectGenreViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigationService;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -80,6 +83,48 @@ namespace ThePage.Core
             LoadData().Forget();
 
             return base.Initialize();
+        }
+
+        #endregion
+
+        #region Public
+
+        public override async Task LoadData(string id = null)
+        {
+            IsLoading = true;
+
+            var genres = await _thePageService.GetAllGenres();
+
+            //Add new created genre to Selected list
+            if (id != null)
+                SelectedItems.Add(genres.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
+
+            Items = new MvxObservableCollection<CellGenreSelect>();
+            genres.Docs.ForEach(x => Items.Add(
+                new CellGenreSelect(x, SelectedItems.Contains(x))));
+
+            _currentPage = genres.Page;
+            _hasNextPage = genres.HasNextPage;
+            IsLoading = false;
+        }
+
+        public override async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiGenreResponse = await _thePageService.GetNextGenres(_currentPage + 1);
+                apiGenreResponse.Docs.ForEach(x => Items.Add(
+                    new CellGenreSelect(x, SelectedItems.Contains(x))));
+
+                _currentPage = apiGenreResponse.Page;
+                _hasNextPage = apiGenreResponse.HasNextPage;
+                _isLoadingNextPage = false;
+
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
         }
 
         #endregion
@@ -103,22 +148,6 @@ namespace ThePage.Core
         void HandleConfirm()
         {
             _navigation.Close(this, SelectedItems);
-        }
-
-        public override async Task LoadData(string id = null)
-        {
-            IsLoading = true;
-
-            var genres = await _thePageService.GetAllGenres();
-
-            //Add new created genre to Selected list
-            if (id != null)
-                SelectedItems.Add(genres.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
-
-            Items = new List<CellGenreSelect>();
-            genres.Docs.ForEach(x => Items.Add(new CellGenreSelect(x, SelectedItems.Contains(x))));
-
-            IsLoading = false;
         }
 
         #endregion

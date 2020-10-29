@@ -25,6 +25,7 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintEnd_toStartOf="@id/fabAdd" />
     <MvxRecyclerView
+        android:id="@+id/lstItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"

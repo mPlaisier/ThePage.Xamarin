@@ -13,6 +13,11 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
+
+        int _currentPage;
+        bool _hasNextPage;
+        bool _isLoadingNextPage;
 
         #region Properties
 
@@ -24,10 +29,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public AuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -64,6 +70,24 @@ namespace ThePage.Core
             Refresh().Forget();
         }
 
+        public async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiAuthorResponse = await _thePageService.GetNextAuthors(_currentPage + 1);
+                Authors.AddRange(apiAuthorResponse.Docs);
+
+                _currentPage = apiAuthorResponse.Page;
+                _hasNextPage = apiAuthorResponse.HasNextPage;
+
+                _isLoadingNextPage = false;
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
         #endregion
 
         #region Private
@@ -75,6 +99,8 @@ namespace ThePage.Core
             var authors = await _thePageService.GetAllAuthors();
             Authors = authors.Docs;
 
+            _currentPage = authors.Page;
+            _hasNextPage = authors.HasNextPage;
             IsLoading = false;
         }
 

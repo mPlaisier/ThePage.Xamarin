@@ -7,7 +7,7 @@ namespace ThePage.Api
     {
         [Get("/authors/v2")]
         [Headers("Authorization: Bearer")]
-        Task<ApiAuthorResponse> GetAuthors();
+        Task<ApiAuthorResponse> GetAuthors([Body] ApiPageRequest page);
 
         [Get("/authors/v2/{id}")]
         [Headers("Authorization: Bearer")]

@@ -13,6 +13,11 @@ namespace ThePage.Core
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
+        readonly IUserInteraction _userInteraction;
+
+        int _currentPage;
+        bool _hasNextPage;
+        bool _isLoadingNextPage;
 
         #region Properties
 
@@ -24,10 +29,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public GenreViewModel(IMvxNavigationService navigation, IThePageService thePageService)
+        public GenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _navigation = navigation;
             _thePageService = thePageService;
+            _userInteraction = userInteraction;
         }
 
         #endregion
@@ -64,6 +70,24 @@ namespace ThePage.Core
             Refresh().Forget();
         }
 
+        public async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiGenreResponse = await _thePageService.GetNextGenres(_currentPage + 1);
+                Genres.AddRange(apiGenreResponse.Docs);
+
+                _currentPage = apiGenreResponse.Page;
+                _hasNextPage = apiGenreResponse.HasNextPage;
+
+                _isLoadingNextPage = false;
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
         #endregion
 
         #region Private
@@ -75,6 +99,8 @@ namespace ThePage.Core
             var result = await _thePageService.GetAllGenres();
             Genres = result.Docs;
 
+            _currentPage = result.Page;
+            _hasNextPage = result.HasNextPage;
             IsLoading = false;
         }
 
