@@ -25,6 +25,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiBookResponse> GetNextBooks(int page)
+        {
+            ApiBookResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.Get(token, page);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<ApiBookDetailResponse> GetBook(string id)
         {
             ApiBookDetailResponse result = null;
