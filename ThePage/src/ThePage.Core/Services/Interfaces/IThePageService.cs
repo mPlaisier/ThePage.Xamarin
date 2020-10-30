@@ -27,6 +27,8 @@ namespace ThePage.Core
 
         Task<ApiAuthorResponse> GetNextAuthors(int page);
 
+        Task<ApiAuthor> GetAuthor(string id);
+
         Task<ApiAuthor> AddAuthor(ApiAuthorRequest author);
 
         Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author);
@@ -40,6 +42,8 @@ namespace ThePage.Core
         Task<ApiGenreResponse> GetAllGenres();
 
         Task<ApiGenreResponse> GetNextGenres(int page);
+
+        Task<ApiGenre> GetGenre(string id);
 
         Task<ApiGenre> AddGenre(ApiGenreRequest genre);
 

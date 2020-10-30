@@ -21,6 +21,22 @@ namespace ThePage.Api
 
         #endregion
 
+        #region Constructor
+
+        public ApiBook()
+        {
+
+        }
+
+        public ApiBook(ApiBookDetailResponse bookDetail)
+        {
+            Id = bookDetail.Id;
+            Title = bookDetail.Title;
+            Author = bookDetail.Author;
+        }
+
+        #endregion
+
         #region public
 
         public override bool Equals(object obj)
