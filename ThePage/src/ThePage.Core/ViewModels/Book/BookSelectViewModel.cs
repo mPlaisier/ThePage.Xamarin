@@ -79,7 +79,11 @@ namespace ThePage.Core
 
             //Add new created book to Selected list
             if (id != null)
-                SelectedItems.Add(books.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
+            {
+                var newBook = await _thePageService.GetBook(id);
+                if (newBook != null)
+                    SelectedItems.Add(new ApiBook(newBook));
+            }
 
             //Create select cells with the already selected books = true
             Items = new MvxObservableCollection<CellBookSelect>();

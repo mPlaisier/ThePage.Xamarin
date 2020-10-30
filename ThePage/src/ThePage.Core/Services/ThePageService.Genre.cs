@@ -42,6 +42,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiGenre> GetGenre(string id)
+        {
+            ApiGenre result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await GenreManager.Get(token, id);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<ApiGenre> AddGenre(ApiGenreRequest genre)
         {
             ApiGenre result = null;
