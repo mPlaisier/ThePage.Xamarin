@@ -130,7 +130,7 @@ namespace ThePage.Core
                 Items.RemoveItems(Items.OfType<CellBookShelfBookItem>().ToList());
 
                 var bookItems = new List<CellBookShelfBookItem>();
-                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook)));
+                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, isEdit: true)));
 
                 Items.InsertRange(3, bookItems);
             }

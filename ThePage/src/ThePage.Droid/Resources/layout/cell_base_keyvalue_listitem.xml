@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:focusableInTouchMode="true"
     android:layout_marginTop="10dp"
     android:padding="4dp"
-    local:MvxBind="Click CommandClick">
+    local:MvxBind="Click If(IsEdit, CommandClick)">
     <TextView
         android:id="@+id/lblKey"
         android:layout_width="0dp"
@@ -35,5 +34,5 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintStart_toEndOf="@id/lblKey"
         android:tint="@color/primaryColor"
-        local:MvxBind="ResourceName If(IsEdit, Icon, '')"/>
+        local:MvxBind="ResourceName Icon;Visibility Visibility(IsEdit)"/>
 </android.support.constraint.ConstraintLayout>
