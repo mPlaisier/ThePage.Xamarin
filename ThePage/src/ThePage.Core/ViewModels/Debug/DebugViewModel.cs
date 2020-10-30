@@ -302,7 +302,7 @@ namespace ThePage.Core
                         selectedBooks.Add(genre);
                 }
 
-                var bookshelf = new ApiBookShelfRequest(null, $"Book {i + 1}", selectedBooks.GetIdStrings());
+                var bookshelf = new ApiBookShelfRequest(null, $"BookShelf {i + 1}", selectedBooks.GetIdStrings());
                 await _thePageService.AddBookShelf(bookshelf);
             }
         }

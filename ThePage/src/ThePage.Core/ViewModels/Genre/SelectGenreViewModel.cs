@@ -97,7 +97,11 @@ namespace ThePage.Core
 
             //Add new created genre to Selected list
             if (id != null)
-                SelectedItems.Add(genres.Docs.Where(x => x.Id.Equals(id)).FirstOrDefault());
+            {
+                var newGenre = await _thePageService.GetGenre(id);
+                if (newGenre != null)
+                    SelectedItems.Add(newGenre);
+            }
 
             Items = new MvxObservableCollection<CellGenreSelect>();
             genres.Docs.ForEach(x => Items.Add(

@@ -42,6 +42,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiAuthor> GetAuthor(string id)
+        {
+            ApiAuthor result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await AuthorManager.Get(token, id);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<ApiAuthor> AddAuthor(ApiAuthorRequest author)
         {
             ApiAuthor result = null;
