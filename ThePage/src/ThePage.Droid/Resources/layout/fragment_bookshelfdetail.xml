@@ -11,7 +11,7 @@
     <MvxRecyclerView
         android:id="@+id/lstItems"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toTopOf="@+id/btnUpdate"
         local:layout_constraintStart_toStartOf="parent"
