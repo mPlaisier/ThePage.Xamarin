@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using ThePage.Core;
 using Xunit;
@@ -184,7 +185,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Assert
             var buttons = _vm.Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
             foreach (var item in buttons)
-                Assert.Equal(isValid, item.IsValid);
+                item.IsValid.Should().Be(isValid, $"title is {title}, author is {author} and pages is {pages}");
         }
 
         public static IEnumerable<object[]> InputDataForBooks =>
@@ -198,7 +199,7 @@ namespace ThePage.UnitTests.ViewModels.Book
                 new object[] { null, null, "100", false },
                 new object[] { "Valid name", null, null, false },
                 new object[] { null, AuthorDataFactory.GetSingleAuthor(), null, false },
-                new object[] { "Valid name", AuthorDataFactory.GetSingleAuthor(), null, false },
+                new object[] { "Valid name", AuthorDataFactory.GetSingleAuthor(), null, true },
                 new object[] { null, AuthorDataFactory.GetSingleAuthor(), "100", false }
         };
     }
