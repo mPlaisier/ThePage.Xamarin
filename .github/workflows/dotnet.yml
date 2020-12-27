@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Restore dependencies
-      run: dotnet restore ThePage.Xamarin
+      run: dotnet restore ThePage/ThePage.sln
     - name: Build
       run: dotnet build --no-restore
     - name: Test
