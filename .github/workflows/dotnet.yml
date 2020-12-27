@@ -27,9 +27,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Android
       run: |
-        cd ThePage/src
+        cd ThePage
         nuget restore
-        cd ThePage.Droid
+        cd src/hePage.Droid
         msbuild ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   iOS:
@@ -38,6 +38,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: iOS
       run: |
-        cd ThePage/src
+        cd ThePage
         nuget restore
-        msbuild ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+        msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
