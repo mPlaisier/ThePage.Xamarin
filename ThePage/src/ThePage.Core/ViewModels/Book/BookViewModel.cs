@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
@@ -24,7 +23,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public MvxObservableCollection<ApiBook> Books { get; set; }
+        public MvxObservableCollection<ApiBook> Books { get; private set; }
 
         public override string LblTitle => "Books";
 

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -23,7 +23,7 @@ namespace ThePage.Core
 
         public override string LblTitle => "Bookshelves";
 
-        public List<ApiBookShelf> BookShelves { get; internal set; }
+        public MvxObservableCollection<ApiBookShelf> BookShelves { get; private set; }
 
         #endregion
 
@@ -90,7 +90,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var apiBookShelfResponse = await _thePageService.GetAllBookShelves();
-            BookShelves = apiBookShelfResponse.Docs;
+            BookShelves = new MvxObservableCollection<ApiBookShelf>(apiBookShelfResponse.Docs);
 
             _currentPage = apiBookShelfResponse.Page;
             _hasNextPage = apiBookShelfResponse.HasNextPage;
