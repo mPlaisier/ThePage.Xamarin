@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
 
@@ -23,7 +23,7 @@ namespace ThePage.Core
 
         public override string LblTitle => "Authors";
 
-        public List<ApiAuthor> Authors { get; set; }
+        public MvxObservableCollection<ApiAuthor> Authors { get; private set; }
 
         #endregion
 
@@ -97,7 +97,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var authors = await _thePageService.GetAllAuthors();
-            Authors = authors.Docs;
+            Authors = new MvxObservableCollection<ApiAuthor>(authors.Docs);
 
             _currentPage = authors.Page;
             _hasNextPage = authors.HasNextPage;
