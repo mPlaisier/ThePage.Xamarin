@@ -20,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ThePage/ThePage.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ThePage/ThePage.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ThePage/ThePage.sln --no-build --verbosity normal
