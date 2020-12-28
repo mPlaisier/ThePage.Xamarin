@@ -78,14 +78,14 @@ namespace ThePage.Core
             Analytics.TrackEvent($"Initialize {nameof(BookShelfDetailViewModel)}");
             await base.Initialize();
 
-            FetchData().Forget();
+            Refresh().Forget();
         }
 
         #endregion
 
         #region Private
 
-        async Task FetchData()
+        async Task Refresh()
         {
             if (IsLoading)
                 return;
@@ -101,7 +101,7 @@ namespace ThePage.Core
                 new BaseCellTitle("List of books:")
             };
 
-            BookShelfDetail.Books.ForEach(x => Items.Add(new CellBookShelfBookItem(x, RemoveBook)));
+            BookShelfDetail.Books.ForEach(x => Items.Add(new CellBookShelfBookItem(x, RemoveBook, (obj) => GoToBookDetail(obj).Forget())));
 
             IsLoading = false;
             UpdateValidation();
@@ -133,7 +133,7 @@ namespace ThePage.Core
                 Items.RemoveItems(Items.OfType<CellBookShelfBookItem>().ToList());
 
                 var bookItems = new List<CellBookShelfBookItem>();
-                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, isEdit: true)));
+                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, (obj) => GoToBookDetail(obj).Forget(), isEdit: true)));
 
                 Items.InsertRange(Items.Count, bookItems);
             }
@@ -142,6 +142,17 @@ namespace ThePage.Core
         void RemoveBook(ICell obj)
         {
             Items.Remove(obj);
+        }
+
+        async Task GoToBookDetail(ICell obj)
+        {
+            if (obj is CellBookShelfBookItem bookshelfItem)
+            {
+                var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(bookshelfItem.Book));
+                if (result)
+                    await Refresh();
+            }
+
         }
 
         void ToggleEditValue()

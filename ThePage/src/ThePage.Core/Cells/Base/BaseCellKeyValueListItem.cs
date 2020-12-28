@@ -5,7 +5,8 @@ namespace ThePage.Core
 {
     public class BaseCellKeyValueListItem : BaseCellInput
     {
-        readonly Action<ICell> _action;
+        readonly Action<ICell> _actionClick;
+        readonly Action<ICell> _actionEditClick;
 
         #region Properties
 
@@ -20,17 +21,26 @@ namespace ThePage.Core
         #region Commands
 
         IMvxCommand _commandClick;
-        public IMvxCommand CommandClick => _commandClick ??= new MvxCommand(() => _action.Invoke(this));
+        public IMvxCommand CommandClick => _commandClick ??= new MvxCommand(() =>
+        {
+            if (IsEdit)
+                _actionEditClick?.Invoke(this);
+            else
+                _actionClick?.Invoke(this);
+        });
 
         #endregion
 
         #region Constructor
 
-        public BaseCellKeyValueListItem(string key, string value, Action<ICell> action, string icon = "ic_delete", bool isEdit = false)
+        public BaseCellKeyValueListItem(string key, string value,
+                                        Action<ICell> actionEditClick, Action<ICell> actionClick = null,
+                                        string icon = "ic_delete", bool isEdit = false)
         {
             Key = key;
             Value = value;
-            _action = action;
+            _actionEditClick = actionEditClick;
+            _actionClick = actionClick;
             Icon = icon;
             IsEdit = isEdit;
         }
