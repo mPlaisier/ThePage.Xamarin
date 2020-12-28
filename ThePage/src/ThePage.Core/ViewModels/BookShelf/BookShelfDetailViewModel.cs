@@ -135,7 +135,7 @@ namespace ThePage.Core
                 var bookItems = new List<CellBookShelfBookItem>();
                 books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, isEdit: true)));
 
-                Items.InsertRange(3, bookItems);
+                Items.InsertRange(Items.Count, bookItems);
             }
         }
 
@@ -155,7 +155,11 @@ namespace ThePage.Core
 
             if (IsEditing)
             {
-                Items.Insert(Items.Count, new BaseCellClickableText("Add a book", AddBooks));
+                var index = Items.FindIndex(x => x is CellBookShelfBookItem);
+                if (index == -1)
+                    index = Items.Count;
+
+                Items.Insert(index, new BaseCellClickableText("Add a book", AddBooks));
                 UpdateValidation();
             }
             else

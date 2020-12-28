@@ -155,10 +155,10 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
             _vm.Items[0].Should().BeOfType<BaseCellTitle>();
             _vm.Items[1].Should().BeOfType<CellBookShelfTextView>();
             _vm.Items[2].Should().BeOfType<BaseCellTitle>();
-            _vm.Items[3].Should().BeOfType<CellBookShelfBookItem>();
+            _vm.Items[3].Should().BeOfType<BaseCellClickableText>();
             _vm.Items[4].Should().BeOfType<CellBookShelfBookItem>();
             _vm.Items[5].Should().BeOfType<CellBookShelfBookItem>();
-            _vm.Items[6].Should().BeOfType<BaseCellClickableText>();
+            _vm.Items[6].Should().BeOfType<CellBookShelfBookItem>();
         }
 
         [Fact]
