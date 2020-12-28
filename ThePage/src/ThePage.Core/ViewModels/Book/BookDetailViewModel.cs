@@ -43,11 +43,14 @@ namespace ThePage.Core
 
         public MvxObservableCollection<ICellBook> Items { get; set; } = new MvxObservableCollection<ICellBook>();
 
-        public override string LblTitle => BookDetail != null ? BookDetail.Title : "Book detail";
+        public override string LblTitle => _book != null ? _book.Title : "Book detail";
 
         public ApiBookDetailResponse BookDetail { get; internal set; }
 
         public bool IsEditing { get; set; }
+
+        readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
+        public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
 
         #endregion
 
@@ -233,6 +236,8 @@ namespace ThePage.Core
             {
                 BookDetail.Title = updatedBook.Title;
                 _book.Title = updatedBook.Title;
+
+                _updateToolbarInteraction.Raise();
             }
 
             BookDetail.Author = author;

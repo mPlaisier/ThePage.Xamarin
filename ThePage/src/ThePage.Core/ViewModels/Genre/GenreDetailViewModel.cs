@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using PropertyChanged;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
@@ -36,7 +37,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string LblTitle => "Genre Detail";
+        public override string LblTitle => Genre != null ? Genre.Name : "Genre Detail";
 
         public ApiGenre Genre { get; internal set; }
 
@@ -52,6 +53,9 @@ namespace ThePage.Core
         public string LblDeleteBtn => "Delete Genre";
 
         public bool IsEditing { get; set; }
+
+        readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
+        public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
 
         #endregion
 
@@ -122,7 +126,11 @@ namespace ThePage.Core
                 var genre = await _thePageService.UpdateGenre(Genre.Id, request);
 
                 if (genre != null)
+                {
                     _userInteraction.ToastMessage("Genre updated", EToastType.Success);
+
+                    _updateToolbarInteraction.Raise();
+                }
                 else
                     _userInteraction.Alert("Failure updating genre");
             }

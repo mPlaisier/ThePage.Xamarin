@@ -92,6 +92,12 @@ namespace ThePage.Droid.Views
             }
         }
 
+        public void UpdateToolbar()
+        {
+            if (_toolbar != null)
+                _toolbar.Title = ViewModel.LblTitle;
+        }
+
         #endregion
 
         #region Prvate

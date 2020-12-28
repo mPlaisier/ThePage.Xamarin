@@ -36,6 +36,9 @@ namespace ThePage.Core
 
         public string LblBtnDelete => "Delete bookshelf";
 
+        readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
+        public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
+
         #endregion
 
         #region Commands
@@ -221,6 +224,8 @@ namespace ThePage.Core
             {
                 BookShelfDetail.Name = request.Name;
                 _bookShelf.Name = request.Name;
+
+                _updateToolbarInteraction.Raise();
             }
 
             if (request.Books != null)

@@ -1,13 +1,9 @@
 using System.ComponentModel;
-using Android.OS;
-using Android.Views;
-using AndroidX.RecyclerView.Widget;
 using MvvmCross.Base;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using MvvmCross.ViewModels;
 using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
-using ThePage.Droid.Views;
 using ZXing.Mobile;
 using static ThePage.Core.BookViewModel;
 
