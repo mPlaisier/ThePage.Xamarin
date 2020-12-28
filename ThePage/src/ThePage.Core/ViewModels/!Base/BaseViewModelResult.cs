@@ -15,4 +15,17 @@ namespace ThePage.Core.ViewModels
             base.ViewDestroy(viewFinishing);
         }
     }
+
+    public abstract class BaseListViewModelResult<TResult> : BaseListViewModel, IMvxViewModelResult<TResult>
+    {
+        public TaskCompletionSource<object> CloseCompletionSource { get; set; }
+
+        public override void ViewDestroy(bool viewFinishing = true)
+        {
+            if (viewFinishing && CloseCompletionSource?.Task.IsCompleted == false && !CloseCompletionSource.Task.IsFaulted)
+                CloseCompletionSource?.TrySetCanceled();
+
+            base.ViewDestroy(viewFinishing);
+        }
+    }
 }

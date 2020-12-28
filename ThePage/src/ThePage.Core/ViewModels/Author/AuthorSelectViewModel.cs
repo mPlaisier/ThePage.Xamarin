@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -29,12 +29,13 @@ namespace ThePage.Core
         readonly IThePageService _thePageService;
         readonly IMvxNavigationService _navigationService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
         public override string LblTitle => "Select Author";
 
-        public override List<CellAuthorSelect> Items { get; set; }
+        public override MvxObservableCollection<CellAuthorSelect> Items { get; set; }
 
         public override ApiAuthor SelectedItem { get; internal set; }
 
@@ -61,11 +62,15 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorSelectViewModel(IThePageService thePageService, IMvxNavigationService navigationService, IUserInteraction userInteraction)
+        public AuthorSelectViewModel(IThePageService thePageService,
+                                     IMvxNavigationService navigationService,
+                                     IUserInteraction userInteraction,
+                                     IDevice device)
         {
             _thePageService = thePageService;
             _navigationService = navigationService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -79,7 +84,7 @@ namespace ThePage.Core
 
         public override Task Initialize()
         {
-            LoadData().Forget();
+            Refresh().Forget();
 
             return base.Initialize();
         }
@@ -88,18 +93,18 @@ namespace ThePage.Core
 
         #region Public
 
-        public override async Task LoadData()
+        public override async Task Refresh()
         {
             IsLoading = true;
 
-            var authors = await _thePageService.GetAllAuthors();
+            var apiAuthorResponse = await _thePageService.GetAllAuthors();
 
-            Items = new List<CellAuthorSelect>();
-            authors.Docs.ForEach(x => Items.Add(
+            Items = new MvxObservableCollection<CellAuthorSelect>();
+            apiAuthorResponse.Docs.ForEach(x => Items.Add(
                 new CellAuthorSelect(x, x == SelectedItem)));
 
-            _currentPage = authors.Page;
-            _hasNextPage = authors.HasNextPage;
+            _currentPage = apiAuthorResponse.Page;
+            _hasNextPage = apiAuthorResponse.HasNextPage;
             IsLoading = false;
         }
 
@@ -110,7 +115,10 @@ namespace ThePage.Core
                 _isLoadingNextPage = true;
                 _userInteraction.ToastMessage("Loading data", EToastType.Info);
 
-                var apiAuthorResponse = await _thePageService.GetNextAuthors(_currentPage + 1);
+                ApiAuthorResponse apiAuthorResponse = _isSearching
+                    ? await _thePageService.SearchAuthors(_search, _currentPage + 1)
+                    : await _thePageService.GetNextAuthors(_currentPage + 1);
+
                 apiAuthorResponse.Docs.ForEach(x => Items.Add(
                     new CellAuthorSelect(x, x == SelectedItem)));
 
@@ -119,6 +127,42 @@ namespace ThePage.Core
                 _isLoadingNextPage = false;
 
                 _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        public override async Task Search(string search)
+        {
+            if (IsLoading)
+                return;
+
+            _device.HideKeyboard();
+
+            if (_search != null && _search.Equals(search))
+                return;
+
+            IsLoading = true;
+            _search = search;
+            _isSearching = true;
+
+            var apiAuthorResponse = await _thePageService.SearchAuthors(search, null);
+
+            Items = new MvxObservableCollection<CellAuthorSelect>();
+            apiAuthorResponse.Docs.ForEach(x => Items.Add(
+                new CellAuthorSelect(x, x == SelectedItem)));
+
+            _currentPage = apiAuthorResponse.Page;
+            _hasNextPage = apiAuthorResponse.HasNextPage;
+
+            IsLoading = false;
+        }
+
+        public override void StopSearch()
+        {
+            if (_isSearching)
+            {
+                _isSearching = false;
+                _search = null;
+                Refresh().Forget();
             }
         }
 

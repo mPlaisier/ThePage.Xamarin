@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using MvvmCross.Base;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using MvvmCross.ViewModels;
@@ -90,15 +89,6 @@ namespace ThePage.Droid
 
                 _getIsbnCode = null;
                 _isbnCode = null;
-            }
-        }
-
-        protected override void OnScrollListener_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_scrolllistener.BottomReached))
-            {
-                if (_scrolllistener.BottomReached)
-                    ViewModel.LoadNextPage().Forget();
             }
         }
 

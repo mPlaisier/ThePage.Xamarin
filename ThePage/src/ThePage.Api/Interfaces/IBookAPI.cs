@@ -13,6 +13,10 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiBookDetailResponse> GetBook(string id);
 
+        [Get("/books/search/title")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiBookResponse> SearchTitle([Body] ApiSearchRequest search);
+
         [Post("/books/v2")]
         [Headers("Authorization: Bearer")]
         Task<ApiBookDetailRequest> AddBook([Body] ApiBookDetailRequest book);
