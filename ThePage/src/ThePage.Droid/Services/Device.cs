@@ -11,5 +11,10 @@ namespace ThePage.Droid
             var activity = Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
             DroidUtils.HideKeyboard(activity);
         }
+
+        public void UpdateToolbar(string title)
+        {
+            var activity = Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
+        }
     }
 }
