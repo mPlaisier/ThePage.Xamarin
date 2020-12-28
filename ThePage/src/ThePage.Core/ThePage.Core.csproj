@@ -6,10 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="MvvmCross" Version="7.1.2" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.3" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.3" />
-    <PackageReference Include="Microsoft.AppCenter" Version="3.4.3" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.10" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AppCenter" Version="4.0.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
     <PackageReference Include="Fody" Version="6.3.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
