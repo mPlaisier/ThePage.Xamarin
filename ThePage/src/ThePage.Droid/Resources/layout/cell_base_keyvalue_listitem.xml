@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:layout_marginTop="10dp"
     android:padding="4dp"
-    local:MvxBind="Click If(IsEdit, CommandClick)">
+    android:background="@drawable/grey_border"
+    android:clickable="true"
+    local:MvxBind="Click CommandClick">
     <TextView
         android:id="@+id/lblKey"
         android:layout_width="0dp"
@@ -17,22 +18,24 @@
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toTopOf="@+id/lblValue"
         local:layout_constraintStart_toStartOf="parent"
-        local:layout_constraintWidth_percent="0.5"
-        local:MvxBind="Text Key" />
+        local:layout_constraintEnd_toStartOf="@+id/icon"
+        local:MvxBind="Text Key;" />
     <TextView
         android:id="@+id/lblValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toBottomOf="@+id/lblKey"
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toStartOf="@+id/icon"
         local:MvxBind="Text Value;"/>
     <ImageView
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         local:layout_constraintTop_toTopOf="parent"
         local:layout_constraintBottom_toBottomOf="parent"
-        local:layout_constraintStart_toEndOf="@id/lblKey"
+        local:layout_constraintEnd_toEndOf="parent"
         android:tint="@color/primaryColor"
-        local:MvxBind="ResourceName Icon;Visibility Visibility(IsEdit)"/>
+        local:MvxBind="ResourceName Icon;Visibility Visibility(IsEdit);"/>
 </android.support.constraint.ConstraintLayout>
