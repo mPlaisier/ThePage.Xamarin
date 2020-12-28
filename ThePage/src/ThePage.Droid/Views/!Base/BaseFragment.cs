@@ -29,7 +29,7 @@ namespace ThePage.Droid.Views
         protected virtual EToolbarIcon ToolbarIcon => EToolbarIcon.Back;
         protected virtual bool ShowToolbar => true;
 
-        Toolbar _toolbar;
+        protected Toolbar _toolbar;
 
         #region LifeCycle
 
