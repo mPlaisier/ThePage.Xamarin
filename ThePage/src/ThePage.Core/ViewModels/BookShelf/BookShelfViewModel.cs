@@ -9,15 +9,12 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookShelfViewModel : BaseViewModel, INotifyPropertyChanged
+    public class BookShelfViewModel : BaseListViewModel, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
-
-        int _currentPage;
-        bool _hasNextPage;
-        bool _isLoadingNextPage;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -29,11 +26,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction)
+        public BookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -63,14 +61,17 @@ namespace ThePage.Core
 
         #region Public
 
-        public async Task LoadNextPage()
+        public override async Task LoadNextPage()
         {
             if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
             {
                 _isLoadingNextPage = true;
                 _userInteraction.ToastMessage("Loading data", EToastType.Info);
 
-                var apiBookShelfResponse = await _thePageService.GetNextBookshelves(_currentPage + 1);
+                var apiBookShelfResponse = _isSearching
+                    ? await _thePageService.SearchBookshelves(_search, _currentPage + 1)
+                    : await _thePageService.GetNextBookshelves(_currentPage + 1);
+
                 BookShelves.AddRange(apiBookShelfResponse.Docs);
 
                 _currentPage = apiBookShelfResponse.Page;
@@ -78,6 +79,39 @@ namespace ThePage.Core
 
                 _isLoadingNextPage = false;
                 _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        public override async Task Search(string search)
+        {
+            if (IsLoading)
+                return;
+
+            _device.HideKeyboard();
+
+            if (_search != null && _search.Equals(search))
+                return;
+
+            IsLoading = true;
+            _search = search;
+            _isSearching = true;
+
+            var apiBookShelfResponse = await _thePageService.SearchBookshelves(search, null);
+            BookShelves = new MvxObservableCollection<ApiBookShelf>(apiBookShelfResponse.Docs);
+
+            _currentPage = apiBookShelfResponse.Page;
+            _hasNextPage = apiBookShelfResponse.HasNextPage;
+
+            IsLoading = false;
+        }
+
+        public override void StopSearch()
+        {
+            if (_isSearching)
+            {
+                _isSearching = false;
+                _search = null;
+                Refresh().Forget();
             }
         }
 

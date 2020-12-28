@@ -13,17 +13,13 @@ namespace ThePage.Core
     /// <typeparam name="TParameter"></typeparam>
     /// <typeparam name="TResult"></typeparam>
     public abstract class BaseSelectViewModel<TParameter, TResult, TObject>
-        : BaseViewModel<TParameter, TResult>
+        : BaseListViewModel<TParameter, TResult>
         where TObject : ICellBaseSelect<TResult>
     {
-        protected int _currentPage;
-        protected bool _hasNextPage;
-        protected bool _isLoadingNextPage;
-
         #region Properties
 
         [SuppressPropertyChangedWarnings]
-        public abstract List<TObject> Items { get; set; }
+        public abstract MvxObservableCollection<TObject> Items { get; set; }
 
         #endregion
 
@@ -37,9 +33,7 @@ namespace ThePage.Core
 
         #region Public
 
-        public abstract Task LoadData();
-
-        public abstract Task LoadNextPage();
+        public abstract Task Refresh();
 
         #endregion
     }
@@ -68,14 +62,10 @@ namespace ThePage.Core
     /// <typeparam name="TResult"></typeparam>
     /// <typeparam name="TSelectObject"></typeparam>
     public abstract class BaseSelectMultipleItemsViewModel<TParameter, TResult, TSelectObject, TSelectResultObject>
-        : BaseViewModel<TParameter, TResult>
+        : BaseListViewModel<TParameter, TResult>
         where TResult : List<TSelectResultObject>
         where TSelectObject : ICellBaseSelect<TSelectResultObject>
     {
-        protected int _currentPage;
-        protected bool _hasNextPage;
-        protected bool _isLoadingNextPage;
-
         #region Properties
 
         [SuppressPropertyChangedWarnings]
@@ -98,9 +88,7 @@ namespace ThePage.Core
 
         #region Public
 
-        public abstract Task LoadData(string item = default);
-
-        public abstract Task LoadNextPage();
+        protected abstract Task Refresh(string item = default);
 
         #endregion
     }

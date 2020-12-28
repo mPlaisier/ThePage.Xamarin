@@ -10,16 +10,13 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookViewModel : BaseViewModel, INotifyPropertyChanged
+    public class BookViewModel : BaseListViewModel, INotifyPropertyChanged
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IOpenLibraryService _openLibraryService;
         readonly IUserInteraction _userInteraction;
-
-        int _currentPage;
-        bool _hasNextPage;
-        bool _isLoadingNextPage;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -34,12 +31,17 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IOpenLibraryService openLibraryService, IUserInteraction userInteraction)
+        public BookViewModel(IMvxNavigationService navigation,
+                             IThePageService thePageService,
+                             IOpenLibraryService openLibraryService,
+                             IUserInteraction userInteraction,
+                             IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _openLibraryService = openLibraryService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -83,14 +85,17 @@ namespace ThePage.Core
 
         #region Public
 
-        public async Task LoadNextPage()
+        public override async Task LoadNextPage()
         {
             if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
             {
                 _isLoadingNextPage = true;
                 _userInteraction.ToastMessage("Loading data", EToastType.Info);
 
-                var apiBookResponse = await _thePageService.GetNextBooks(_currentPage + 1);
+                var apiBookResponse = _isSearching
+                    ? await _thePageService.SearchBooksTitle(_search, _currentPage + 1)
+                    : await _thePageService.GetNextBooks(_currentPage + 1);
+
                 Books.AddRange(apiBookResponse.Docs);
 
                 _currentPage = apiBookResponse.Page;
@@ -98,6 +103,39 @@ namespace ThePage.Core
                 _isLoadingNextPage = false;
 
                 _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        public override async Task Search(string search)
+        {
+            if (IsLoading)
+                return;
+
+            _device.HideKeyboard();
+
+            if (_search != null && _search.Equals(search))
+                return;
+
+            IsLoading = true;
+            _search = search;
+            _isSearching = true;
+
+            var apiBookResponse = await _thePageService.SearchBooksTitle(search, null);
+            Books = new MvxObservableCollection<ApiBook>(apiBookResponse.Docs);
+
+            _currentPage = apiBookResponse.Page;
+            _hasNextPage = apiBookResponse.HasNextPage;
+
+            IsLoading = false;
+        }
+
+        public override void StopSearch()
+        {
+            if (_isSearching)
+            {
+                _isSearching = false;
+                _search = null;
+                Refresh().Forget();
             }
         }
 

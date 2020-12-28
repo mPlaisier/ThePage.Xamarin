@@ -57,6 +57,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiBookShelfResponse> SearchBookshelves(string search, int? page = null)
+        {
+            ApiBookShelfResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookShelfManager.Search(token, search, page);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<bool> AddBookShelf(ApiBookShelfRequest bookshelf)
         {
             ApiBookShelf result = null;
