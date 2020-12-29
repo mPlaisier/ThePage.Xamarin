@@ -59,7 +59,7 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public int TxtNumberInput => ConvertToNumber();
+        public long TxtNumberInput => ConvertToNumber();
 
         public override bool IsValid => CheckValidation();
 
@@ -81,9 +81,9 @@ namespace ThePage.Core
 
         #region Private
 
-        int ConvertToNumber()
+        long ConvertToNumber()
         {
-            var parseOk = int.TryParse(TxtInput, out var number);
+            var parseOk = long.TryParse(TxtInput, out var number);
 
             return parseOk ? number : -1;
         }
