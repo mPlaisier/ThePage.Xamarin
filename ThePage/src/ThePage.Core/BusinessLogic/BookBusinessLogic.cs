@@ -31,7 +31,7 @@ namespace ThePage.Core
                 genres = null;
 
             //Isbn
-            int? isbn = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtNumberInput;
+            long? isbn = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtNumberInput;
             if (isbn == null || isbn.ToString().Equals(originalResponse?.ISBN) || isbn == -1)
                 isbn = null;
 
@@ -46,7 +46,7 @@ namespace ThePage.Core
                 read = null;
 
             //Pages
-            int? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
+            long? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
             if (pages == null || pages == originalResponse?.Pages || pages == -1)
                 pages = null;
 

@@ -243,10 +243,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         [InlineData("Valid name", "100", true)]
         [InlineData("", "", false)]
         [InlineData(null, null, false)]
-        [InlineData("Valid name", "", false)]
+        [InlineData("Valid name", "", true)]
         [InlineData("", "100", false)]
         [InlineData(null, "100", false)]
-        [InlineData("Valid name", null, false)]
+        [InlineData("Valid name", null, true)]
         public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, string pages, bool isValid)
         {
             //Setup
