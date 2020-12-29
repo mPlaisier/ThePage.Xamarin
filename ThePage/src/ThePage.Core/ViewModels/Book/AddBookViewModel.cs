@@ -137,7 +137,7 @@ namespace ThePage.Core
             if (_olBook != null)
                 await CreateCellBooksFromOlData();
             else
-                CreateCellBooks();
+                CreateCellBooks(isbn: _isbn);
 
             IsLoading = false;
             UpdateValidation();
