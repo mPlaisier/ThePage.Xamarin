@@ -49,7 +49,7 @@ namespace ThePage.Core
 
         bool CheckValidation()
         {
-            return !_isRequired ? true : !string.IsNullOrWhiteSpace(TxtInput);
+            return !_isRequired || !string.IsNullOrWhiteSpace(TxtInput);
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace ThePage.Core
 
         bool CheckValidation()
         {
-            return !_isRequired ? true : TxtNumberInput > -1;
+            return !_isRequired || TxtNumberInput > -1;
         }
 
         #endregion

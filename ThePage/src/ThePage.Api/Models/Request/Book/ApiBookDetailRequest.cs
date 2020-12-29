@@ -75,13 +75,15 @@ namespace ThePage.Api
             OlCover = olCover;
         }
 
-        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, string iSBN, bool? owned, bool? read, int? pages, bool? ebook, string olkey, Olcover olCover)
+        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, int? iSBN, bool? owned, bool? read, int? pages, bool? ebook, string olkey, Olcover olCover)
         {
             Id = id;
             Title = title;
             AuthorId = author;
             Genres = genres;
-            ISBN = iSBN;
+
+            ISBN = iSBN.HasValue ? iSBN.Value.ToString() : null;
+
             Owned = owned;
             Read = read;
             Pages = pages;
@@ -105,7 +107,7 @@ namespace ThePage.Api
             bool? _read;
             bool? _ebook;
 
-            string _iSBN;
+            int? _iSBN;
             string _olkey;
             Olcover _olCover;
 
@@ -159,7 +161,7 @@ namespace ThePage.Api
                 return this;
             }
 
-            public Builder SetIsbn(string isbn)
+            public Builder SetIsbn(int? isbn)
             {
                 _iSBN = isbn;
                 return this;
