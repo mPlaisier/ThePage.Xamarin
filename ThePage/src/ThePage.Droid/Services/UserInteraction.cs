@@ -5,6 +5,7 @@ using Android.Graphics;
 using Android.Support.V4.Content;
 using Android.Views;
 using Android.Widget;
+using AndroidX.Core.Graphics;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
 using ThePage.Core;
@@ -181,7 +182,7 @@ namespace ThePage.Droid
                 //Set ImageView values
                 img.SetImageResource(GetToastTypeImage(type));
                 img.SetColorFilter(Color.Argb(255, 255, 255, 255)); // White Tint
-                img.Drawable.SetColorFilter(GetToastTextColor(type), PorterDuff.Mode.SrcIn);
+                img.SetColorFilter(BlendModeColorFilterCompat.CreateBlendModeColorFilterCompat(GetToastTextColor(type), BlendModeCompat.SrcIn));
 
                 //Set TextView values
                 txt.Text = message;
