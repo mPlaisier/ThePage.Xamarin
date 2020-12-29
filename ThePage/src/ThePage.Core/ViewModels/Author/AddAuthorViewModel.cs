@@ -82,9 +82,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var author = new ApiAuthorRequest(TxtName.Trim());
-            if (_olkey != null)
-                author.Olkey = _olkey;
+            var author = new ApiAuthorRequest(TxtName.Trim(), _olkey);
 
             var result = await _thePageService.AddAuthor(author);
 

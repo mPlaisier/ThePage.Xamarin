@@ -143,20 +143,20 @@ namespace ThePage.Core
             UpdateValidation();
         }
 
-        void CreateCellBooks()
+        void CreateCellBooks(string title = null, ApiAuthor author = null, string pages = null, string isbn = null)
         {
             Items = new MvxObservableCollection<ICellBook>
-            {
-                new CellBookTextView("Title", EBookInputType.Title,UpdateValidation,true, true),
-                new CellBookAuthor(_navigation, _device, UpdateValidation,true),
-                new CellBookTitle("Genres"),
-                new CellBookAddGenre(AddGenreAction),
-                new CellBookNumberTextView("Pages", EBookInputType.Pages, UpdateValidation, false,true),
-                new CellBookNumberTextView("ISBN", _isbn, EBookInputType.ISBN, UpdateValidation, false, true),
-                new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
-                new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
-                new CellBookButton("Add Book",AddBook)
-            };
+                {
+                    new CellBookTextView("Title",title, EBookInputType.Title,UpdateValidation,true, true),
+                    new CellBookAuthor(author, _navigation, _device, UpdateValidation,true),
+                    new CellBookTitle("Genres"),
+                    new CellBookAddGenre(AddGenreAction),
+                    new CellBookNumberTextView("Pages", pages, EBookInputType.Pages, UpdateValidation, false,true),
+                    new CellBookNumberTextView("ISBN",isbn, EBookInputType.ISBN, UpdateValidation, false, true),
+                    new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
+                    new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
+                    new CellBookButton("Add Book",AddBook)
+                };
         }
 
         async Task CreateCellBooksFromOlData()
@@ -165,21 +165,32 @@ namespace ThePage.Core
             var olkey = GetAuthorKey(olAuthor?.Url.ToString());
 
             ApiAuthor author = null;
-
             author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
 
             if (author == null)
             {
-                var result = await _userInteraction.ConfirmAsync($"{olAuthor.Name} is not found in your author list. Would you like to add it?");
-                if (!result)
-                    return;
+                var authorChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{olAuthor.Name} is not found in your author list. Would you like to add it?", null,
+                                                                                   neutral: "Choose from list");
 
-                author = new ApiAuthor
+                ApiAuthor newAuthor = null;
+                if (authorChoice == ConfirmThreeButtonsResponse.Positive)
                 {
-                    Name = olAuthor.Name,
-                    Olkey = olkey
-                };
-                var newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+                    author = new ApiAuthor
+                    {
+                        Name = olAuthor.Name,
+                        Olkey = olkey
+                    };
+                    newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+                }
+                //Select author from list
+                else if (authorChoice == ConfirmThreeButtonsResponse.Neutral)
+                {
+                    newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
+                    newAuthor.Olkey = olkey;
+
+                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
+                }
+
                 if (newAuthor != null)
                     author = newAuthor;
                 else
@@ -189,18 +200,7 @@ namespace ThePage.Core
                 }
             }
 
-            Items = new MvxObservableCollection<ICellBook>
-                {
-                    new CellBookTextView("Title",_olBook.Title, EBookInputType.Title,UpdateValidation,true, true),
-                    new CellBookAuthor(author, _navigation, _device, UpdateValidation,true),
-                    new CellBookTitle("Genres"),
-                    new CellBookAddGenre(AddGenreAction),
-                    new CellBookNumberTextView("Pages", _olBook.Pages.ToString(), EBookInputType.Pages, UpdateValidation, false,true),
-                    new CellBookNumberTextView("ISBN",_isbn, EBookInputType.ISBN, UpdateValidation, false, true),
-                    new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
-                    new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
-                    new CellBookButton("Add Book",AddBook)
-                };
+            CreateCellBooks(_olBook.Title, author, _olBook.Pages.ToString(), _isbn);
         }
 
         void UpdateValidation()
