@@ -12,19 +12,19 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Restore dependencies
-      run: 
-        echo "RESTORE"
-        cd ThePage
+      run: |
+        echo "RESTORE",
+        cd ThePage,
         dotnet restore
     - name: Build
-      run:
-        echo "BUILD"
-        ls
+      run: |
+        echo "BUILD",
+        ls,
         dotnet build --no-restore
     - name: Test
-      run: 
-        echo "TEST"
-        ls
+      run: |
+        echo "TEST",
+        ls,
         dotnet test --no-build --verbosity normal
   
   Android:
