@@ -2,25 +2,31 @@ name: CI on Push and Pull Request
 
 on: [push, pull_request]
 
-jobs:
-  Practice:
-    runs-on: macos-latest
+jobs: 
+  build:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-    - name: Show what's in the directory
-      run: |
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Restore dependencies
+      run: 
+        echo "RESTORE"
+        cd ThePage
+        dotnet restore
+    - name: Build
+      run:
+        echo "BUILD"
         ls
-    - name: Show what all is in the parent directory
-      run: |
-        cd ..
+        dotnet build --no-restore
+    - name: Test
+      run: 
+        echo "TEST"
         ls
-        
+        dotnet test --no-build --verbosity normal
+  
   Android:
     runs-on: macos-latest
     steps:
