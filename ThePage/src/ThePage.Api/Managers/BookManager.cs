@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
-using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -27,7 +26,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
 
                 result = await api.GetBooks(new ApiPageRequest(page));
                 Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
@@ -45,7 +44,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
                 result = await api.GetBook(id);
 
                 Barrel.Current.Add(bookKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
@@ -62,7 +61,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKS_KEY);
 
-            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.AddBook(book);
         }
 
@@ -75,7 +74,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKS_KEY, BOOKS_SINGLE_KEY, id);
 
-            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.UpdateBook(book, id);
         }
 
@@ -89,7 +88,7 @@ namespace ThePage.Api
             ManagerUtils.ClearPageBarrels(BOOKS_KEY, BOOKS_SINGLE_KEY, id);
             Barrel.Current.Empty(BookShelfManager.BOOKSHELVES_KEY);
 
-            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             await api.DeleteBook(id);
 
             return true;
