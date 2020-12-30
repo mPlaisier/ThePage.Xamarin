@@ -14,7 +14,7 @@ jobs:
     - name: Restore dependencies
       run: |
         echo "RESTORE",
-        ls,
+        ls
         dotnet restore
     - name: Build
       run: |
