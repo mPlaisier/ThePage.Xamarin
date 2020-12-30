@@ -17,13 +17,11 @@ jobs:
         dotnet restore
     - name: Build
       run: |
-        echo "BUILD",
-        ls
+        cd ThePage
         dotnet build --no-restore
     - name: Test
       run: |
-        echo "TEST",
-        ls
+        cd ThePage
         dotnet test --no-build --verbosity normal
   
   Android:
