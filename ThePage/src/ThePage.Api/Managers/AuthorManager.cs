@@ -57,7 +57,7 @@ namespace ThePage.Api
         {
             ApiAuthorResponse result = null;
 
-            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchAuthors(new ApiSearchRequest(page, search));
 
             return result;

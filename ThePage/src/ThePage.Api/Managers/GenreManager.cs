@@ -58,7 +58,7 @@ namespace ThePage.Api
         {
             ApiGenreResponse result = null;
 
-            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchGenres(new ApiSearchRequest(page, search));
 
             return result;

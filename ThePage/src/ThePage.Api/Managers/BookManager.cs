@@ -60,7 +60,7 @@ namespace ThePage.Api
         {
             ApiBookResponse result = null;
 
-            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchTitle(new ApiSearchRequest(page, search));
 
             return result;

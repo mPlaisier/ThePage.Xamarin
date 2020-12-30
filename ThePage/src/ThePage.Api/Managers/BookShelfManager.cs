@@ -60,7 +60,7 @@ namespace ThePage.Api
         {
             ApiBookShelfResponse result = null;
 
-            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchBookshelves(new ApiSearchRequest(page, search));
 
             return result;
