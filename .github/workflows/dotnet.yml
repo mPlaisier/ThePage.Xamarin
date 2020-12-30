@@ -12,6 +12,16 @@ jobs:
         cd ThePage
         nuget restore
         msbuild src/ThePage.Api/ThePage.Api.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+
+  Core:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Core
+      run: |
+        cd ThePage
+        nuget restore
+        msbuild src/ThePage.Core/ThePage.Core.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   Android:
     runs-on: macos-latest
