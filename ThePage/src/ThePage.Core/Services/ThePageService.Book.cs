@@ -59,6 +59,23 @@ namespace ThePage.Core
             return result;
         }
 
+        public async Task<ApiBookResponse> SearchBooksTitle(string search, int? page = null)
+        {
+            ApiBookResponse result = null;
+            try
+            {
+                var token = await _authService.GetSessionToken();
+
+                if (token != null)
+                    result = await BookManager.SearchTitle(token, search, page);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            return result;
+        }
+
         public async Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book)
         {
             ApiBookDetailRequest result = null;

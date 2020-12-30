@@ -5,6 +5,7 @@ using Android.Support.V4.Content;
 using Android.Support.V4.Content.Res;
 using Android.Views;
 using AndroidX.AppCompat.Widget;
+using AndroidX.Core.Graphics;
 using MvvmCross.Platforms.Android.Binding.BindingContext;
 using MvvmCross.Platforms.Android.Views.Fragments;
 using MvvmCross.ViewModels;
@@ -29,7 +30,7 @@ namespace ThePage.Droid.Views
         protected virtual EToolbarIcon ToolbarIcon => EToolbarIcon.Back;
         protected virtual bool ShowToolbar => true;
 
-        Toolbar _toolbar;
+        protected Toolbar _toolbar;
 
         #region LifeCycle
 
@@ -92,6 +93,12 @@ namespace ThePage.Droid.Views
             }
         }
 
+        public void UpdateToolbar()
+        {
+            if (_toolbar != null)
+                _toolbar.Title = ViewModel.LblTitle;
+        }
+
         #endregion
 
         #region Prvate
@@ -114,7 +121,7 @@ namespace ThePage.Droid.Views
 
             }
             var color = new Color(ContextCompat.GetColor(Activity, Resource.Color.white));
-            icon.SetColorFilter(color, PorterDuff.Mode.SrcIn);
+            icon.SetColorFilter(BlendModeColorFilterCompat.CreateBlendModeColorFilterCompat(color, BlendModeCompat.SrcIn));
 
             return icon;
         }

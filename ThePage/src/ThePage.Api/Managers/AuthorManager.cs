@@ -51,6 +51,20 @@ namespace ThePage.Api
 
         #endregion
 
+        #region SEARCH
+
+        public static async Task<ApiAuthorResponse> Search(string token, string search, int? page = null)
+        {
+            ApiAuthorResponse result = null;
+
+            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            result = await api.SearchAuthors(new ApiSearchRequest(page, search));
+
+            return result;
+        }
+
+        #endregion
+
         #region ADD
 
         public static async Task<ApiAuthor> Add(string token, ApiAuthorRequest author)

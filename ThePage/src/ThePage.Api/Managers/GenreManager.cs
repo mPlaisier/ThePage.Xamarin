@@ -52,6 +52,20 @@ namespace ThePage.Api
 
         #endregion
 
+        #region SEARCH
+
+        public static async Task<ApiGenreResponse> Search(string token, string search, int? page = null)
+        {
+            ApiGenreResponse result = null;
+
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            result = await api.SearchGenres(new ApiSearchRequest(page, search));
+
+            return result;
+        }
+
+        #endregion
+
         #region ADD
 
         public static async Task<ApiGenre> Add(string token, ApiGenreRequest genre)

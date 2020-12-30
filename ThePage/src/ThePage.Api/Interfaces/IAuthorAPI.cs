@@ -13,6 +13,10 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiAuthor> GetAuthor(string id);
 
+        [Get("/authors/search/name")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiAuthorResponse> SearchAuthors([Body] ApiSearchRequest search);
+
         [Post("/authors/v2")]
         [Headers("Authorization: Bearer")]
         Task<ApiAuthor> AddAuthor([Body] ApiAuthorRequest author);

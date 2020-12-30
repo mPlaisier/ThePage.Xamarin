@@ -29,7 +29,7 @@ namespace ThePage.Api
         public bool Read { get; set; }
 
         [JsonProperty("pages")]
-        public int Pages { get; set; }
+        public long? Pages { get; set; }
 
         [JsonProperty("ebook")]
         public bool Ebook { get; set; }

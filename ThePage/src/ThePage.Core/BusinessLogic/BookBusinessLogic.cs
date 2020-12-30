@@ -31,8 +31,8 @@ namespace ThePage.Core
                 genres = null;
 
             //Isbn
-            var isbn = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtInput;
-            if (isbn == null || isbn.Equals(originalResponse?.ISBN))
+            long? isbn = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtNumberInput;
+            if (isbn == null || isbn.ToString().Equals(originalResponse?.ISBN) || isbn == -1)
                 isbn = null;
 
             //Owned
@@ -46,8 +46,8 @@ namespace ThePage.Core
                 read = null;
 
             //Pages
-            int? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
-            if (pages == null || pages == originalResponse?.Pages)
+            long? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
+            if (pages == null || pages == originalResponse?.Pages || pages == -1)
                 pages = null;
 
             //Build
@@ -89,7 +89,7 @@ namespace ThePage.Core
                 items.Add(new CellBookGenreItem(item, removeGenre));
             }
 
-            items.Add(new CellBookNumberTextView("Pages", response.Pages.ToString(), EBookInputType.Pages, updateValidation, true));
+            items.Add(new CellBookNumberTextView("Pages", response.Pages.ToString(), EBookInputType.Pages, updateValidation, false));
             items.Add(new CellBookNumberTextView("ISBN", response.ISBN, EBookInputType.ISBN, updateValidation, false));
             items.Add(new CellBookSwitch("Do you own this book?", response.Owned, EBookInputType.Owned, updateValidation));
             items.Add(new CellBookSwitch("Have you read this book?", response.Read, EBookInputType.Read, updateValidation));

@@ -14,6 +14,10 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiGenre> Get(string id);
 
+        [Get("/genres/search/name")]
+        [Headers("Authorization: Bearer")]
+        Task<ApiGenreResponse> SearchGenres([Body] ApiSearchRequest search);
+
         [Post("/genres/v2")]
         [Headers("Authorization: Bearer")]
         Task<ApiGenre> Add([Body] ApiGenreRequest genre);

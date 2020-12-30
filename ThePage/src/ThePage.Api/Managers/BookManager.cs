@@ -54,6 +54,20 @@ namespace ThePage.Api
 
         #endregion
 
+        #region SEARCH
+
+        public static async Task<ApiBookResponse> SearchTitle(string token, string search, int? page = null)
+        {
+            ApiBookResponse result = null;
+
+            var api = RestService.For<IBookAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            result = await api.SearchTitle(new ApiSearchRequest(page, search));
+
+            return result;
+        }
+
+        #endregion
+
         #region ADD
 
         public static async Task<ApiBookDetailRequest> Add(string token, ApiBookDetailRequest book)

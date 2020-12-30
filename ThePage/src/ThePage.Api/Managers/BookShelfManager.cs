@@ -54,6 +54,20 @@ namespace ThePage.Api
 
         #endregion
 
+        #region SEARCH
+
+        public static async Task<ApiBookShelfResponse> Search(string token, string search, int? page = null)
+        {
+            ApiBookShelfResponse result = null;
+
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            result = await api.SearchBookshelves(new ApiSearchRequest(page, search));
+
+            return result;
+        }
+
+        #endregion
+
         #region ADD
 
         public static async Task<ApiBookShelf> Add(string token, ApiBookShelfRequest bookshelf)
