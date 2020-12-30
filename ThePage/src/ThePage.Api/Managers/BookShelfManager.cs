@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
-using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -27,7 +26,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
 
                 result = await api.GetBookShelves(new ApiPageRequest(page));
                 Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
@@ -45,7 +44,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
                 result = await api.GetBookShelf(id);
 
                 Barrel.Current.Add(bookShelfKey, result, TimeSpan.FromMinutes(Constants.BookExpirationTimeInMinutes));
@@ -61,7 +60,7 @@ namespace ThePage.Api
         {
             ApiBookShelfResponse result = null;
 
-            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchBookshelves(new ApiSearchRequest(page, search));
 
             return result;
@@ -76,7 +75,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY);
 
-            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.AddBookShelf(bookshelf);
         }
 
@@ -89,7 +88,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY, BOOKSHELVES_SINGLE_KEY, id);
 
-            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.UpdateBookShelf(bookShelf, id);
         }
 
@@ -102,7 +101,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKSHELVES_KEY, BOOKSHELVES_SINGLE_KEY, id);
 
-            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IBookShelfApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             await api.DeleteBookShelf(id);
 
             return true;

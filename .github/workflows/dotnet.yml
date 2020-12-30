@@ -1,0 +1,44 @@
+name: CI on Push and Pull Request
+
+on: [pull_request]
+
+jobs: 
+  API:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Api
+      run: |
+        cd ThePage
+        nuget restore
+        msbuild src/ThePage.Api/ThePage.Api.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        
+  Android:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Android
+      run: |
+        cd ThePage
+        nuget restore
+        msbuild src/ThePage.Droid/ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        
+  iOS:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: iOS
+      run: |
+        cd ThePage
+        nuget restore
+        msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+        
+  UnitTests:
+      runs-on: macos-latest
+      steps:
+      - uses: actions/checkout@v1
+      - name: Unit tests
+        run: |
+          cd ThePage
+          nuget restore
+          msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        

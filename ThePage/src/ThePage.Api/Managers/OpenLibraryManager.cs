@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Refit;
 
@@ -6,7 +5,7 @@ namespace ThePage.Api
 {
     public class OpenLibraryManager
     {
-        static readonly IOpenLibraryAPI _olLibrary = RestService.For<IOpenLibraryAPI>("http://openlibrary.org/api");
+        static readonly IOpenLibraryAPI _olLibrary = RestService.For<IOpenLibraryAPI>(Constants.OpenLibrary_Api_Url);
 
         #region FETCH
 

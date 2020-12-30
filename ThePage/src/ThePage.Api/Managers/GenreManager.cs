@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using MonkeyCache.LiteDB;
 using Refit;
-using ThePage.Api.Helpers;
 
 namespace ThePage.Api
 {
@@ -23,7 +22,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
                 result = await api.Get(new ApiPageRequest(page));
 
                 Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.GenreExpirationTimeInMinutes));
@@ -42,7 +41,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+                var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
                 result = await api.Get(id);
 
                 Barrel.Current.Add(genreKey, result, TimeSpan.FromMinutes(Constants.GenreExpirationTimeInMinutes));
@@ -59,7 +58,7 @@ namespace ThePage.Api
         {
             ApiGenreResponse result = null;
 
-            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchGenres(new ApiSearchRequest(page, search));
 
             return result;
@@ -74,7 +73,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(GENRES_KEY);
 
-            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.Add(genre);
         }
 
@@ -87,7 +86,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(GENRES_KEY, GENRES_SINGLE_KEY, genre.Id);
 
-            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.Update(genre, id);
         }
 
@@ -100,7 +99,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(GENRES_KEY, GENRES_SINGLE_KEY, genre.Id);
 
-            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Secrets.ThePageAPI_URL, token));
+            var api = RestService.For<IGenreAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             await api.Delete(genre);
 
             return true;
