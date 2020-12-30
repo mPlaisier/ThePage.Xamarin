@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs: 
   build:
     runs-on: ubuntu-latest
+    env:
+      config: 'Release'
+       
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -14,15 +17,15 @@ jobs:
     - name: Restore dependencies
       run: |
         cd ThePage
-        dotnet restore --include-transitive
+        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        dotnet build --no-restore
+        dotnet build --configuration $config --no-restore
     - name: Test
       run: |
         cd ThePage
-        dotnet test --no-build --verbosity normal
+        dotnet test --no-restore --no-build --configuration $config 
   
   Android:
     runs-on: macos-latest
@@ -43,3 +46,14 @@ jobs:
         cd ThePage
         nuget restore
         msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+        
+  UnitTests:
+      runs-on: macos-latest
+      steps:
+      - uses: actions/checkout@v1
+      - name: Unit tests
+        run: |
+          cd ThePage
+          nuget restore
+          msbuild
+          msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
