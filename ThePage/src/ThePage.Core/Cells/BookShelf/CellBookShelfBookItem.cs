@@ -15,8 +15,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookShelfBookItem(ApiBook book, Action<ICell> action, string icon = "ic_delete", bool isEdit = false)
-            : base(book.Title, book.Author.Name, action, icon, isEdit)
+        public CellBookShelfBookItem(ApiBook book,
+                                     Action<ICell> actionEditClick, Action<ICell> actionClick = null,
+                                     string icon = "ic_delete", bool isEdit = false)
+            : base(book.Title, book.Author.Name, actionEditClick, actionClick, icon, isEdit)
         {
             Book = book;
         }

@@ -30,7 +30,7 @@ namespace ThePage.Api
         public bool? Read { get; internal set; }
 
         [JsonProperty("pages")]
-        public int? Pages { get; internal set; }
+        public long? Pages { get; internal set; }
 
         [JsonProperty("ebook")]
         public bool? Ebook { get; internal set; }
@@ -49,7 +49,7 @@ namespace ThePage.Api
         {
         }
 
-        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages)
+        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, string iSBN, bool owned, bool read, long pages)
         {
             Id = id;
             Title = title;
@@ -61,7 +61,7 @@ namespace ThePage.Api
             Pages = pages;
         }
 
-        public ApiBookDetailRequest(string title, string author, List<string> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, Olcover olCover)
+        public ApiBookDetailRequest(string title, string author, List<string> genres, string iSBN, bool owned, bool read, long pages, bool ebook, string olkey, Olcover olCover)
         {
             Title = title;
             AuthorId = author;
@@ -75,13 +75,15 @@ namespace ThePage.Api
             OlCover = olCover;
         }
 
-        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, string iSBN, bool? owned, bool? read, int? pages, bool? ebook, string olkey, Olcover olCover)
+        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, long? iSBN, bool? owned, bool? read, long? pages, bool? ebook, string olkey, Olcover olCover)
         {
             Id = id;
             Title = title;
             AuthorId = author;
             Genres = genres;
-            ISBN = iSBN;
+
+            ISBN = iSBN.HasValue ? iSBN.Value.ToString() : null;
+
             Owned = owned;
             Read = read;
             Pages = pages;
@@ -99,13 +101,13 @@ namespace ThePage.Api
             string _authorId;
 
             List<string> _genres;
-            int? _pages;
+            long? _pages;
 
             bool? _owned;
             bool? _read;
             bool? _ebook;
 
-            string _iSBN;
+            long? _iSBN;
             string _olkey;
             Olcover _olCover;
 
@@ -135,7 +137,7 @@ namespace ThePage.Api
                 return this;
             }
 
-            public Builder SetPages(int? pages)
+            public Builder SetPages(long? pages)
             {
                 _pages = pages;
                 return this;
@@ -159,7 +161,7 @@ namespace ThePage.Api
                 return this;
             }
 
-            public Builder SetIsbn(string isbn)
+            public Builder SetIsbn(long? isbn)
             {
                 _iSBN = isbn;
                 return this;

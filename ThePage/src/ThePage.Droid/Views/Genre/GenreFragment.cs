@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
@@ -18,19 +17,6 @@ namespace ThePage.Droid
         #region Properties
 
         protected override int FragmentLayoutId => Resource.Layout.fragment_genre;
-
-        #endregion
-
-        #region Protected
-
-        protected override void OnScrollListener_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_scrolllistener.BottomReached))
-            {
-                if (_scrolllistener.BottomReached)
-                    ViewModel.LoadNextPage().Forget();
-            }
-        }
 
         #endregion
     }

@@ -14,7 +14,7 @@ namespace ThePage.Api
         public string Name { get; }
 
         [JsonProperty("olkey")]
-        public string Olkey { get; set; }
+        public string Olkey { get; }
 
         #endregion
 
@@ -23,6 +23,18 @@ namespace ThePage.Api
         public ApiAuthorRequest(string name)
         {
             Name = name;
+        }
+
+        public ApiAuthorRequest(string name, string olkey)
+        {
+            Name = name;
+            Olkey = olkey;
+        }
+
+        public ApiAuthorRequest(ApiAuthor apiAuthor)
+        {
+            Name = apiAuthor.Name;
+            Olkey = apiAuthor.Olkey;
         }
 
         #endregion

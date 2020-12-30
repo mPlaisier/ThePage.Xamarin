@@ -70,7 +70,7 @@ namespace ThePage.Core
             if (collection.IsNullOrEmpty())
                 return -1;
 
-            var item = collection.Where(predicate).First();
+            var item = collection.Where(predicate).FirstOrDefault();
             return collection.IndexOf(item);
         }
 

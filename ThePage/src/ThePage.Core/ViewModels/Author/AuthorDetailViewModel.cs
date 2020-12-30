@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using PropertyChanged;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
@@ -36,7 +37,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public override string LblTitle => "Author Detail";
+        public override string LblTitle => Author != null ? Author.Name : "Author Detail";
 
         public ApiAuthor Author { get; internal set; }
 
@@ -52,6 +53,9 @@ namespace ThePage.Core
         public string LblDeleteBtn => "Delete Author";
 
         public bool IsEditing { get; set; }
+
+        readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
+        public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
 
         #endregion
 
@@ -121,7 +125,12 @@ namespace ThePage.Core
 
                 var author = await _thePageService.UpdateAuthor(Author.Id, request);
                 if (author != null)
+                {
                     _userInteraction.ToastMessage("Author updated", EToastType.Success);
+
+                    _updateToolbarInteraction.Raise();
+                }
+
                 else
                     _userInteraction.Alert("Failure updating author");
             }

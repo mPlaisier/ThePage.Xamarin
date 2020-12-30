@@ -36,6 +36,9 @@ namespace ThePage.Core
 
         public string LblBtnDelete => "Delete bookshelf";
 
+        readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
+        public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
+
         #endregion
 
         #region Commands
@@ -75,14 +78,14 @@ namespace ThePage.Core
             Analytics.TrackEvent($"Initialize {nameof(BookShelfDetailViewModel)}");
             await base.Initialize();
 
-            FetchData().Forget();
+            Refresh().Forget();
         }
 
         #endregion
 
         #region Private
 
-        async Task FetchData()
+        async Task Refresh()
         {
             if (IsLoading)
                 return;
@@ -98,7 +101,7 @@ namespace ThePage.Core
                 new BaseCellTitle("List of books:")
             };
 
-            BookShelfDetail.Books.ForEach(x => Items.Add(new CellBookShelfBookItem(x, RemoveBook)));
+            BookShelfDetail.Books.ForEach(x => Items.Add(new CellBookShelfBookItem(x, RemoveBook, (obj) => GoToBookDetail(obj).Forget())));
 
             IsLoading = false;
             UpdateValidation();
@@ -130,15 +133,26 @@ namespace ThePage.Core
                 Items.RemoveItems(Items.OfType<CellBookShelfBookItem>().ToList());
 
                 var bookItems = new List<CellBookShelfBookItem>();
-                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, isEdit: true)));
+                books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, (obj) => GoToBookDetail(obj).Forget(), isEdit: true)));
 
-                Items.InsertRange(3, bookItems);
+                Items.InsertRange(Items.Count, bookItems);
             }
         }
 
         void RemoveBook(ICell obj)
         {
             Items.Remove(obj);
+        }
+
+        async Task GoToBookDetail(ICell obj)
+        {
+            if (obj is CellBookShelfBookItem bookshelfItem)
+            {
+                var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(bookshelfItem.Book));
+                if (result)
+                    await Refresh();
+            }
+
         }
 
         void ToggleEditValue()
@@ -152,7 +166,11 @@ namespace ThePage.Core
 
             if (IsEditing)
             {
-                Items.Insert(Items.Count, new BaseCellClickableText("Add a book", AddBooks));
+                var index = Items.FindIndex(x => x is CellBookShelfBookItem);
+                if (index == -1)
+                    index = Items.Count;
+
+                Items.Insert(index, new BaseCellClickableText("Add a book", AddBooks));
                 UpdateValidation();
             }
             else
@@ -221,6 +239,8 @@ namespace ThePage.Core
             {
                 BookShelfDetail.Name = request.Name;
                 _bookShelf.Name = request.Name;
+
+                _updateToolbarInteraction.Raise();
             }
 
             if (request.Books != null)

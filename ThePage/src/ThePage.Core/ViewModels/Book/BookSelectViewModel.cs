@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -13,6 +12,7 @@ namespace ThePage.Core
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
+        readonly IDevice _device;
 
         #region Properties
 
@@ -34,7 +34,7 @@ namespace ThePage.Core
         {
             var result = await _navigation.Navigate<AddBookViewModel, string>();
             if (result != null)
-                await LoadData(result);
+                await Refresh(result);
         });
 
         IMvxCommand _commandConfirm;
@@ -44,11 +44,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction)
+        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigationService;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
+            _device = device;
         }
 
         #endregion
@@ -62,7 +63,7 @@ namespace ThePage.Core
 
         public override Task Initialize()
         {
-            LoadData().Forget();
+            Refresh().Forget();
 
             return base.Initialize();
         }
@@ -71,7 +72,69 @@ namespace ThePage.Core
 
         #region Public
 
-        public override async Task LoadData(string id = null)
+        public override async Task LoadNextPage()
+        {
+            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            {
+                _isLoadingNextPage = true;
+                _userInteraction.ToastMessage("Loading data", EToastType.Info);
+
+                var apiBookResponse = _isSearching
+                    ? await _thePageService.SearchBooksTitle(_search, _currentPage + 1)
+                    : await _thePageService.GetNextBooks(_currentPage + 1);
+
+                apiBookResponse.Docs.ForEach(x => Items.Add(
+                    new CellBookSelect(x, SelectedItems.Contains(x))));
+
+                _currentPage = apiBookResponse.Page;
+                _hasNextPage = apiBookResponse.HasNextPage;
+                _isLoadingNextPage = false;
+
+                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+            }
+        }
+
+        public override async Task Search(string search)
+        {
+            if (IsLoading)
+                return;
+
+            _device.HideKeyboard();
+
+            if (_search != null && _search.Equals(search))
+                return;
+
+            IsLoading = true;
+            _search = search;
+            _isSearching = true;
+
+            var apiBookResponse = await _thePageService.SearchBooksTitle(search);
+
+            Items = new MvxObservableCollection<CellBookSelect>();
+            apiBookResponse.Docs.ForEach(x => Items.Add(
+                new CellBookSelect(x, SelectedItems.Contains(x))));
+
+            _currentPage = apiBookResponse.Page;
+            _hasNextPage = apiBookResponse.HasNextPage;
+
+            IsLoading = false;
+        }
+
+        public override void StopSearch()
+        {
+            if (_isSearching)
+            {
+                _isSearching = false;
+                _search = null;
+                Refresh().Forget();
+            }
+        }
+
+        #endregion
+
+        #region Private
+
+        protected override async Task Refresh(string id = null)
         {
             IsLoading = true;
 
@@ -95,28 +158,6 @@ namespace ThePage.Core
             IsLoading = false;
         }
 
-        public override async Task LoadNextPage()
-        {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
-            {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiBookResponse = await _thePageService.GetNextBooks(_currentPage + 1);
-                apiBookResponse.Docs.ForEach(x => Items.Add(
-                    new CellBookSelect(x, SelectedItems.Contains(x))));
-
-                _currentPage = apiBookResponse.Page;
-                _hasNextPage = apiBookResponse.HasNextPage;
-                _isLoadingNextPage = false;
-
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
-            }
-        }
-
-        #endregion
-
-        #region Private
 
         void HandleBookClick(CellBookSelect cellBook)
         {
