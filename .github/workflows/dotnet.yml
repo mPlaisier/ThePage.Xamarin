@@ -29,8 +29,7 @@ jobs:
       run: |
         cd ThePage
         nuget restore
-        cd src/hePage.Droid
-        msbuild ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        msbuild src/ThePage.Droid/ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   iOS:
     runs-on: macos-latest
