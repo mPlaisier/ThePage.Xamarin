@@ -7,7 +7,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Android
+    - name: Api
       run: |
         cd ThePage
         nuget restore
@@ -17,7 +17,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Android
+    - name: Core
       run: |
         cd ThePage
         nuget restore
@@ -51,5 +51,4 @@ jobs:
         run: |
           cd ThePage
           nuget restore
-          msbuild
           msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
