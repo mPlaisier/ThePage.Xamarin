@@ -270,18 +270,15 @@ namespace ThePage.Core
 
                 var author = authors[random.Next(0, authors.Count() - 1)];
 
-                var book = new ApiBookDetailRequest($"Book {i + 1}",
-                                                    author.Id,
-                                                    selectedgenres.GetIdStrings().ToList(),
-                                                    null,
-                                                    false,
-                                                    true,
-                                                    random.Next(50, 500),
-                                                    false,
-                                                    null,
-                                                    null);
+                var builder = new ApiBookDetailRequest.Builder();
+                builder.SetTitle($"Book {i + 1}")
+                       .SetAuthor(author.Id)
+                       .SetGenres(selectedgenres.GetIdStrings().ToList())
+                       .SetOwned(false)
+                       .SetPages(random.Next(50, 500))
+                       .SetEbook(false);
 
-                await _thePageService.AddBook(book);
+                await _thePageService.AddBook(builder.Build());
             }
         }
 

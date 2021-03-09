@@ -14,54 +14,47 @@ namespace ThePage.Core
 
         public static (ApiBookDetailRequest request, ApiAuthor author, IEnumerable<ApiGenre> genres) CreateBookDetailRequestFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
         {
+            var builder = new ApiBookDetailRequest.Builder()
+                                                   .SetId(id);
+
             //Title
             var title = items.OfType<CellBookTextView>().Where(p => p.InputType == EBookInputType.Title).First().TxtInput.Trim();
-            if (title == null || title.Equals(originalResponse?.Title))
-                title = null;
+            if (title != null && !title.Equals(originalResponse?.Title))
+                builder.SetTitle(title);
 
             //Author
             var responseAuthor = items.OfType<CellBookAuthor>().Where(p => p.InputType == EBookInputType.Author).First().Item;
             var author = responseAuthor;
-            if (author == null || author.Id.Equals(originalResponse?.Author.Id))
-                author = null;
+            if (author != null && !author.Id.Equals(originalResponse?.Author.Id))
+                builder.SetAuthor(author.Id);
 
             //Genres
             var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            if (genres == null || (genres.Count == originalResponse?.Genres.Count && !genres.Except(originalResponse?.Genres).Any()))
-                genres = null;
+            if (genres != null && (genres.Count != originalResponse?.Genres.Count || genres.Except(originalResponse?.Genres).Any()))
+                builder.SetGenres(genres.GetIdStrings().ToList());
 
             //Isbn
             long? isbn = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.ISBN).First().TxtNumberInput;
-            if (isbn == null || isbn.ToString().Equals(originalResponse?.ISBN) || isbn == -1)
-                isbn = null;
+            if (isbn != null && isbn.HasValue && !isbn.ToString().Equals(originalResponse?.ISBN) && isbn != -1)
+                builder.SetIsbn(isbn.Value);
 
             //Owned
             bool? owned = items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Owned).First().IsSelected;
-            if (owned == null || owned == originalResponse?.Owned)
-                owned = null;
+            if (owned != null && owned.HasValue && owned != originalResponse?.Owned)
+                builder.SetOwned(owned.Value);
 
             //Read
             bool? read = items.OfType<CellBookSwitch>().Where(p => p.InputType == EBookInputType.Read).First().IsSelected;
-            if (read == null || read == originalResponse?.Read)
-                read = null;
+            if (read != null && read.HasValue && read != originalResponse?.Read)
+                builder.SetRead(read.Value);
 
             //Pages
             long? pages = items.OfType<CellBookNumberTextView>().Where(p => p.InputType == EBookInputType.Pages).First().TxtNumberInput;
-            if (pages == null || pages == originalResponse?.Pages || pages == -1)
-                pages = null;
+            if (pages != null && pages.HasValue && pages != originalResponse?.Pages && pages != -1)
+                builder.SetPages(pages.Value);
 
             //Build
-            return (new ApiBookDetailRequest
-                       .Builder()
-                       .SetId(id)
-                       .SetTitle(title)
-                       .SetAuthor(author?.Id)
-                       .SetGenres(genres.GetIdStrings(true))
-                       .SetIsbn(isbn)
-                       .SetOwned(owned)
-                       .SetRead(read)
-                       .SetPages(pages)
-                       .Build(),
+            return (builder.Build(),
                     responseAuthor,
                     genres);
         }

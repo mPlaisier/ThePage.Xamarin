@@ -43,159 +43,111 @@ namespace ThePage.Api
 
         #endregion
 
-        #region Constructor
-
-        public ApiBookDetailRequest()
-        {
-        }
-
-        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, string iSBN, bool owned, bool read, long pages)
-        {
-            Id = id;
-            Title = title;
-            AuthorId = author;
-            Genres = genres;
-            ISBN = iSBN;
-            Owned = owned;
-            Read = read;
-            Pages = pages;
-        }
-
-        public ApiBookDetailRequest(string title, string author, List<string> genres, string iSBN, bool owned, bool read, long pages, bool ebook, string olkey, Olcover olCover)
-        {
-            Title = title;
-            AuthorId = author;
-            Genres = genres;
-            ISBN = iSBN;
-            Owned = owned;
-            Read = read;
-            Pages = pages;
-            Ebook = ebook;
-            Olkey = olkey;
-            OlCover = olCover;
-        }
-
-        public ApiBookDetailRequest(string id, string title, string author, List<string> genres, long? iSBN, bool? owned, bool? read, long? pages, bool? ebook, string olkey, Olcover olCover)
-        {
-            Id = id;
-            Title = title;
-            AuthorId = author;
-            Genres = genres;
-
-            ISBN = iSBN.HasValue ? iSBN.Value.ToString() : null;
-
-            Owned = owned;
-            Read = read;
-            Pages = pages;
-            Ebook = ebook;
-            Olkey = olkey;
-            OlCover = olCover;
-        }
-
-        #endregion
-
         public class Builder
         {
-            string _id;
-            string _title;
-            string _authorId;
-
-            List<string> _genres;
-            long? _pages;
-
-            bool? _owned;
-            bool? _read;
-            bool? _ebook;
-
-            long? _iSBN;
-            string _olkey;
-            Olcover _olCover;
+            bool isEmpty = true;
+            ApiBookDetailRequest _apiRequest;
 
             #region Public
 
             public Builder SetId(string id)
             {
-                _id = id;
+                _apiRequest.Id = id;
                 return this;
             }
 
             public Builder SetTitle(string title)
             {
-                _title = title;
+                isEmpty = false;
+
+                _apiRequest.Title = title;
                 return this;
             }
 
             public Builder SetAuthor(string authorId)
             {
-                _authorId = authorId;
+                isEmpty = false;
+
+                _apiRequest.AuthorId = authorId;
                 return this;
             }
 
             public Builder SetGenres(List<string> genres)
             {
-                _genres = genres;
+                isEmpty = false;
+
+                _apiRequest.Genres = genres;
                 return this;
             }
 
-            public Builder SetPages(long? pages)
+            public Builder SetPages(long pages)
             {
-                _pages = pages;
+                isEmpty = false;
+
+                _apiRequest.Pages = pages;
                 return this;
             }
 
-            public Builder SetOwned(bool? owned)
+            public Builder SetOwned(bool owned)
             {
-                _owned = owned;
+                isEmpty = false;
+
+                _apiRequest.Owned = owned;
                 return this;
             }
 
-            public Builder SetRead(bool? read)
+            public Builder SetRead(bool read)
             {
-                _read = read;
+                isEmpty = false;
+
+                _apiRequest.Read = read;
                 return this;
             }
 
             public Builder SetEbook(bool? ebook)
             {
-                _ebook = ebook;
+                isEmpty = false;
+
+                _apiRequest.Ebook = ebook;
                 return this;
             }
 
-            public Builder SetIsbn(long? isbn)
+            public Builder SetIsbn(long isbn)
             {
-                _iSBN = isbn;
+                isEmpty = false;
+
+                _apiRequest.ISBN = isbn.ToString();
                 return this;
             }
 
             public Builder SetOlKey(string olKey)
             {
-                _olkey = olKey;
+                isEmpty = false;
+
+                _apiRequest.Olkey = olKey;
                 return this;
             }
 
             public Builder SetOlCover(Olcover olCover)
             {
-                _olCover = olCover;
+                isEmpty = false;
+
+                _apiRequest.OlCover = olCover;
                 return this;
             }
 
             public ApiBookDetailRequest Build()
             {
-                return _title == null && _authorId == null && _genres == null
-                    && _iSBN == null && _owned == null && _read == null && _pages == null
-                    && _ebook == null && _olkey == null && _olCover == null
-                    ? null
-                    : new ApiBookDetailRequest(_id,
-                                                _title,
-                                                _authorId,
-                                                _genres,
-                                                _iSBN,
-                                                _owned,
-                                                _read,
-                                                _pages,
-                                                _ebook,
-                                                _olkey,
-                                                _olCover);
+                return isEmpty ? null : _apiRequest;
+            }
+
+            #endregion
+
+            #region Constructor
+
+            public Builder()
+            {
+                _apiRequest = new ApiBookDetailRequest();
             }
 
             #endregion
