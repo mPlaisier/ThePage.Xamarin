@@ -186,7 +186,7 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<CellBookInput>().ToList();
-            var isValid = lstInput.Any(x => x.IsValid);
+            var isValid = lstInput.All(x => x.IsValid);
 
             Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
         }

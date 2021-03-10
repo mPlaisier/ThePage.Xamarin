@@ -130,9 +130,7 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<BaseCellInput>().ToList();
-            var isValid = lstInput.Any(x => x.IsValid);
-
-            IsValid = isValid;
+            IsValid = lstInput.All(x => x.IsValid);
         }
 
         #endregion

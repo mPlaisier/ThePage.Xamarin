@@ -112,9 +112,9 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<BaseCellInput>().ToList();
-            var isValid = lstInput.Any(x => x.IsValid);
+            var HasInvalidCells = lstInput.Any(x => !x.IsValid);
 
-            IsValid = isValid;
+            IsValid = !HasInvalidCells;
         }
 
         async Task AddBooks()

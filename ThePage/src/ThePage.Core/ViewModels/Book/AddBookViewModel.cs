@@ -207,10 +207,9 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
-            var isValid = lstInput.Any(x => x.IsValid);
+            var isValid = lstInput.All(x => x.IsValid);
 
-            var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
-            buttons.ForEach(x => x.IsValid = isValid);
+            Items.OfType<CellBookButton>().ForEach(x => x.IsValid = isValid);
         }
 
         async Task AddGenreAction()
