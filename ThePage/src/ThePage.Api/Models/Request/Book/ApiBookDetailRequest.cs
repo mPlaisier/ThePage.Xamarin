@@ -45,8 +45,9 @@ namespace ThePage.Api
 
         public class Builder
         {
+            readonly ApiBookDetailRequest _apiRequest;
+
             bool isEmpty = true;
-            ApiBookDetailRequest _apiRequest;
 
             #region Public
 

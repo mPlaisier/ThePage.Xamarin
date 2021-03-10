@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
@@ -176,7 +175,7 @@ namespace ThePage.Core
                 {
                     author = new ApiAuthor
                     {
-                        Name = olAuthor.Name,
+                        Name = olAuthor?.Name,
                         Olkey = olkey
                     };
                     newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);

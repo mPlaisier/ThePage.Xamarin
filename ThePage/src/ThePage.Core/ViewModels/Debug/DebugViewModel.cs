@@ -26,7 +26,7 @@ namespace ThePage.Core
 
         public MvxObservableCollection<ICellDebug> Items { get; internal set; }
 
-        MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
+        readonly MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
 
         #endregion

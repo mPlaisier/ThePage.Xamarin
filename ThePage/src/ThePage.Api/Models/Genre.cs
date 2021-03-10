@@ -38,7 +38,7 @@ namespace ThePage.Api
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is Genre genre && (Id == genre.Id) && Name.Equals(genre.Name);
+            return obj is Genre genre && (Id == genre.Id) && Name.Equals(genre.Name);
         }
 
         public override int GetHashCode()
