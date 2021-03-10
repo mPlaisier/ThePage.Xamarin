@@ -155,16 +155,16 @@ namespace ThePage.Core
 
         #region Protected
 
-        protected override async Task Refresh(string id = null)
+        protected override async Task Refresh(string item = null)
         {
             IsLoading = true;
 
             var genres = await _thePageService.GetAllGenres();
 
             //Add new created genre to Selected list
-            if (id != null)
+            if (item != null)
             {
-                var newGenre = await _thePageService.GetGenre(id);
+                var newGenre = await _thePageService.GetGenre(item);
                 if (newGenre != null)
                     SelectedItems.Add(newGenre);
             }

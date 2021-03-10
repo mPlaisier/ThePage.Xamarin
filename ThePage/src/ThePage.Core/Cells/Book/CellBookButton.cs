@@ -18,7 +18,7 @@ namespace ThePage.Core
         bool _isValid;
         public bool IsValid
         {
-            get => _requireValidation ? _isValid : true;
+            get => !_requireValidation || _isValid;
             set => SetProperty(ref _isValid, value);
         }
 
@@ -26,8 +26,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _clickCommand;
-        public IMvxCommand ClickCommand => _clickCommand ??= new MvxCommand(() => _btnAction?.Invoke().Forget());
+        IMvxAsyncCommand _clickCommand;
+        public IMvxAsyncCommand ClickCommand => _clickCommand ??= new MvxAsyncCommand(_btnAction);
 
         #endregion
 

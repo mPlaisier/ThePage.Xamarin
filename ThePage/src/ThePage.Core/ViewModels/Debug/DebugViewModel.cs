@@ -26,7 +26,7 @@ namespace ThePage.Core
 
         public MvxObservableCollection<ICellDebug> Items { get; internal set; }
 
-        MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
+        readonly MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
 
         #endregion
@@ -263,25 +263,22 @@ namespace ThePage.Core
                 var selectedgenres = new List<ApiGenre>();
                 while (selectedgenres.Count < amountGenres)
                 {
-                    var genre = genres[random.Next(0, genres.Count() - 1)];
+                    var genre = genres[random.Next(0, genres.Count - 1)];
                     if (!selectedgenres.Contains(genre))
                         selectedgenres.Add(genre);
                 }
 
-                var author = authors[random.Next(0, authors.Count() - 1)];
+                var author = authors[random.Next(0, authors.Count - 1)];
 
-                var book = new ApiBookDetailRequest($"Book {i + 1}",
-                                                    author.Id,
-                                                    selectedgenres.GetIdStrings().ToList(),
-                                                    null,
-                                                    false,
-                                                    true,
-                                                    random.Next(50, 500),
-                                                    false,
-                                                    null,
-                                                    null);
+                var builder = new ApiBookDetailRequest.Builder();
+                builder.SetTitle($"Book {i + 1}")
+                       .SetAuthor(author.Id)
+                       .SetGenres(selectedgenres.GetIdStrings().ToList())
+                       .SetOwned(false)
+                       .SetPages(random.Next(50, 500))
+                       .SetEbook(false);
 
-                await _thePageService.AddBook(book);
+                await _thePageService.AddBook(builder.Build());
             }
         }
 
@@ -297,7 +294,7 @@ namespace ThePage.Core
                 var selectedBooks = new List<ApiBook>();
                 while (selectedBooks.Count < amountBooks)
                 {
-                    var genre = books[random.Next(0, books.Count() - 1)];
+                    var genre = books[random.Next(0, books.Count - 1)];
                     if (!selectedBooks.Contains(genre))
                         selectedBooks.Add(genre);
                 }

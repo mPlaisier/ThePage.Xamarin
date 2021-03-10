@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
@@ -11,7 +10,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookShelfDetailViewModel : BaseViewModel<ApiBookShelf, bool>, INotifyPropertyChanged
+    public class BookShelfDetailViewModel : BaseViewModel<ApiBookShelf, bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -113,9 +112,9 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<BaseCellInput>().ToList();
-            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var HasInvalidCells = lstInput.Any(x => !x.IsValid);
 
-            IsValid = isValid;
+            IsValid = !HasInvalidCells;
         }
 
         async Task AddBooks()

@@ -5,7 +5,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public class BookShelfManager
+    public static class BookShelfManager
     {
         #region CachingKeys
 

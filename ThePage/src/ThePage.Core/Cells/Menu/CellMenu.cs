@@ -1,4 +1,3 @@
-using System;
 using static ThePage.Core.ViewModels.Main.MainViewModel;
 
 namespace ThePage.Core

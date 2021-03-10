@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -10,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookViewModel : BaseListViewModel, INotifyPropertyChanged
+    public class BookViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -24,7 +23,7 @@ namespace ThePage.Core
 
         public override string LblTitle => "Books";
 
-        MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
+        readonly MvxInteraction<GetIsbnCode> _isbnInteraction = new MvxInteraction<GetIsbnCode>();
         public IMvxInteraction<GetIsbnCode> ISBNInteraction => _isbnInteraction;
 
         #endregion

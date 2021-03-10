@@ -1,4 +1,3 @@
-using System;
 namespace ThePage.Api
 {
     public static class Constants

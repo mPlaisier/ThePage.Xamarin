@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -28,7 +27,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>, INotifyPropertyChanged
+    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

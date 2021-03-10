@@ -5,7 +5,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public class AuthorManager
+    public static class AuthorManager
     {
         const string AUTHORS_KEY = "GetAuthorsKey";
         const string AUTHORS_SINGLE_KEY = "GetAuthorKey";
@@ -22,7 +22,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+                var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
 
                 result = await api.GetAuthors(new ApiPageRequest(page));
                 Barrel.Current.Add(barrelkey, result, TimeSpan.FromMinutes(Constants.AuthorExpirationTimeInMinutes));
@@ -40,7 +40,7 @@ namespace ThePage.Api
 
             if (result == null)
             {
-                var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+                var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
 
                 result = await api.GetAuthor(id);
                 Barrel.Current.Add(authorKey, result, TimeSpan.FromMinutes(Constants.AuthorExpirationTimeInMinutes));
@@ -57,7 +57,7 @@ namespace ThePage.Api
         {
             ApiAuthorResponse result = null;
 
-            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+            var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             result = await api.SearchAuthors(new ApiSearchRequest(page, search));
 
             return result;
@@ -72,7 +72,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(AUTHORS_KEY);
 
-            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+            var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.AddAuthor(author);
         }
 
@@ -85,7 +85,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, author.Id);
 
-            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+            var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             return await api.UpdateAuthor(author, id);
         }
 
@@ -98,7 +98,7 @@ namespace ThePage.Api
             //Clear cache
             ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, author.Id);
 
-            var api = RestService.For<IAuthorAPI>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
+            var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
             await api.DeleteAuthor(author);
 
             return true;

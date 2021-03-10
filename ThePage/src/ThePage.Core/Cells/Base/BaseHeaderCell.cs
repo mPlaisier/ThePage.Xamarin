@@ -1,4 +1,3 @@
-using System;
 using MvvmCross.ViewModels;
 
 namespace ThePage.Core

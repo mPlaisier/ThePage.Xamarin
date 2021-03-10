@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using MvvmCross.ViewModels;
-using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -31,6 +27,7 @@ namespace ThePage.Core
 
         public static void Forget(this Task task)
         {
+            //Forget task and continue
         }
     }
 }

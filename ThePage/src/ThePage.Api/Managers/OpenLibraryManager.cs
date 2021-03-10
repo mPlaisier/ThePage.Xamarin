@@ -3,9 +3,9 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public class OpenLibraryManager
+    public static class OpenLibraryManager
     {
-        static readonly IOpenLibraryAPI _olLibrary = RestService.For<IOpenLibraryAPI>(Constants.OpenLibrary_Api_Url);
+        static readonly IOpenLibraryApi _olLibrary = RestService.For<IOpenLibraryApi>(Constants.OpenLibrary_Api_Url);
 
         #region FETCH
 

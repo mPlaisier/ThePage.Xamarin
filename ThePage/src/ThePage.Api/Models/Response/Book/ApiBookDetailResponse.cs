@@ -41,41 +41,6 @@ namespace ThePage.Api
         public Olcover OlCover { get; set; }
 
         #endregion
-
-        #region Constructor
-
-        public ApiBookDetailResponse()
-        {
-        }
-
-        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages)
-        {
-            Id = id;
-            Title = title;
-            Author = author;
-            Genres = genres;
-            ISBN = iSBN;
-            Owned = owned;
-            Read = read;
-            Pages = pages;
-        }
-
-        public ApiBookDetailResponse(string id, string title, ApiAuthor author, List<ApiGenre> genres, string iSBN, bool owned, bool read, int pages, bool ebook, string olkey, Olcover olCover)
-        {
-            Id = id;
-            Title = title;
-            Author = author;
-            Genres = genres;
-            ISBN = iSBN;
-            Owned = owned;
-            Read = read;
-            Pages = pages;
-            Ebook = ebook;
-            Olkey = olkey;
-            OlCover = olCover;
-        }
-
-        #endregion
     }
 
     public class Olcover
