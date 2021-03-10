@@ -33,7 +33,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AddBookViewModel : BaseViewModel<AddBookParameter, string>, INotifyPropertyChanged
+    public class AddBookViewModel : BaseViewModel<AddBookParameter, string>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -43,7 +43,6 @@ namespace ThePage.Core
         OLObject _olBook;
         string _isbn;
 
-        ApiGenreResponse _genres;
         ApiAuthorResponse _authors;
 
         #region Properties
@@ -126,7 +125,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             _authors = await _thePageService.GetAllAuthors();
-            _genres = await _thePageService.GetAllGenres();
+            var _genres = await _thePageService.GetAllGenres();
 
             if (_authors == null || _genres == null)
             {
@@ -169,7 +168,7 @@ namespace ThePage.Core
 
             if (author == null)
             {
-                var authorChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{olAuthor.Name} is not found in your author list. Would you like to add it?", null,
+                var authorChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{olAuthor?.Name} is not found in your author list. Would you like to add it?", null,
                                                                                    neutral: "Choose from list");
 
                 ApiAuthor newAuthor = null;
@@ -209,7 +208,7 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
-            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var isValid = lstInput.Any(x => x.IsValid);
 
             var buttons = Items.Where(b => b is CellBookButton).OfType<CellBookButton>();
             buttons.ForEach(x => x.IsValid = isValid);

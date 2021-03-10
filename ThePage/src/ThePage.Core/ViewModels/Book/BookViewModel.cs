@@ -10,7 +10,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookViewModel : BaseListViewModel, INotifyPropertyChanged
+    public class BookViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

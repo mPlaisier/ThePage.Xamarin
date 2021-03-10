@@ -28,7 +28,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>, INotifyPropertyChanged
+    public class AuthorDetailViewModel : BaseViewModel<AuthorDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

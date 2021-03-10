@@ -9,7 +9,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddGenreViewModel : BaseViewModelResult<string>, INotifyPropertyChanged
+    public class AddGenreViewModel : BaseViewModelResult<string>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

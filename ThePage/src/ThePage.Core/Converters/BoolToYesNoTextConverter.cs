@@ -8,7 +8,12 @@ namespace ThePage.Core
     {
         protected override string Convert(bool? value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == true ? "Yes" : value == false ? "No" : "";
+            if (value == true)
+                return "Yes";
+
+            return value == false
+                ? "No"
+                : "";
         }
     }
 }

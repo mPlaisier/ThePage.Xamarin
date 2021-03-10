@@ -263,12 +263,12 @@ namespace ThePage.Core
                 var selectedgenres = new List<ApiGenre>();
                 while (selectedgenres.Count < amountGenres)
                 {
-                    var genre = genres[random.Next(0, genres.Count() - 1)];
+                    var genre = genres[random.Next(0, genres.Count - 1)];
                     if (!selectedgenres.Contains(genre))
                         selectedgenres.Add(genre);
                 }
 
-                var author = authors[random.Next(0, authors.Count() - 1)];
+                var author = authors[random.Next(0, authors.Count - 1)];
 
                 var builder = new ApiBookDetailRequest.Builder();
                 builder.SetTitle($"Book {i + 1}")
@@ -294,7 +294,7 @@ namespace ThePage.Core
                 var selectedBooks = new List<ApiBook>();
                 while (selectedBooks.Count < amountBooks)
                 {
-                    var genre = books[random.Next(0, books.Count() - 1)];
+                    var genre = books[random.Next(0, books.Count - 1)];
                     if (!selectedBooks.Contains(genre))
                         selectedBooks.Add(genre);
                 }

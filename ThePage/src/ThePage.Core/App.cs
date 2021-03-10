@@ -1,6 +1,5 @@
 ﻿using MvvmCross.IoC;
 using MvvmCross.ViewModels;
-using ThePage.Core.ViewModels.Main;
 
 namespace ThePage.Core
 {

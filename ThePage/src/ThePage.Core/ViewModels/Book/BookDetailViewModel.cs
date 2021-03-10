@@ -30,7 +30,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>, INotifyPropertyChanged
+    public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -187,7 +187,7 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<CellBookInput>().ToList();
-            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
+            var isValid = lstInput.Any(x => x.IsValid);
 
             Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
         }
@@ -245,8 +245,6 @@ namespace ThePage.Core
 
             if (genres == null)
                 BookDetail.Genres = new List<ApiGenre>();
-            else
-                genres.ToList();
 
             BookDetail.ISBN = updatedBook.ISBN;
 

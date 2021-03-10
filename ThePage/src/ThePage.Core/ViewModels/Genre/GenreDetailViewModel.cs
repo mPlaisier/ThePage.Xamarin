@@ -28,7 +28,7 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class GenreDetailViewModel : BaseViewModel<GenreDetailParameter, bool>, INotifyPropertyChanged
+    public class GenreDetailViewModel : BaseViewModel<GenreDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

@@ -70,7 +70,7 @@ namespace ThePage.Core
             if (collection.IsNullOrEmpty())
                 return -1;
 
-            var item = collection.Where(predicate).FirstOrDefault();
+            var item = collection.FirstOrDefault(predicate);
             return collection.IndexOf(item);
         }
 
@@ -82,6 +82,24 @@ namespace ThePage.Core
         /// <param name="index"></param>
         /// <param name="enumerable"></param>
         public static void InsertRange<T>(this Collection<T> collection, int index, IEnumerable<T> enumerable)
+        {
+            int currentIndex = index;
+            var changedItems = collection is List<T> ? (List<T>)enumerable : new List<T>(enumerable);
+            foreach (var i in changedItems)
+            {
+                collection.Insert(currentIndex, i);
+                currentIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Adds the elements at index of the collection. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="index"></param>
+        /// <param name="enumerable"></param>
+        public static void InsertRange<T>(this ObservableCollection<T> collection, int index, IEnumerable<T> enumerable)
         {
             int currentIndex = index;
             var changedItems = collection is List<T> ? (List<T>)enumerable : new List<T>(enumerable);
@@ -107,18 +125,6 @@ namespace ThePage.Core
             //Error: Collection was modified; enumeration operation may not execute
             foreach (var item in enumerable.ToList())
                 collection.Remove(item);
-        }
-
-
-        public static void InsertRange<T>(this ObservableCollection<T> collection, int index, IEnumerable<T> enumerable)
-        {
-            int currentIndex = index;
-            var changedItems = collection is List<T> ? (List<T>)enumerable : new List<T>(enumerable);
-            foreach (var i in changedItems)
-            {
-                collection.Insert(currentIndex, i);
-                currentIndex++;
-            }
         }
     }
 }

@@ -22,9 +22,7 @@ namespace ThePage.Api
 
         public override bool Equals(object obj)
         {
-            return !(obj is ApiGenre item)
-                ? false
-                : Id.Equals(item.Id) && Name.Equals(item.Name);
+            return obj is ApiGenre item && Id.Equals(item.Id) && Name.Equals(item.Name);
         }
 
         public override int GetHashCode()
