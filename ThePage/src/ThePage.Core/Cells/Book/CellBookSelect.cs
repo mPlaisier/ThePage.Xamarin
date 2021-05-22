@@ -20,8 +20,7 @@ namespace ThePage.Core
         public CellBookSelect(ApiBook book, bool isSelected = false)
         {
             Item = book;
-
-            IsSelected = book != null ? isSelected : false;
+            IsSelected = book != null && isSelected;
         }
 
         #endregion

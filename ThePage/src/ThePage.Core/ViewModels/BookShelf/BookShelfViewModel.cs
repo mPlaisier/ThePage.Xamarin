@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -9,7 +8,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookShelfViewModel : BaseListViewModel, INotifyPropertyChanged
+    public class BookShelfViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;

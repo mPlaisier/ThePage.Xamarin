@@ -9,7 +9,7 @@ namespace ThePage.Core
         public static (ApiBookShelfRequest request, IEnumerable<ApiBook> books) CreateApiBookShelfRequestFromInput(IEnumerable<ICell> items, string id = null, ApiBookShelfDetailResponse originalResponse = null)
         {
             //Name
-            var name = items.OfType<CellBookShelfTextView>().Where(p => p.InputType == EBookShelfInputType.Name).First().TxtInput.Trim();
+            var name = items.OfType<CellBookShelfTextView>().First(p => p.InputType == EBookShelfInputType.Name).TxtInput.Trim();
             if (name == null || name.Equals(originalResponse?.Name))
                 name = null;
 

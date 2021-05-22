@@ -1,7 +1,6 @@
 using System;
 using Microsoft.AppCenter.Crashes;
 using MonkeyCache.LiteDB;
-using MvvmCross;
 using Refit;
 
 namespace ThePage.Core

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
@@ -11,7 +10,7 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddBookShelfViewModel : BaseViewModelResult<bool>, INotifyPropertyChanged
+    public class AddBookShelfViewModel : BaseViewModelResult<bool>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -131,9 +130,7 @@ namespace ThePage.Core
                 return;
 
             var lstInput = Items.OfType<BaseCellInput>().ToList();
-            var isValid = lstInput.Where(x => x.IsValid == false).Count() == 0;
-
-            IsValid = isValid;
+            IsValid = lstInput.All(x => x.IsValid);
         }
 
         #endregion

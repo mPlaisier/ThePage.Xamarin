@@ -25,7 +25,6 @@ namespace ThePage.Api
 
     }
 
-    //TODO perhaps move to a ENUM class/file
     public enum EApiErrorCode
     {
         Unkown = 0,

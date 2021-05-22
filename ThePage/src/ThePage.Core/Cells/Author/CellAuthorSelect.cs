@@ -19,8 +19,7 @@ namespace ThePage.Core
         public CellAuthorSelect(ApiAuthor author, bool isSelected = false)
         {
             Item = author;
-
-            IsSelected = author != null ? isSelected : false;
+            IsSelected = author != null && isSelected;
         }
 
         #endregion

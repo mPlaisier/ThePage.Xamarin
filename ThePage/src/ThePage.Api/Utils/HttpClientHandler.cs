@@ -38,20 +38,16 @@ namespace ThePage.Api
             Debug.WriteLine($"{msg} {req.Method} {req.RequestUri.PathAndQuery} {req.RequestUri.Scheme}/{req.Version}");
             Debug.WriteLine($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}");
 #endif
-            if (req.Content != null)
+            if (req.Content != null && (req.Content is StringContent || IsTextBasedContentType(req.Headers) || IsTextBasedContentType(req.Content.Headers)))
             {
-                if (req.Content is StringContent || IsTextBasedContentType(req.Headers) ||
-                    IsTextBasedContentType(req.Content.Headers))
-                {
-                    var result = await req.Content.ReadAsStringAsync();
+                var result = await req.Content.ReadAsStringAsync();
 #if DEBUG
-                    var parsedJson = JToken.Parse(result);
-                    var beautified = parsedJson.ToString(Formatting.Indented);
+                var parsedJson = JToken.Parse(result);
+                var beautified = parsedJson.ToString(Formatting.Indented);
 
-                    Debug.WriteLine($"{msg} Content:");
-                    Debug.WriteLine($"{beautified}");
+                Debug.WriteLine($"{msg} Content:");
+                Debug.WriteLine($"{beautified}");
 #endif
-                }
             }
 
             var start = DateTime.Now;
@@ -82,24 +78,21 @@ namespace ThePage.Api
             Debug.WriteLine(
                 $"{msg} {req.RequestUri.Scheme.ToUpper()}/{resp.Version} {(int)resp.StatusCode} {resp.ReasonPhrase}");
 #endif
-            if (resp.Content != null)
+            if (resp.Content != null && (resp.Content is StringContent || IsTextBasedContentType(resp.Headers) || IsTextBasedContentType(resp.Content.Headers)))
             {
-                if (resp.Content is StringContent || IsTextBasedContentType(resp.Headers) ||
-                    IsTextBasedContentType(resp.Content.Headers))
-                {
-                    start = DateTime.Now;
-                    var result = await resp.Content.ReadAsStringAsync();
-                    end = DateTime.Now;
+                start = DateTime.Now;
+                var result = await resp.Content.ReadAsStringAsync();
+                end = DateTime.Now;
 #if DEBUG
-                    var parsedJson = JToken.Parse(result);
-                    var beautified = parsedJson.ToString(Formatting.Indented);
+                var parsedJson = JToken.Parse(result);
+                var beautified = parsedJson.ToString(Formatting.Indented);
 
-                    Debug.WriteLine($"{msg} Content:");
-                    Debug.WriteLine($"{beautified}");
-                    Debug.WriteLine($"{msg} Duration: {end - start}");
+                Debug.WriteLine($"{msg} Content:");
+                Debug.WriteLine($"{beautified}");
+                Debug.WriteLine($"{msg} Duration: {end - start}");
 #endif
-                }
             }
+
 #if DEBUG
             Debug.WriteLine($"{msg}==========End Response==========");
 #endif

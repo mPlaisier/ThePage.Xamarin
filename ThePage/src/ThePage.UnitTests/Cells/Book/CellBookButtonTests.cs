@@ -13,16 +13,6 @@ namespace ThePage.UnitTests.Cells.Book
             Assert.Equal(isValid, cell.IsValid);
         }
 
-        [Fact]
-        public void NoCrashForNullAction()
-        {
-            //Setup
-            var cell = DataFactory.GetCellBookButtonIsRequiredAndValidNullAction();
-
-            //Execute
-            cell.ClickCommand.Execute();
-        }
-
         public static IEnumerable<object[]> CellBookButtonScenarios =>
             new[]
                {

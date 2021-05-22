@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
 
 namespace ThePage.Api
 {
-    public interface IGenreAPI
+    public interface IGenreApi
     {
         [Get("/genres/v2")]
         [Headers("Authorization: Bearer")]

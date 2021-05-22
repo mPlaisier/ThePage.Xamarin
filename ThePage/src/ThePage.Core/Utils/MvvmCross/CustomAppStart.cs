@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 using MvvmCross.Exceptions;
-using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Core.ViewModels.Main;
@@ -39,6 +39,7 @@ namespace ThePage.Core
             }
             catch (Exception exception)
             {
+                Crashes.TrackError(exception);
                 throw exception.MvxWrap("Problem navigating to ViewModel {0}", typeof(MvxViewModel).Name);
             }
         }

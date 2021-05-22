@@ -7,7 +7,7 @@ namespace ThePage.Core
 {
     public class CellBookGenreItem : CellBookInput, ICellBook
     {
-        Action<CellBookGenreItem> _removeGenre;
+        readonly Action<CellBookGenreItem> _removeGenre;
 
         #region Properties
 
@@ -18,7 +18,7 @@ namespace ThePage.Core
         #region Commands
 
         IMvxCommand _DeleteCommand;
-        public IMvxCommand DeleteCommand => _DeleteCommand = _DeleteCommand ?? new MvxCommand(() => _removeGenre?.Invoke(this));
+        public IMvxCommand DeleteCommand => _DeleteCommand ??= new MvxCommand(() => _removeGenre?.Invoke(this));
 
         public override bool IsValid => true;
 

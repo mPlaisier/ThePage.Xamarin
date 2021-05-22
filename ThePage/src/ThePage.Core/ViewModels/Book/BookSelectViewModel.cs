@@ -134,16 +134,16 @@ namespace ThePage.Core
 
         #region Private
 
-        protected override async Task Refresh(string id = null)
+        protected override async Task Refresh(string item = null)
         {
             IsLoading = true;
 
             var books = await _thePageService.GetAllBooks();
 
             //Add new created book to Selected list
-            if (id != null)
+            if (item != null)
             {
-                var newBook = await _thePageService.GetBook(id);
+                var newBook = await _thePageService.GetBook(item);
                 if (newBook != null)
                     SelectedItems.Add(new ApiBook(newBook));
             }

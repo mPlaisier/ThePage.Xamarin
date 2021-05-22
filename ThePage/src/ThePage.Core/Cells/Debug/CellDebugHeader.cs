@@ -1,7 +1,3 @@
-using System;
-using MvvmCross.Commands;
-using MvvmCross.ViewModels;
-
 namespace ThePage.Core
 {
     public class CellDebugHeader : BaseHeaderCell, ICellDebug
