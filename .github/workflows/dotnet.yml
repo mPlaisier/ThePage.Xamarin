@@ -1,4 +1,4 @@
-name: CI on Push and Pull Request
+name: Build all projects
 
 on: [pull_request]
 

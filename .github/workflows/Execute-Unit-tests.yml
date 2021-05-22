@@ -1,0 +1,27 @@
+name: Execute Unit-Tests
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: |
+        cd ThePage
+        dotnet restore
+    - name: Build
+      run: |
+        cd ThePage
+        dotnet build --no-restore -c Unit-Test
+    - name: Test
+      run: |
+        cd ThePage
+        dotnet test --no-build --verbosity normal -c Unit-Test
