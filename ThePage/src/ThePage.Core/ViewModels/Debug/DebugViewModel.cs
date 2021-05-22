@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
@@ -253,29 +254,28 @@ namespace ThePage.Core
 
         async Task CreateBooks(List<ApiGenre> genres, List<ApiAuthor> authors)
         {
-            var random = new Random();
             int minGenres = 0;
-            int maxGenres = 4;
+            int maxGenres = 5;
 
             for (int i = 0; i < AMOUNT_BOOKS; i++)
             {
-                var amountGenres = random.Next(minGenres, maxGenres);
+                var amountGenres = RandomNumberGenerator.GetInt32(minGenres, maxGenres);
                 var selectedgenres = new List<ApiGenre>();
                 while (selectedgenres.Count < amountGenres)
                 {
-                    var genre = genres[random.Next(0, genres.Count - 1)];
+                    var genre = genres[RandomNumberGenerator.GetInt32(0, genres.Count)];
                     if (!selectedgenres.Contains(genre))
                         selectedgenres.Add(genre);
                 }
 
-                var author = authors[random.Next(0, authors.Count - 1)];
+                var author = authors[RandomNumberGenerator.GetInt32(0, authors.Count)];
 
                 var builder = new ApiBookDetailRequest.Builder();
                 builder.SetTitle($"Book {i + 1}")
                        .SetAuthor(author.Id)
                        .SetGenres(selectedgenres.GetIdStrings().ToList())
                        .SetOwned(false)
-                       .SetPages(random.Next(50, 500))
+                       .SetPages(RandomNumberGenerator.GetInt32(50, 501))
                        .SetEbook(false);
 
                 await _thePageService.AddBook(builder.Build());
@@ -284,17 +284,16 @@ namespace ThePage.Core
 
         async Task CreateBookShelves(List<ApiBook> books)
         {
-            var random = new Random();
             int minBooks = 0;
-            int maxBooks = 25;
+            int maxBooks = 26;
 
             for (int i = 0; i < AMOUNT_BOOKSHELVES; i++)
             {
-                var amountBooks = random.Next(minBooks, maxBooks);
+                var amountBooks = RandomNumberGenerator.GetInt32(minBooks, maxBooks);
                 var selectedBooks = new List<ApiBook>();
                 while (selectedBooks.Count < amountBooks)
                 {
-                    var genre = books[random.Next(0, books.Count - 1)];
+                    var genre = books[RandomNumberGenerator.GetInt32(0, books.Count)];
                     if (!selectedBooks.Contains(genre))
                         selectedBooks.Add(genre);
                 }
