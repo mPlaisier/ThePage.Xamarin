@@ -13,7 +13,7 @@ namespace ThePage.UnitTests.Cells.Author
 
             //Check
             Assert.NotNull(cell.Item);
-            Assert.False(cell.IsSelected);
+            Assert.True(cell.IsSelected);
         }
 
         [Fact]
