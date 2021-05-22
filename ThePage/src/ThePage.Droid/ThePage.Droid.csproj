@@ -53,6 +53,21 @@
     <AndroidLinkSkip>ThePage.Core;ThePage.Api;MvvmCross;MvvmCross.Plugins.Color;MvvmCross.Plugins.Color.Droid;MvvmCross.Plugins.Visibility;MvvmCross.Plugins.Visibility.Droid;MvvmCross.Droid.Support.V7.RecyclerView;MvvmCross.Droid.Support.V7.AppCompat;Newtonsoft.Json;MonkeyCache;MonkeyCache.LiteDB</AndroidLinkSkip>
     <AndroidLinkTool>r8</AndroidLinkTool>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
+    <DebugType></DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Unit-Test</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkSkip></AndroidLinkSkip>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <JavaMaximumHeapSize></JavaMaximumHeapSize>
+    <AndroidUseAapt2>false</AndroidUseAapt2>
+    <AndroidManifest></AndroidManifest>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
+<AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+<AndroidDexTool>dx</AndroidDexTool>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
     <Reference Include="System" />
