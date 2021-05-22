@@ -22,6 +22,10 @@ jobs:
         cd ThePage
         dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: |
+        cd ThePage
+        dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        cd ThePage
+        dotnet test --no-build --verbosity normal
