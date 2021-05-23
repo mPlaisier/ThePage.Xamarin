@@ -82,7 +82,7 @@ namespace ThePage.Core
         public async Task<string> GetSessionToken()
         {
             string token = null;
-            if (Barrel.Current.Exists(SESSION_KEY))
+            if (Barrel.Current.Exists(SESSION_KEY) && !Barrel.Current.IsExpired(SESSION_KEY))
             {
                 var result = Barrel.Current.Get<ApiTokens>(SESSION_KEY);
                 token = result.Access.Expires > DateTime.UtcNow
