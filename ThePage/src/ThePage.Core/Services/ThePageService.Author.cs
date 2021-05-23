@@ -20,7 +20,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetAllAuthors");
             }
             return result;
         }
@@ -37,7 +37,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetNextAuthors");
             }
             return result;
         }
@@ -54,7 +54,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetAuthor");
             }
             return result;
         }
@@ -71,7 +71,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "SearchAuthors");
             }
             return result;
         }
@@ -88,7 +88,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "AddAuthor");
             }
             return result;
         }
@@ -105,7 +105,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "UpdateAuthor");
             }
             return result;
         }
@@ -121,7 +121,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "DeleteAuthor");
             }
             return false;
         }

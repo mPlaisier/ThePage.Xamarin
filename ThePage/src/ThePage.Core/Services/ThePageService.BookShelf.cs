@@ -18,7 +18,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetAllBookShelves");
             }
             return result;
         }
@@ -35,7 +35,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetNextBookshelves");
             }
             return result;
         }
@@ -52,7 +52,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetBookShelf");
             }
             return result;
         }
@@ -69,7 +69,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "SearchBookshelves");
             }
             return result;
         }
@@ -86,7 +86,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "AddBookShelf");
             }
             return result != null;
         }
@@ -103,7 +103,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "UpdateBookShelf");
             }
             return result;
         }
@@ -119,7 +119,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "DeleteBookShelf");
             }
             return false;
         }

@@ -31,7 +31,7 @@ namespace ThePage.Core.ViewModels.Main
         #region Commands
 
         private MvxCommand<CellMenu> _itemClickCommand;
-        public MvxCommand<CellMenu> ItemClickCommand => _itemClickCommand = _itemClickCommand ?? new MvxCommand<CellMenu>(OnItemClick);
+        public MvxCommand<CellMenu> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellMenu>(OnItemClick);
 
         #endregion
 

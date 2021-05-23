@@ -20,7 +20,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetAllGenres");
             }
             return result;
         }
@@ -37,7 +37,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetNextGenres");
             }
             return result;
         }
@@ -54,7 +54,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetGenre");
             }
             return result;
         }
@@ -71,7 +71,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "SearchGenres");
             }
             return result;
         }
@@ -88,7 +88,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "AddGenre");
             }
             return result;
         }
@@ -105,7 +105,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "UpdateGenre");
             }
             return result;
         }
@@ -121,7 +121,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "DeleteGenre");
             }
             return false;
         }
