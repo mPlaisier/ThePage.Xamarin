@@ -1,43 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <ReleaseVersion>2.5</ReleaseVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
-    <DebugType></DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Unit-Test</OutputPath>
-    <DefineConstants></DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>obj\Unit-Test</IntermediateOutputPath>
-    <NoWarn></NoWarn>
-    <NoStdLib>false</NoStdLib>
-  </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Managers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Models\Response\" />
-    <Folder Include="Models\Request\" />
-    <Folder Include="Models\Response\Book\" />
-    <Folder Include="Utils\" />
-    <Folder Include="Models\Request\Authentication\" />
-    <Folder Include="Models\Response\Author\" />
-    <Folder Include="Models\Response\Genre\" />
-    <Folder Include="Models\Request\Author\" />
-    <Folder Include="Models\Request\Genre\" />
-    <Folder Include="Models\Request\Book\" />
-    <Folder Include="Models\Response\BookShelf\" />
-    <Folder Include="Models\Request\BookShelf\" />
-    <Folder Include="Models\Request\Base\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Refit" Version="5.2.4" />
-    <PackageReference Include="MonkeyCache" Version="1.3.0" />
-    <PackageReference Include="MonkeyCache.LiteDB" Version="1.3.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<ReleaseVersion>2.5</ReleaseVersion>
+		<Configurations>Unit-Test;Debug;Release</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
+		<DebugType>
+		</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Unit-Test</OutputPath>
+		<DefineConstants>
+		</DefineConstants>
+		<WarningLevel>4</WarningLevel>
+		<IntermediateOutputPath>obj\Unit-Test</IntermediateOutputPath>
+		<NoWarn>
+		</NoWarn>
+		<NoStdLib>false</NoStdLib>
+	</PropertyGroup>
+	<ItemGroup>
+		<Folder Include="Managers\" />
+		<Folder Include="Models\" />
+		<Folder Include="Exceptions\" />
+		<Folder Include="Interfaces\" />
+		<Folder Include="Models\Response\" />
+		<Folder Include="Models\Request\" />
+		<Folder Include="Models\Response\Book\" />
+		<Folder Include="Utils\" />
+		<Folder Include="Models\Request\Authentication\" />
+		<Folder Include="Models\Response\Author\" />
+		<Folder Include="Models\Response\Genre\" />
+		<Folder Include="Models\Request\Author\" />
+		<Folder Include="Models\Request\Genre\" />
+		<Folder Include="Models\Request\Book\" />
+		<Folder Include="Models\Response\BookShelf\" />
+		<Folder Include="Models\Request\BookShelf\" />
+		<Folder Include="Models\Request\Base\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Include="Refit" Version="5.2.4" />
+		<PackageReference Include="MonkeyCache" Version="1.5.2" />
+		<PackageReference Include="MonkeyCache.LiteDB" Version="1.5.2" />
+	</ItemGroup>
 </Project>
