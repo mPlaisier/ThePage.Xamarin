@@ -116,6 +116,28 @@ namespace ThePage.Core
                 _userInteraction.Alert(exception.Message, null, "Error");
         }
 
+        public void HandleThePageException(Exception exception, string requestType)
+        {
+            var data = new Dictionary<string, string>
+            {
+                { "Service", nameof(ThePageService) },
+                { "RequestType", requestType }
+            };
+            AddExceptionForLogging(exception, data);
+
+            if (exception is ApiException apiException)
+            {
+                if (apiException.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _userInteraction.Alert("Item not found", null, "Not Found");
+                }
+            }
+            else
+            {
+                _userInteraction.Alert(exception.Message, null, "Error");
+            }
+        }
+
         #endregion
     }
 

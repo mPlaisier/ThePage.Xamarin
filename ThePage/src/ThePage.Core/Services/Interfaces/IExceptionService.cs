@@ -12,5 +12,7 @@ namespace ThePage.Core
         void HandleAuthException(Exception exception, string requestType);
 
         void HandleOpenLibraryException(Exception exception, string requestType, string isbn);
+
+        void HandleThePageException(Exception exception, string requestType);
     }
 }
