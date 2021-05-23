@@ -4,15 +4,13 @@ namespace ThePage.Core
 {
     public partial class ThePageService : IThePageService
     {
-        readonly IUserInteraction _userInteraction;
         readonly IAuthService _authService;
         readonly IExceptionService _exceptionService;
 
         #region Constructor
 
-        public ThePageService(IUserInteraction userInteraction, IAuthService authService, IExceptionService exceptionService)
+        public ThePageService(IAuthService authService, IExceptionService exceptionService)
         {
-            _userInteraction = userInteraction;
             _authService = authService;
             _exceptionService = exceptionService;
 
