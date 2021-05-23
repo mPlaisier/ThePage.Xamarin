@@ -10,5 +10,7 @@ namespace ThePage.Core
         void AddExceptionForLogging(Exception exception, Dictionary<string, string> exceptionData);
 
         void HandleAuthException(Exception exception, string requestType);
+
+        void HandleOpenLibraryException(Exception exception, string requestType, string isbn);
     }
 }

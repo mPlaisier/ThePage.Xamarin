@@ -65,7 +65,7 @@ namespace ThePage.Core
 
         public void HandleAuthException(Exception exception, string requestType)
         {
-            new Dictionary<string, string>
+            var data = new Dictionary<string, string>
             {
                 { "Service", nameof(AuthService) },
                 { "RequestType", requestType }
@@ -84,15 +84,36 @@ namespace ThePage.Core
                 }
                 else
                 {
-                    Crashes.TrackError(exception);
+                    data.Add("StatusCode", apiException.StatusCode.ToString());
+
+                    AddExceptionForLogging(exception, data);
                     _userInteraction.Alert(error.Message, null, "Error");
                 }
             }
             else
             {
-                Crashes.TrackError(exception);
+                AddExceptionForLogging(exception, data);
                 _userInteraction.Alert(exception.Message, null, "Error");
             }
+        }
+
+        public void HandleOpenLibraryException(Exception exception, string requestType, string isbn)
+        {
+            var data = new Dictionary<string, string>
+            {
+                { "Service", nameof(OpenLibraryService) },
+                { "RequestType", requestType },
+                { "Isbn", isbn }
+            };
+            AddExceptionForLogging(exception, data);
+
+            if (exception is KeyNotFoundException)
+            {
+                var message = $"{isbn} is not found in the library. Please add the book manually";
+                _userInteraction.Alert(message, null, "Not found");
+            }
+            else
+                _userInteraction.Alert(exception.Message, null, "Error");
         }
 
         #endregion
