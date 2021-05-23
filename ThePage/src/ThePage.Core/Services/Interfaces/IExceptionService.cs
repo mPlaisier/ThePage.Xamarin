@@ -8,5 +8,7 @@ namespace ThePage.Core
         void LogginIsEnabled();
 
         void AddExceptionForLogging(Exception exception, Dictionary<string, string> exceptionData);
+
+        void HandleAuthException(Exception exception, string requestType);
     }
 }
