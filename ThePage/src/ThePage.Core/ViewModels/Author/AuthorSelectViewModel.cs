@@ -3,6 +3,7 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
+using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
@@ -24,7 +25,8 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorSelectViewModel : BaseSelectSingleItemViewModel<AuthorSelectParameter, ApiAuthor, CellAuthorSelect>
+    public class AuthorSelectViewModel : BaseListViewModel<AuthorSelectParameter, ApiAuthor>,
+                                         IBaseSelectSingleItemViewModel<ApiAuthor, CellAuthorSelect>
     {
         readonly IThePageService _thePageService;
         readonly IMvxNavigationService _navigationService;
@@ -35,22 +37,22 @@ namespace ThePage.Core
 
         public override string LblTitle => "Select Author";
 
-        public override MvxObservableCollection<CellAuthorSelect> Items { get; set; }
+        public MvxObservableCollection<CellAuthorSelect> Items { get; set; }
 
-        public override ApiAuthor SelectedItem { get; internal set; }
+        public ApiAuthor SelectedItem { get; private set; }
 
         #endregion
 
         #region Commands
 
         IMvxCommand<CellAuthorSelect> _commandSelectItem;
-        public override IMvxCommand<CellAuthorSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellAuthorSelect>((cell) =>
+        public IMvxCommand<CellAuthorSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellAuthorSelect>((cell) =>
         {
             _navigationService.Close(this, cell.Item);
         });
 
         IMvxCommand _commandAddItem;
-        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        public IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
             var result = await _navigationService.Navigate<AddAuthorViewModel, ApiAuthor>();
             if (result != null)
@@ -93,7 +95,7 @@ namespace ThePage.Core
 
         #region Public
 
-        public override async Task Refresh()
+        public async Task Refresh()
         {
             IsLoading = true;
 
