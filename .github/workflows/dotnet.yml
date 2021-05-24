@@ -7,7 +7,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Api
+    - with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Build Api
       run: |
         cd ThePage
         nuget restore
@@ -17,7 +22,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Core
+      with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Build Core
       run: |
         cd ThePage
         nuget restore
@@ -27,7 +37,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Android
+      with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Build Android
       run: |
         cd ThePage
         nuget restore
@@ -37,7 +52,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: iOS
+      with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Build iOS
       run: |
         cd ThePage
         nuget restore
@@ -47,7 +67,12 @@ jobs:
       runs-on: macos-latest
       steps:
       - uses: actions/checkout@v1
-      - name: Unit tests
+      with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+      - name: Build Unit tests
         run: |
           cd ThePage
           nuget restore
