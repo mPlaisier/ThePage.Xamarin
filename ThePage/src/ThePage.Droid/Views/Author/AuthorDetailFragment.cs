@@ -17,7 +17,7 @@ namespace ThePage.Droid
         PopEnterAnimation = Resource.Animation.pull_in_left,
         PopExitAnimation = Resource.Animation.push_out_right
     )]
-    public class AuthorDetailFragment : BaseFragment<AuthorDetailViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
+    public class AuthorDetailFragment : BaseFragment<AuthorDetailViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener, IOnBackPressed
     {
         #region Properties
 
@@ -37,7 +37,6 @@ namespace ThePage.Droid
                     _updateToolbar.Requested += OnUpdateToolbarRequested;
             }
         }
-
 
         #endregion
 
@@ -68,6 +67,13 @@ namespace ThePage.Droid
 
             UpdateToolbarInteraction = null;
         }
+
+        #endregion
+
+        #region Public
+
+        public bool OnBackPressed()
+         => ViewModel.Close();
 
         #endregion
 

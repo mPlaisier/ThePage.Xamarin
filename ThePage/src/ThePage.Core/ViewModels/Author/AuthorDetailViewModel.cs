@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -65,20 +64,26 @@ namespace ThePage.Core
         public IMvxCommand EditAuthorCommand => _editAuthorCommand ??= new MvxCommand(() =>
         {
             _device.HideKeyboard();
-            IsEditing = !IsEditing;
+            if (IsEditing)
+                Close();
+            else
+                IsEditing = !IsEditing;
         });
 
-        IMvxCommand _deleteAuthorCommand;
-        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(() => DeleteAuthor().Forget());
+        IMvxAsyncCommand _deleteAuthorCommand;
+        public IMvxAsyncCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxAsyncCommand(DeleteAuthor);
 
-        IMvxCommand _updateAuthorCommand;
-        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(() => UpdateAuthor().Forget());
+        IMvxAsyncCommand _updateAuthorCommand;
+        public IMvxAsyncCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxAsyncCommand(UpdateAuthor);
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AuthorDetailViewModel(IMvxNavigationService navigation,
+                                     IThePageService thePageService,
+                                     IUserInteraction userInteraction,
+                                     IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
@@ -93,9 +98,7 @@ namespace ThePage.Core
         public override void Prepare(AuthorDetailParameter parameter)
         {
             Author = parameter.Author;
-
-            TxtName = Author.Name;
-            IsEditing = false;
+            SetInitialData();
         }
 
         public override Task Initialize()
@@ -103,6 +106,27 @@ namespace ThePage.Core
             Analytics.TrackEvent($"Initialize {nameof(AuthorDetailViewModel)}");
 
             return base.Initialize();
+        }
+
+        #endregion
+
+        #region Public
+
+        public bool Close()
+        {
+            if (IsEditing)
+            {
+                if (HasAuthorChanged())
+                {
+                    _userInteraction.Confirm("Changes have not been saved. Are you sure?",
+                                             SetInitialData,
+                                             okButton: "Confirm");
+                }
+                else
+                    IsEditing = !IsEditing;
+                return true;
+            }
+            return false;
         }
 
         #endregion
@@ -117,8 +141,8 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
-            TxtName = TxtName.Trim();
-            if (!Author.Name.Equals(TxtName))
+
+            if (HasAuthorChanged())
             {
                 Author.Name = TxtName;
                 var request = new ApiAuthorRequest(TxtName);
@@ -161,6 +185,18 @@ namespace ThePage.Core
                     IsLoading = false;
                 }
             }
+        }
+
+        bool HasAuthorChanged()
+        {
+            TxtName = TxtName.Trim();
+            return !Author.Name.Equals(TxtName);
+        }
+
+        void SetInitialData()
+        {
+            TxtName = Author.Name;
+            IsEditing = false;
         }
 
         #endregion

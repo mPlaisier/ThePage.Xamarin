@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -65,7 +64,10 @@ namespace ThePage.Core
         public IMvxCommand EditGenreCommand => _editGenreCommand ??= new MvxCommand(() =>
         {
             _device.HideKeyboard();
-            IsEditing = !IsEditing;
+            if (IsEditing)
+                Close();
+            else
+                IsEditing = !IsEditing;
         });
 
         IMvxAsyncCommand _deleteGenreCommand;
@@ -97,8 +99,7 @@ namespace ThePage.Core
         {
             Genre = parameter.Genre;
 
-            TxtName = Genre.Name;
-            IsEditing = false;
+            SetInitialData();
         }
 
         public override Task Initialize()
@@ -112,7 +113,14 @@ namespace ThePage.Core
         {
             if (IsEditing)
             {
-                IsEditing = !IsEditing;
+                if (HasGenreChanged())
+                {
+                    _userInteraction.Confirm("Changes have not been saved. Are you sure?",
+                                             SetInitialData,
+                                             okButton: "Confirm");
+                }
+                else
+                    IsEditing = !IsEditing;
                 return true;
             }
             return false;
@@ -130,8 +138,7 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
-            TxtName = TxtName.Trim();
-            if (!Genre.Name.Equals(TxtName))
+            if (HasGenreChanged())
             {
                 Genre.Name = TxtName;
 
@@ -170,6 +177,18 @@ namespace ThePage.Core
                     IsLoading = false;
                 }
             }
+        }
+
+        bool HasGenreChanged()
+        {
+            TxtName = TxtName.Trim();
+            return !Genre.Name.Equals(TxtName);
+        }
+
+        void SetInitialData()
+        {
+            TxtName = Genre.Name;
+            IsEditing = false;
         }
 
         #endregion
