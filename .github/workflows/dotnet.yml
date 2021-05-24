@@ -7,12 +7,14 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - with:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
         dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Build Api
+    - name: Build
       run: |
         cd ThePage
         nuget restore
@@ -22,12 +24,14 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Build Core
+    - name: Build
       run: |
         cd ThePage
         nuget restore
@@ -37,12 +41,14 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Build Android
+    - name: Build
       run: |
         cd ThePage
         nuget restore
@@ -52,28 +58,32 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Build iOS
+    - name: Build
       run: |
         cd ThePage
         nuget restore
         msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
         
   UnitTests:
-      runs-on: macos-latest
-      steps:
-      - uses: actions/checkout@v1
-        with:
-          dotnet-version: 3.1.403
-          source-url: https://nuget.pkg.github.com/mplaisier/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-      - name: Build UnitTests
-        run: |
-          cd ThePage
-          nuget restore
-          msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.403
+        source-url: https://nuget.pkg.github.com/mplaisier/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Build
+      run: |
+        cd ThePage
+        nuget restore
+        msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
