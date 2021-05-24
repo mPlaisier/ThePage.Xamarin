@@ -4,6 +4,7 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
+using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
@@ -25,7 +26,8 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class SelectGenreViewModel : BaseSelectMultipleItemsViewModel<SelectedGenreParameters, List<ApiGenre>, CellGenreSelect, ApiGenre>
+    public class SelectGenreViewModel : BaseListViewModel<SelectedGenreParameters, List<ApiGenre>>,
+                                        IBaseSelectMultipleItemsViewModel<CellGenreSelect, ApiGenre>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -36,19 +38,19 @@ namespace ThePage.Core
 
         public override string LblTitle => "Select Genre";
 
-        public override MvxObservableCollection<CellGenreSelect> Items { get; set; }
+        public MvxObservableCollection<CellGenreSelect> Items { get; set; }
 
-        public override List<ApiGenre> SelectedItems { get; internal set; }
+        public List<ApiGenre> SelectedItems { get; internal set; }
 
         #endregion
 
         #region Commands
 
         IMvxCommand<CellGenreSelect> _commandSelectItem;
-        public override IMvxCommand<CellGenreSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellGenreSelect>(HandleGenreClick);
+        public IMvxCommand<CellGenreSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellGenreSelect>(HandleGenreClick);
 
         IMvxCommand _commandAddItem;
-        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        public IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
             var result = await _navigation.Navigate<AddGenreViewModel, string>();
             if (result != null)
@@ -56,7 +58,7 @@ namespace ThePage.Core
         });
 
         IMvxCommand _commandConfirm;
-        public override IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
+        public IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
 
         #endregion
 
@@ -155,7 +157,7 @@ namespace ThePage.Core
 
         #region Protected
 
-        protected override async Task Refresh(string item = null)
+        async Task Refresh(string item = null)
         {
             IsLoading = true;
 

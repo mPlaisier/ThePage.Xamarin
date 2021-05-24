@@ -4,10 +4,12 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
+using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookSelectViewModel : BaseSelectMultipleItemsViewModel<List<ApiBook>, List<ApiBook>, CellBookSelect, ApiBook>
+    public class BookSelectViewModel : BaseListViewModel<List<ApiBook>, List<ApiBook>>,
+                                       IBaseSelectMultipleItemsViewModel<CellBookSelect, ApiBook>
     {
         readonly IMvxNavigationService _navigation;
         readonly IThePageService _thePageService;
@@ -18,19 +20,19 @@ namespace ThePage.Core
 
         public override string LblTitle => "Select Book";
 
-        public override MvxObservableCollection<CellBookSelect> Items { get; set; }
+        public MvxObservableCollection<CellBookSelect> Items { get; set; }
 
-        public override List<ApiBook> SelectedItems { get; internal set; }
+        public List<ApiBook> SelectedItems { get; internal set; }
 
         #endregion
 
         #region Commandds
 
         IMvxCommand<CellBookSelect> _commandSelectItem;
-        public override IMvxCommand<CellBookSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellBookSelect>(HandleBookClick);
+        public IMvxCommand<CellBookSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellBookSelect>(HandleBookClick);
 
         IMvxCommand _commandAddItem;
-        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        public IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
             var result = await _navigation.Navigate<AddBookViewModel, string>();
             if (result != null)
@@ -38,13 +40,16 @@ namespace ThePage.Core
         });
 
         IMvxCommand _commandConfirm;
-        public override IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
+        public IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
 
         #endregion
 
         #region Constructor
 
-        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public BookSelectViewModel(IMvxNavigationService navigationService,
+                                   IThePageService thePageService,
+                                   IUserInteraction userInteraction,
+                                   IDevice device)
         {
             _navigation = navigationService;
             _thePageService = thePageService;
@@ -134,7 +139,7 @@ namespace ThePage.Core
 
         #region Private
 
-        protected override async Task Refresh(string item = null)
+        async Task Refresh(string item = null)
         {
             IsLoading = true;
 
