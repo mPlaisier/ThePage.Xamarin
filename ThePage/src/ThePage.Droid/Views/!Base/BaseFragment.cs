@@ -45,15 +45,6 @@ namespace ThePage.Droid.Views
 
         #endregion
 
-        #region Virtual
-
-        public virtual bool OnBackPressed()
-        {
-            return false;
-        }
-
-        #endregion
-
         #region Public
 
         public void InitializeToolbar()

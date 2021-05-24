@@ -68,17 +68,20 @@ namespace ThePage.Core
             IsEditing = !IsEditing;
         });
 
-        IMvxCommand _deleteGenreCommand;
-        public IMvxCommand DeleteGenreCommand => _deleteGenreCommand ??= new MvxCommand(() => DeleteGenre().Forget());
+        IMvxAsyncCommand _deleteGenreCommand;
+        public IMvxAsyncCommand DeleteGenreCommand => _deleteGenreCommand ??= new MvxAsyncCommand(DeleteGenre);
 
-        IMvxCommand _updateGenreCommand;
-        public IMvxCommand UpdateGenreCommand => _updateGenreCommand ??= new MvxCommand(() => UpdateGenre().Forget());
+        IMvxAsyncCommand _updateGenreCommand;
+        public IMvxAsyncCommand UpdateGenreCommand => _updateGenreCommand ??= new MvxAsyncCommand(UpdateGenre);
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public GenreDetailViewModel(IMvxNavigationService navigation,
+                                    IThePageService thePageService,
+                                    IUserInteraction userInteraction,
+                                    IDevice device)
         {
             _navigation = navigation;
             _thePageService = thePageService;
@@ -105,6 +108,16 @@ namespace ThePage.Core
             return base.Initialize();
         }
 
+        public bool Close()
+        {
+            if (IsEditing)
+            {
+                IsEditing = !IsEditing;
+                return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Private
@@ -128,11 +141,8 @@ namespace ThePage.Core
                 if (genre != null)
                 {
                     _userInteraction.ToastMessage("Genre updated", EToastType.Success);
-
                     _updateToolbarInteraction.Raise();
                 }
-                else
-                    _userInteraction.Alert("Failure updating genre");
             }
 
             IsEditing = false;
@@ -157,7 +167,6 @@ namespace ThePage.Core
                 }
                 else
                 {
-                    _userInteraction.Alert("Failure removing genre");
                     IsLoading = false;
                 }
             }

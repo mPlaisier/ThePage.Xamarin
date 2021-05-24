@@ -6,6 +6,7 @@ using MvvmCross.ViewModels;
 using ThePage.Core;
 using ThePage.Core.ViewModels.Main;
 using ThePage.Droid.Views;
+using ThePage.Droid.Views.Main;
 
 namespace ThePage.Droid
 {
@@ -17,7 +18,7 @@ namespace ThePage.Droid
         PopEnterAnimation = Resource.Animation.pull_in_left,
         PopExitAnimation = Resource.Animation.push_out_right
     )]
-    public class GenreDetailFragment : BaseFragment<GenreDetailViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener
+    public class GenreDetailFragment : BaseFragment<GenreDetailViewModel>, ViewTreeObserver.IOnGlobalFocusChangeListener, IOnBackPressed
     {
         #region Properties
 
@@ -67,6 +68,13 @@ namespace ThePage.Droid
 
             UpdateToolbarInteraction = null;
         }
+
+        #endregion
+
+        #region Public
+
+        public bool OnBackPressed()
+            => ViewModel.Close();
 
         #endregion
 
