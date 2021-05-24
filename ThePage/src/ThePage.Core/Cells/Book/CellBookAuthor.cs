@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ThePage.Api;

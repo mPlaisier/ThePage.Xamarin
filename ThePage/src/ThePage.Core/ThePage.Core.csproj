@@ -27,6 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NodaTime" Version="3.0.5" />
+    <PackageReference Include="cbp-extensions" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Author\" />

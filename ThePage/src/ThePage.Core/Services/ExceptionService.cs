@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using CBP.Extensions;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Refit;
