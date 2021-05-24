@@ -50,6 +50,18 @@ namespace ThePage.Droid.Views.Main
             return base.OnOptionsItemSelected(item);
         }
 
+        public override void OnBackPressed()
+        {
+            var fragment = SupportFragmentManager.FindFragmentById(Resource.Id.content_frame);
+            if (fragment is IOnBackPressed frag)
+            {
+                if (!frag.OnBackPressed())
+                    base.OnBackPressed();
+            }
+            else
+                base.OnBackPressed();
+        }
+
         #endregion
     }
 }
