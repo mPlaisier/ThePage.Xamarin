@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;

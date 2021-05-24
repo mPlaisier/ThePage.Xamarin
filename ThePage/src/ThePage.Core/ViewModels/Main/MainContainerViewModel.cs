@@ -1,4 +1,5 @@
-﻿using MvvmCross.Navigation;
+﻿using CBP.Extensions;
+using MvvmCross.Navigation;
 
 namespace ThePage.Core.ViewModels.Main
 {
