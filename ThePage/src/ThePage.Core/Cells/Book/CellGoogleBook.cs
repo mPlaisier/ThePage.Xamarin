@@ -5,11 +5,13 @@ namespace ThePage.Core
 {
     public class CellGoogleBook
     {
-        readonly GoogleBook _book;
+
 
         #region Properties
 
-        public string Title => _book?.VolumeInfo.Title;
+        public GoogleBook Book { get; }
+
+        public string Title => Book?.VolumeInfo.Title;
 
         public string Author => GetAuthors();
 
@@ -21,7 +23,7 @@ namespace ThePage.Core
 
         public CellGoogleBook(GoogleBook book)
         {
-            _book = book;
+            Book = book;
         }
 
         #endregion
@@ -30,10 +32,10 @@ namespace ThePage.Core
 
         string GetAuthors()
         {
-            if (_book != null && _book.VolumeInfo.Authors.IsNotNullAndHasItems())
+            if (Book != null && Book.VolumeInfo.Authors.IsNotNullAndHasItems())
             {
                 var authors = "";
-                _book.VolumeInfo.Authors.ForEach((a) => authors += $", {a}");
+                Book.VolumeInfo.Authors.ForEach((a) => authors += $", {a}");
                 authors.Substring(1);
 
                 return authors;
@@ -43,9 +45,9 @@ namespace ThePage.Core
 
         string GetImage()
         {
-            if (_book != null && _book.VolumeInfo.ImageLinks != null)
+            if (Book != null && Book.VolumeInfo.ImageLinks != null)
             {
-                var images = _book.VolumeInfo.ImageLinks;
+                var images = Book.VolumeInfo.ImageLinks;
                 if (images.Thumbnail != null)
                     return images.Thumbnail;
 

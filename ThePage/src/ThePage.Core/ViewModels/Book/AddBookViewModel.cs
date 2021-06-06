@@ -180,27 +180,12 @@ namespace ThePage.Core
 
             if (author == null)
             {
-                var authorChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{olAuthor?.Name} is not found in your author list. Would you like to add it?", null,
-                                                                                   neutral: "Choose from list");
-
-                ApiAuthor newAuthor = null;
-                if (authorChoice == ConfirmThreeButtonsResponse.Positive)
+                author = new ApiAuthor
                 {
-                    author = new ApiAuthor
-                    {
-                        Name = olAuthor?.Name,
-                        Olkey = olkey
-                    };
-                    newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
-                }
-                //Select author from list
-                else if (authorChoice == ConfirmThreeButtonsResponse.Neutral)
-                {
-                    newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
-                    newAuthor.Olkey = olkey;
-
-                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
-                }
+                    Name = olAuthor?.Name,
+                    Olkey = olkey
+                };
+                var newAuthor = await SelectOrCreateAuthor(author, olkey);
 
                 if (newAuthor != null)
                     author = newAuthor;
@@ -212,6 +197,17 @@ namespace ThePage.Core
             }
 
             CreateCellBooks(_olBook.Title, author, _olBook.Pages.ToString(), _isbn);
+
+            string GetAuthorKey(string key)
+            {
+                if (key != null)
+                {
+                    var split = key.Split('/');
+                    return split[4];
+                }
+                return string.Empty;
+            }
+
         }
 
         void UpdateValidation()
@@ -250,18 +246,9 @@ namespace ThePage.Core
             Items.Remove(obj);
         }
 
-        string GetAuthorKey(string key)
-        {
-            if (key != null)
-            {
-                var split = key.Split('/');
-                return split[4];
-            }
-            return string.Empty;
-        }
-
         async Task SearchForBookTitle(string title)
         {
+            _device.HideKeyboard();
             IsLoading = true;
 
             var result = await _googleBooksService.SearchBookByTitle(title);
@@ -272,6 +259,7 @@ namespace ThePage.Core
 
         async Task SearchForBookIsbn(string isbn)
         {
+            _device.HideKeyboard();
             IsLoading = true;
 
             var result = await _googleBooksService.SearchBookByISBN(isbn);
@@ -288,11 +276,44 @@ namespace ThePage.Core
             if (result.Books.IsNotNullAndHasItems())
             {
                 var book = await _navigation.Navigate<BookSearchViewModel, GoogleBooksResult, GoogleBook>(result);
+
+                var title = book.VolumeInfo.Title;
+                var author = await SelectOrCreateAuthor(new ApiAuthor(book.VolumeInfo.Authors.First()));
+
+                var pages = book.VolumeInfo.PageCount;
+                var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
+
+                CreateCellBooks(title, author, pages.ToString(), isbn);
             }
             else
             {
                 _userInteraction.Alert("No books found");
             }
+        }
+
+        async Task<ApiAuthor> SelectOrCreateAuthor(ApiAuthor author, string olKey = null)
+        {
+            var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?", null,
+                                                                                   neutral: "Choose from list");
+
+            ApiAuthor newAuthor = null;
+            if (userChoice == ConfirmThreeButtonsResponse.Positive)
+            {
+                newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+            }
+            //Select author from list
+            else if (userChoice == ConfirmThreeButtonsResponse.Neutral)
+            {
+                newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
+
+                if (olKey.IsNotNull())
+                {
+                    newAuthor.Olkey = olKey;
+                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
+                }
+            }
+
+            return newAuthor;
         }
 
         #endregion

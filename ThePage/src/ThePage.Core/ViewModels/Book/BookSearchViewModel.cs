@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
 using ThePage.Core.ViewModels;
@@ -11,6 +12,7 @@ namespace ThePage.Core
 {
     public class BookSearchViewModel : BaseListViewModel<GoogleBooksResult, GoogleBook>
     {
+        readonly IMvxNavigationService _navigationService;
         readonly IGoogleBooksService _googleBooksService;
         readonly IUserInteraction _userInteraction;
 
@@ -25,17 +27,18 @@ namespace ThePage.Core
         #region Commands
 
         IMvxCommand<CellGoogleBook> _itemClickCommand;
-        public IMvxCommand<CellGoogleBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellGoogleBook>(async (item) =>
+        public IMvxCommand<CellGoogleBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<CellGoogleBook>((item) =>
         {
-
+            _navigationService.Close(this, item.Book);
         });
 
         #endregion
 
         #region Constructor
 
-        public BookSearchViewModel(IGoogleBooksService googleBooksService, IUserInteraction userInteraction)
+        public BookSearchViewModel(IMvxNavigationService navigationService, IGoogleBooksService googleBooksService, IUserInteraction userInteraction)
         {
+            _navigationService = navigationService;
             _googleBooksService = googleBooksService;
             _userInteraction = userInteraction;
         }
