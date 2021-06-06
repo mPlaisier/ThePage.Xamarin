@@ -39,6 +39,7 @@ namespace ThePage.Core
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+        readonly IGoogleBooksService _googleBooksService;
 
         OLObject _olBook;
         string _isbn;
@@ -55,19 +56,24 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(() => AddBook().Forget());
+        IMvxAsyncCommand _addbookCommand;
+        public IMvxAsyncCommand AddBookCommand => _addbookCommand ??= new MvxAsyncCommand(AddBook);
 
         #endregion
 
         #region Constructor
 
-        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AddBookViewModel(IMvxNavigationService navigation,
+                                IThePageService thePageService,
+                                IUserInteraction userInteraction,
+                                IDevice device,
+                                IGoogleBooksService googleBooksService)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
             _device = device;
+            _googleBooksService = googleBooksService;
         }
 
         #endregion
@@ -146,15 +152,21 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
                 {
-                    new CellBookTextView("Title",title, EBookInputType.Title,UpdateValidation,true, true),
+                    new CellBookTextView.TextViewBuilder("Title",EBookInputType.Title, UpdateValidation)
+                                        .SetValue(title).IsEdit().AllowSearch(SearchForBookTitle)
+                                        .Build(),
                     new CellBookAuthor(author, _navigation, _device, UpdateValidation,true),
                     new CellBookTitle("Genres"),
                     new CellBookAddGenre(AddGenreAction),
-                    new CellBookNumberTextView("Pages", pages, EBookInputType.Pages, UpdateValidation, false,true),
-                    new CellBookNumberTextView("ISBN",isbn, EBookInputType.ISBN, UpdateValidation, false, true),
+                    new CellBookNumberTextView.NumberTextViewBuilder("Pages", EBookInputType.Pages,UpdateValidation)
+                                              .IsEdit().SetValue(pages).NotRequired()
+                                              .Build(),
+                    new CellBookNumberTextView.NumberTextViewBuilder("ISBN", EBookInputType.ISBN,UpdateValidation)
+                                              .IsEdit().SetValue(isbn).NotRequired().AllowSearch(SearchForBookIsbn)
+                                              .Build(),
                     new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
                     new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
-                    new CellBookButton("Add Book",AddBook)
+                    new CellBookButton("Add Book", AddBook)
                 };
         }
 
@@ -246,6 +258,41 @@ namespace ThePage.Core
                 return split[4];
             }
             return string.Empty;
+        }
+
+        async Task SearchForBookTitle(string title)
+        {
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByTitle(title);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        async Task SearchForBookIsbn(string isbn)
+        {
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByISBN(isbn);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        async Task HandleSearchResults(GoogleBooksResult result)
+        {
+            if (result == null)
+                return;
+
+            if (result.Books.IsNotNullAndHasItems())
+            {
+                var book = await _navigation.Navigate<BookSearchViewModel, GoogleBooksResult, GoogleBook>(result);
+            }
+            else
+            {
+                _userInteraction.Alert("No books found");
+            }
         }
 
         #endregion

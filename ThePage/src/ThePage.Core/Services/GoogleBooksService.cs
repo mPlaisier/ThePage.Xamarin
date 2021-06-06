@@ -33,9 +33,18 @@ namespace ThePage.Core
             return results;
         }
 
-        public Task<GoogleBooksResult> SearchBookByISBN(string isbn)
+        public async Task<GoogleBooksResult> SearchBookByISBN(string isbn)
         {
-            return null;
+            GoogleBooksResult results = null;
+            try
+            {
+                results = await GoogleBooksManager.SearchByIsbn(isbn);
+            }
+            catch (Exception ex)
+            {
+                _exceptionService.HandleGoogleException(ex, "SearchBookByTitle", isbn);
+            }
+            return results;
         }
 
         #endregion

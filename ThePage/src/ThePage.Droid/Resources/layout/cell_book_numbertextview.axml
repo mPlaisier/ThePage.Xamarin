@@ -8,7 +8,6 @@
     android:focusableInTouchMode="true"
     android:layout_marginTop="10dp"
     android:padding="4dp">
-
     <TextView
         android:id="@+id/lblTitle"
         android:layout_width="wrap_content"
@@ -18,18 +17,27 @@
         local:layout_constraintBottom_toTopOf="@+id/txtInput"
         local:layout_constraintStart_toStartOf="parent"
         local:MvxBind="Text LblTitle"/>
-
     <EditText
         android:id="@+id/txtInput"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="number"
         local:layout_constraintTop_toBottomOf="@+id/lblTitle"
         local:layout_constraintBottom_toTopOf="@+id/lblValue"
-        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintEnd_toStartOf="@+id/imgsearch"
         local:layout_constraintStart_toStartOf="parent"
         local:MvxBind="Text TxtInput;Visibility Visibility(IsEdit)"/>
-
+    <ImageView
+        android:id="@+id/imgsearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:tint="@color/primaryColor"
+        android:src="@drawable/ic_search"
+        local:layout_constraintTop_toTopOf="@id/txtInput"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Visibility Visibility(HasSearch);Click CommandSearchClick"/>
     <TextView
         android:id="@+id/lblValue"
         android:layout_width="wrap_content"
@@ -38,5 +46,4 @@
         local:layout_constraintBottom_toBottomOf="parent"
         local:layout_constraintStart_toStartOf="parent"
         local:MvxBind="Text TxtInput;Visibility InvertedVisibility(IsEdit)"/>
-
 </android.support.constraint.ConstraintLayout>
