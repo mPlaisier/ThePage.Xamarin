@@ -115,6 +115,8 @@
     <Compile Include="Views\BookShelf\BookShelfDetailFragment.cs" />
     <Compile Include="Utils\OnScrollListener.cs" />
     <Compile Include="Views\!Base\BaseListFragment.cs" />
+    <Compile Include="Views\Book\BookSearchFragment.cs" />
+    <Compile Include="Bindings\ImageViewUrlBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -546,6 +548,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\grey_border.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_booksearch.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_googlebook.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

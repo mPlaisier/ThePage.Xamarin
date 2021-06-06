@@ -39,6 +39,7 @@ namespace ThePage.Core
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+        readonly IGoogleBooksService _googleBooksService;
 
         OLObject _olBook;
         string _isbn;
@@ -55,19 +56,24 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(() => AddBook().Forget());
+        IMvxAsyncCommand _addbookCommand;
+        public IMvxAsyncCommand AddBookCommand => _addbookCommand ??= new MvxAsyncCommand(AddBook);
 
         #endregion
 
         #region Constructor
 
-        public AddBookViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AddBookViewModel(IMvxNavigationService navigation,
+                                IThePageService thePageService,
+                                IUserInteraction userInteraction,
+                                IDevice device,
+                                IGoogleBooksService googleBooksService)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
             _device = device;
+            _googleBooksService = googleBooksService;
         }
 
         #endregion
@@ -146,15 +152,21 @@ namespace ThePage.Core
         {
             Items = new MvxObservableCollection<ICellBook>
                 {
-                    new CellBookTextView("Title",title, EBookInputType.Title,UpdateValidation,true, true),
+                    new CellBookTextView.TextViewBuilder("Title",EBookInputType.Title, UpdateValidation)
+                                        .SetValue(title).IsEdit().AllowSearch(SearchForBookTitle)
+                                        .Build(),
                     new CellBookAuthor(author, _navigation, _device, UpdateValidation,true),
                     new CellBookTitle("Genres"),
                     new CellBookAddGenre(AddGenreAction),
-                    new CellBookNumberTextView("Pages", pages, EBookInputType.Pages, UpdateValidation, false,true),
-                    new CellBookNumberTextView("ISBN",isbn, EBookInputType.ISBN, UpdateValidation, false, true),
+                    new CellBookNumberTextView.NumberTextViewBuilder("Pages", EBookInputType.Pages,UpdateValidation)
+                                              .IsEdit().SetValue(pages).NotRequired()
+                                              .Build(),
+                    new CellBookNumberTextView.NumberTextViewBuilder("ISBN", EBookInputType.ISBN,UpdateValidation)
+                                              .IsEdit().SetValue(isbn).NotRequired().AllowSearch(SearchForBookIsbn)
+                                              .Build(),
                     new CellBookSwitch("Do you own this book?",EBookInputType.Owned, UpdateValidation, true),
                     new CellBookSwitch("Have you read this book?",EBookInputType.Read, UpdateValidation, true),
-                    new CellBookButton("Add Book",AddBook)
+                    new CellBookButton("Add Book", AddBook)
                 };
         }
 
@@ -168,27 +180,12 @@ namespace ThePage.Core
 
             if (author == null)
             {
-                var authorChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{olAuthor?.Name} is not found in your author list. Would you like to add it?", null,
-                                                                                   neutral: "Choose from list");
-
-                ApiAuthor newAuthor = null;
-                if (authorChoice == ConfirmThreeButtonsResponse.Positive)
+                author = new ApiAuthor
                 {
-                    author = new ApiAuthor
-                    {
-                        Name = olAuthor?.Name,
-                        Olkey = olkey
-                    };
-                    newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
-                }
-                //Select author from list
-                else if (authorChoice == ConfirmThreeButtonsResponse.Neutral)
-                {
-                    newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
-                    newAuthor.Olkey = olkey;
-
-                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
-                }
+                    Name = olAuthor?.Name,
+                    Olkey = olkey
+                };
+                var newAuthor = await SelectOrCreateAuthor(author, olkey);
 
                 if (newAuthor != null)
                     author = newAuthor;
@@ -200,6 +197,17 @@ namespace ThePage.Core
             }
 
             CreateCellBooks(_olBook.Title, author, _olBook.Pages.ToString(), _isbn);
+
+            string GetAuthorKey(string key)
+            {
+                if (key != null)
+                {
+                    var split = key.Split('/');
+                    return split[4];
+                }
+                return string.Empty;
+            }
+
         }
 
         void UpdateValidation()
@@ -238,14 +246,74 @@ namespace ThePage.Core
             Items.Remove(obj);
         }
 
-        string GetAuthorKey(string key)
+        async Task SearchForBookTitle(string title)
         {
-            if (key != null)
+            _device.HideKeyboard();
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByTitle(title);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        async Task SearchForBookIsbn(string isbn)
+        {
+            _device.HideKeyboard();
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByISBN(isbn);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        async Task HandleSearchResults(GoogleBooksResult result)
+        {
+            if (result == null)
+                return;
+
+            if (result.Books.IsNotNullAndHasItems())
             {
-                var split = key.Split('/');
-                return split[4];
+                var book = await _navigation.Navigate<BookSearchViewModel, GoogleBooksResult, GoogleBook>(result);
+
+                var title = book.VolumeInfo.Title;
+                var author = await SelectOrCreateAuthor(new ApiAuthor(book.VolumeInfo.Authors.First()));
+
+                var pages = book.VolumeInfo.PageCount;
+                var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
+
+                CreateCellBooks(title, author, pages.ToString(), isbn);
             }
-            return string.Empty;
+            else
+            {
+                _userInteraction.Alert("No books found");
+            }
+        }
+
+        async Task<ApiAuthor> SelectOrCreateAuthor(ApiAuthor author, string olKey = null)
+        {
+            var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?", null,
+                                                                                   neutral: "Choose from list");
+
+            ApiAuthor newAuthor = null;
+            if (userChoice == ConfirmThreeButtonsResponse.Positive)
+            {
+                newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+            }
+            //Select author from list
+            else if (userChoice == ConfirmThreeButtonsResponse.Neutral)
+            {
+                newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
+
+                if (olKey.IsNotNull())
+                {
+                    newAuthor.Olkey = olKey;
+                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
+                }
+            }
+
+            return newAuthor;
         }
 
         #endregion

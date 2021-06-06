@@ -14,5 +14,7 @@ namespace ThePage.Core
         void HandleOpenLibraryException(Exception exception, string requestType, string isbn);
 
         void HandleThePageException(Exception exception, string requestType);
+
+        void HandleGoogleException(Exception exception, string requestType, string searchValue);
     }
 }

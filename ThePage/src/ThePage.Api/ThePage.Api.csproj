@@ -36,6 +36,7 @@
 		<Folder Include="Models\Response\BookShelf\" />
 		<Folder Include="Models\Request\BookShelf\" />
 		<Folder Include="Models\Request\Base\" />
+		<Folder Include="Models\Response\GoogleBooks\" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

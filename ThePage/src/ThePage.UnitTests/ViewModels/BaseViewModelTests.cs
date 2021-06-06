@@ -45,6 +45,9 @@ namespace ThePage.UnitTests
 
             var mockOpenLibrary = new Mock<IOpenLibraryService>();
             Ioc.RegisterSingleton(mockOpenLibrary.Object);
+
+            var mockGoogleService = new Mock<IGoogleBooksService>();
+            Ioc.RegisterSingleton(mockGoogleService.Object);
         }
 
         #endregion

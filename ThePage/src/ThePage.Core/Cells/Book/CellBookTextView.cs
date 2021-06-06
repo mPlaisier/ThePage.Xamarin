@@ -1,15 +1,20 @@
 using System;
+using System.Threading.Tasks;
+using CBP.Extensions;
+using MvvmCross.Commands;
+
 namespace ThePage.Core
 {
     public class CellBookTextView : CellBookInput
     {
-        protected bool _isRequired;
+        protected bool _isRequired = true;
+        protected Func<string, Task> _searchFunc;
 
         #region Properties
 
         public string LblTitle { get; }
 
-        string _txtInput;
+        protected string _txtInput;
         public string TxtInput
         {
             get => _txtInput;
@@ -23,6 +28,15 @@ namespace ThePage.Core
         public override bool IsValid => CheckValidation();
 
         public override EBookInputType InputType { get; }
+
+        public bool HasSearch => _searchFunc.IsNotNull() && IsEdit;
+
+        #endregion
+
+        #region Commands
+
+        IMvxAsyncCommand _commandSearchClick;
+        public IMvxAsyncCommand CommandSearchClick => _commandSearchClick ??= new MvxAsyncCommand(HandleSearch);
 
         #endregion
 
@@ -45,6 +59,7 @@ namespace ThePage.Core
 
         #endregion
 
+
         #region Private
 
         bool CheckValidation()
@@ -52,7 +67,60 @@ namespace ThePage.Core
             return !_isRequired || !string.IsNullOrWhiteSpace(TxtInput);
         }
 
+        protected virtual async Task HandleSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(TxtInput))
+                await _searchFunc(TxtInput);
+        }
+
         #endregion
+
+        public class TextViewBuilder
+        {
+            protected readonly CellBookTextView _cellBookTextView;
+
+            #region Public
+
+            public TextViewBuilder SetValue(string value)
+            {
+                _cellBookTextView._txtInput = value;
+                return this;
+            }
+
+            public TextViewBuilder NotRequired()
+            {
+                _cellBookTextView._isRequired = false;
+                return this;
+            }
+
+            public TextViewBuilder IsEdit()
+            {
+                _cellBookTextView.IsEdit = true;
+                return this;
+            }
+
+            public TextViewBuilder AllowSearch(Func<string, Task> searchFunc)
+            {
+                _cellBookTextView._searchFunc = searchFunc;
+                return this;
+            }
+
+            public CellBookTextView Build()
+            {
+                return _cellBookTextView;
+            }
+
+            #endregion
+
+            #region Constructor
+
+            public TextViewBuilder(string lblTitle, EBookInputType inputType, Action updateValidation)
+            {
+                _cellBookTextView = new CellBookTextView(lblTitle, inputType, updateValidation);
+            }
+
+            #endregion
+        }
     }
 
     public class CellBookNumberTextView : CellBookTextView
@@ -93,6 +161,59 @@ namespace ThePage.Core
             return !_isRequired || TxtNumberInput > -1;
         }
 
+        protected override async Task HandleSearch()
+        {
+            if (TxtNumberInput > -1)
+                await _searchFunc(TxtNumberInput.ToString());
+        }
+
         #endregion
+
+        public class NumberTextViewBuilder
+        {
+            protected readonly CellBookNumberTextView _cellBookNumberTextView;
+
+            #region Public
+
+            public NumberTextViewBuilder SetValue(string value)
+            {
+                _cellBookNumberTextView._txtInput = value;
+                return this;
+            }
+
+            public NumberTextViewBuilder NotRequired()
+            {
+                _cellBookNumberTextView._isRequired = false;
+                return this;
+            }
+
+            public NumberTextViewBuilder IsEdit()
+            {
+                _cellBookNumberTextView.IsEdit = true;
+                return this;
+            }
+
+            public NumberTextViewBuilder AllowSearch(Func<string, Task> searchFunc)
+            {
+                _cellBookNumberTextView._searchFunc = searchFunc;
+                return this;
+            }
+
+            public CellBookTextView Build()
+            {
+                return _cellBookNumberTextView;
+            }
+
+            #endregion
+
+            #region Constructor
+
+            public NumberTextViewBuilder(string lblTitle, EBookInputType inputType, Action updateValidation)
+            {
+                _cellBookNumberTextView = new CellBookNumberTextView(lblTitle, inputType, updateValidation);
+            }
+
+            #endregion
+        }
     }
 }
