@@ -139,6 +139,19 @@ namespace ThePage.Core
             }
         }
 
+        public void HandleGoogleException(Exception exception, string requestType, string searchValue)
+        {
+            var data = new Dictionary<string, string>
+            {
+                { "Service", nameof(GoogleBooksService) },
+                { "RequestType", requestType },
+                { "search", searchValue }
+            };
+            AddExceptionForLogging(exception, data);
+
+            _userInteraction.Alert(exception.Message, null, "Error");
+        }
+
         #endregion
     }
 
