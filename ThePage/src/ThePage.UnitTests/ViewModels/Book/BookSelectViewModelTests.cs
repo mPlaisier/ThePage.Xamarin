@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using ThePage.Api;
@@ -24,7 +25,7 @@ namespace ThePage.UnitTests.ViewModels.Book
 
         #region Setup
 
-        void LoadViewModel(List<ApiBook> parameter)
+        void LoadViewModel(List<Core.Book> parameter)
         {
             _vm.Prepare(parameter);
             _vm.Initialize();
@@ -36,12 +37,14 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CountSelectedItemsCountWithBookParameter()
         {
             //Arrange
-            MockThePageService
-               .Setup(x => x.GetAllBooks())
-               .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
+            var books = BookDataFactory.GetListBook4ElementsComplete();
 
-            var listSelectedBook = BookDataFactory.GetListBook1ElementsComplete().Docs;
-            LoadViewModel(listSelectedBook);
+            MockBookService
+               .Setup(x => x.FetchBooks())
+               .Returns(() => Task.FromResult(books));
+
+            var listSelectedBook = new List<Core.Book> { books.First() };
+            LoadViewModel(listSelectedBook.ToList());
 
             //Assert
             _vm.SelectedItems.Should().NotBeNullOrEmpty();
@@ -53,8 +56,8 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void SelectedItemsShouldNotBeNulltWithNullParameter()
         {
             //Arrange
-            MockThePageService
-               .Setup(x => x.GetAllBooks())
+            MockBookService
+               .Setup(x => x.FetchBooks())
                .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
             LoadViewModel(null);
 
@@ -66,9 +69,9 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void NoCrashWhenNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllBooks())
-               .Returns(() => Task.FromResult<ApiBookResponse>(null));
+            MockBookService
+                .Setup(x => x.FetchBooks())
+                .Returns(() => Task.FromResult<IEnumerable<Core.Book>>(null));
             LoadViewModel(null);
 
             //Assert
@@ -79,8 +82,8 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void AddCellToSelectedListWhenClicked()
         {
             //Prepare
-            MockThePageService
-               .Setup(x => x.GetAllBooks())
+            MockBookService
+               .Setup(x => x.FetchBooks())
                .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
             LoadViewModel(null);
 
@@ -97,10 +100,10 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void RemoveCellToSelectedListWhenClicked()
         {
             //Prepare
-            MockThePageService
-               .Setup(x => x.GetAllBooks())
+            MockBookService
+               .Setup(x => x.FetchBooks())
                .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
-            LoadViewModel(BookDataFactory.GetListBook1ElementsComplete().Docs);
+            LoadViewModel(BookDataFactory.GetListBook4ElementsComplete().ToList());
 
             //Execute
             var book = BookDataFactory.GetCellBookSelect(true);

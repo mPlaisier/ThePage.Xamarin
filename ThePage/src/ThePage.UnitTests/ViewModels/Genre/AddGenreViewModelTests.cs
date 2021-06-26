@@ -3,11 +3,11 @@ using Moq;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels
 {
     public class AddGenreViewModelTests : BaseViewModelTests
     {
-        AddGenreViewModel _vm;
+        readonly AddGenreViewModel _vm;
 
         #region Constructor
 

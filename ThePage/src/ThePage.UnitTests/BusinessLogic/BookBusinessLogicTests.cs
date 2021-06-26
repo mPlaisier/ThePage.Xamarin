@@ -11,7 +11,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void CellsBookDetailWithGenresContainsEnoughItemsTest()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseWithGenres();
+            var response = BookDataFactory.GetBookDetailWithGenres();
 
             //Execute
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null);
@@ -26,7 +26,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void CellsBookDetailWithGenresContainsCorrectCellsTest()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseWithGenres();
+            var response = BookDataFactory.GetBookDetailWithGenres();
 
             //Execute
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null).ToList();
@@ -38,18 +38,20 @@ namespace ThePage.UnitTests.BusinessLogic
             items[2].Should().BeOfType<CellBookTitle>();
             items[3].Should().BeOfType<CellBookGenreItem>();
             items[4].Should().BeOfType<CellBookGenreItem>();
-            items[5].Should().BeOfType<CellBookNumberTextView>();
-            items[6].Should().BeOfType<CellBookNumberTextView>();
-            items[7].Should().BeOfType<CellBookSwitch>();
-            items[8].Should().BeOfType<CellBookSwitch>();
-            items[9].Should().BeOfType<CellBookButton>();
+            items[5].Should().BeOfType<CellBookGenreItem>();
+            items[6].Should().BeOfType<CellBookGenreItem>();
+            items[7].Should().BeOfType<CellBookNumberTextView>();
+            items[8].Should().BeOfType<CellBookNumberTextView>();
+            items[9].Should().BeOfType<CellBookSwitch>();
+            items[10].Should().BeOfType<CellBookSwitch>();
+            items[11].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
         public void CellsBookDetailWithoutGenresContainsEnoughItemsTest()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseNoGenres();
+            var response = BookDataFactory.GetBookDetailNoGenres();
 
             //Execute
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null);
@@ -63,7 +65,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void CellsBookDetailWithoutGenresContainsCorrectCellsTest()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseNoGenres();
+            var response = BookDataFactory.GetBookDetailNoGenres();
 
             //Execute
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null).ToList();
@@ -84,7 +86,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void RequestShouldBeNullWithNoChanges()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseWithGenres();
+            var response = BookDataFactory.GetBookDetailWithGenres();
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null);
 
             //Execute
@@ -98,7 +100,7 @@ namespace ThePage.UnitTests.BusinessLogic
         public void RequestShouldNotBeNullWithChanges()
         {
             //Setup
-            var response = BookDataFactory.GetApiBookDetailResponseWithGenres();
+            var response = BookDataFactory.GetBookDetailWithGenres();
             var items = BookBusinessLogic.CreateCellsBookDetail(response, null, null, null, null, null).ToList();
 
             ((CellBookTextView)items[0]).TxtInput = "Change title";

@@ -34,8 +34,8 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void ShowAuthorsWhenDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+                .Setup(x => x.GetAuthors())
                 .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
 
             //Setup
@@ -51,8 +51,8 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void ShowEmptyAuthorsNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+                .Setup(x => x.GetAuthors())
                 .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthorEmpty()));
 
             //Setup
@@ -67,9 +67,9 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void ShowNullAuthorsNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllAuthors())
-                .Returns(() => Task.FromResult<Api.ApiAuthorResponse>(null));
+            MockAuthorService
+                .Setup(x => x.GetAuthors())
+                .Returns(() => Task.FromResult<IEnumerable<Core.Author>>(null));
 
             //Setup
             LoadViewModel();

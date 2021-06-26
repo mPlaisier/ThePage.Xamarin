@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels
 {
     public class SelectGenreViewModelTests : BaseViewModelTests
     {
-        SelectGenreViewModel _vm;
+        readonly SelectGenreViewModel _vm;
 
         #region Constructor
 
@@ -30,13 +29,15 @@ namespace ThePage.UnitTests.ViewModels.Genre
             _vm.Initialize();
         }
 
-        SelectedGenreParameters GetSingleSelectedItemParameter()
+        void SetupViewModelWithOneSelectedGenre()
         {
-            var list = new List<ApiGenre>()
-            {
-                GenreDataFactory.GetSingleGenre()
-            };
-            return new SelectedGenreParameters(list);
+            var genres = GenreDataFactory.GetGenre4ElementsComplete();
+            MockGenreService
+                .Setup(x => x.GetGenres())
+                .Returns(() => Task.FromResult(genres));
+
+            var selectedGenre = new List<Genre> { genres.First() };
+            LoadViewModel(new SelectedGenreParameters(selectedGenre));
         }
 
         #endregion
@@ -45,10 +46,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void CountSelectedItemsCount()
         {
             //Arrange
-            MockThePageService
-               .Setup(x => x.GetAllGenres())
-               .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
-            LoadViewModel(GetSingleSelectedItemParameter());
+            SetupViewModelWithOneSelectedGenre();
 
             Assert.Single(_vm.SelectedItems);
             Assert.Equal(4, _vm.Items.Count);
@@ -59,10 +57,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void CommandSelectItemGenreRemovedTest()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
-            LoadViewModel(GetSingleSelectedItemParameter());
+            SetupViewModelWithOneSelectedGenre();
 
             var selectedGenre = _vm.Items.Where(x => x.IsSelected == true).FirstOrDefault();
             _vm.CommandSelectItem.Execute(selectedGenre);
@@ -77,10 +72,7 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void CommandSelectItemGenreAddTest()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
-            LoadViewModel(GetSingleSelectedItemParameter());
+            SetupViewModelWithOneSelectedGenre();
 
             var selectedGenre = _vm.Items.Where(x => x.IsSelected == false).FirstOrDefault();
             _vm.CommandSelectItem.Execute(selectedGenre);
@@ -95,10 +87,10 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void NoCrashWhenNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult<ApiGenreResponse>(null));
-            LoadViewModel(GetSingleSelectedItemParameter());
+            MockGenreService
+                .Setup(x => x.GetGenres())
+                .Returns(() => Task.FromResult<IEnumerable<Genre>>(null));
+            LoadViewModel(new SelectedGenreParameters(new List<Genre>()));
 
             Assert.Empty(_vm.Items);
         }
