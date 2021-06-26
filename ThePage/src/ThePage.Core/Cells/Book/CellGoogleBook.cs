@@ -34,7 +34,7 @@ namespace ThePage.Core
             {
                 var authors = "";
                 Book.VolumeInfo.Authors.ForEach((a) => authors += $", {a}");
-                authors.Remove(0, 2);
+                authors = authors.Remove(0, 2);
 
                 return authors;
             }

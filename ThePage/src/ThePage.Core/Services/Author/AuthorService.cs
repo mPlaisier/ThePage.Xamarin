@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MvvmCross.Navigation;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -9,7 +8,6 @@ namespace ThePage.Core
     public class AuthorService : IAuthorService
     {
         readonly IDevice _device;
-        readonly IMvxNavigationService _navigationService;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
 
@@ -27,10 +25,9 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorService(IDevice device, IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction)
+        public AuthorService(IDevice device, IThePageService thePageService, IUserInteraction userInteraction)
         {
             _device = device;
-            _navigationService = navigationService;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
         }

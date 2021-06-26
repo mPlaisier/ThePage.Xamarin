@@ -7,7 +7,7 @@ namespace ThePage.Core
 {
     public class CellBookTextView : CellBookInput
     {
-        protected bool _isRequired = true;
+        protected bool _isRequired;
         protected Func<string, Task> _searchFunc;
 
         #region Properties

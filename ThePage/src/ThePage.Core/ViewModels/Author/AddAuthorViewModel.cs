@@ -14,8 +14,6 @@ namespace ThePage.Core
         readonly IDevice _device;
         readonly IAuthorService _authorService;
 
-        string _olkey;
-
         #region Properties
 
         public override string LblTitle => "New Author";
@@ -57,7 +55,6 @@ namespace ThePage.Core
 
         public override void Prepare(Author parameter)
         {
-            _olkey = parameter.Olkey;
             TxtName = parameter.Name;
         }
 

@@ -1,5 +1,4 @@
 using MvvmCross.ViewModels;
-using ThePage.Api;
 
 namespace ThePage.Core
 {

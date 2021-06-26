@@ -3,7 +3,6 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core

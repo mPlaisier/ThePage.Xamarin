@@ -33,20 +33,22 @@ namespace ThePage.Core
 
         public static List<string> GetIdList(this IEnumerable<ApiBook> books, bool nullAllowed = false)
         {
-            return books == null && nullAllowed
-                   ? null
-                   : books == null
-                       ? new List<string>()
-                       : books.Select(b => b.Id).ToList();
+            if (books == null && nullAllowed)
+                return null;
+
+            return books == null
+                    ? new List<string>()
+                    : books.Select(b => b.Id).ToList();
         }
 
         public static List<string> GetIdList(this IEnumerable<Book> books, bool nullAllowed = false)
         {
-            return books == null && nullAllowed
-                   ? null
-                   : books == null
-                       ? new List<string>()
-                       : books.Select(b => b.Id).ToList();
+            if (books == null && nullAllowed)
+                return null;
+
+            return books == null
+                    ? new List<string>()
+                    : books.Select(b => b.Id).ToList();
         }
     }
 }
