@@ -36,6 +36,8 @@ namespace ThePage.Api
 
     public class ImageLinks
     {
+        #region Properties
+
         [JsonProperty("smallThumbnail")]
         public string SmallThumbnail { get; internal set; }
 
@@ -53,6 +55,15 @@ namespace ThePage.Api
 
         [JsonProperty("extraLarge")]
         public string ExtraLarge { get; internal set; }
+
+        #endregion
+
+        #region Public
+
+        public string GetImageUrl()
+            => Thumbnail ?? Small ?? SmallThumbnail ?? Medium ?? Large ?? ExtraLarge ?? null;
+
+        #endregion
     }
 
     public class VolumeInfo
@@ -189,6 +200,8 @@ namespace ThePage.Api
 
     public class GoogleBook
     {
+        #region Properties
+
         [JsonProperty("kind")]
         public string Kind { get; internal set; }
 
@@ -212,5 +225,16 @@ namespace ThePage.Api
 
         [JsonProperty("searchInfo")]
         public SearchInfo SearchInfo { get; internal set; }
+
+        #endregion
+
+        #region Public
+
+        public string GetImageUrl()
+        {
+            return VolumeInfo?.ImageLinks?.GetImageUrl();
+        }
+
+        #endregion
     }
 }

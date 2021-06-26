@@ -93,13 +93,13 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> Delete(string token, ApiAuthor author)
+        public static async Task<bool> Delete(string token, string id)
         {
             //Clear cache
-            ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, author.Id);
+            ManagerUtils.ClearPageBarrels(AUTHORS_KEY, AUTHORS_SINGLE_KEY, id);
 
             var api = RestService.For<IAuthorApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
-            await api.DeleteAuthor(author);
+            await api.DeleteAuthor(id);
 
             return true;
         }
