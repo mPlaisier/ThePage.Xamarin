@@ -4,7 +4,6 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,34 +11,30 @@ namespace ThePage.Core
     public class GenreViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IGenreService _genreService;
 
         #region Properties
 
         public override string LblTitle => "Genres";
 
-        public MvxObservableCollection<ApiGenre> Genres { get; private set; }
+        public MvxObservableCollection<Genre> Genres { get; private set; }
 
         #endregion
 
         #region Constructor
 
-        public GenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public GenreViewModel(IMvxNavigationService navigation, IGenreService genreService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _genreService = genreService;
         }
 
         #endregion
 
         #region Commands
 
-        IMvxCommand<ApiGenre> _itemClickCommand;
-        public IMvxCommand<ApiGenre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiGenre>(async (item) =>
+        IMvxCommand<Genre> _itemClickCommand;
+        public IMvxCommand<Genre> ItemClickCommand => _itemClickCommand ??= new MvxCommand<Genre>(async (item) =>
         {
             var result = await _navigation.Navigate<GenreDetailViewModel, GenreDetailParameter, bool>(new GenreDetailParameter(item));
             if (result)
@@ -64,26 +59,15 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            Refresh().Forget();
+            await Refresh();
         }
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiGenreResponse = _isSearching
-                   ? await _thePageService.SearchGenres(_search, _currentPage + 1)
-                   : await _thePageService.GetNextGenres(_currentPage + 1);
-                Genres.AddRange(apiGenreResponse.Docs);
-
-                _currentPage = apiGenreResponse.Page;
-                _hasNextPage = apiGenreResponse.HasNextPage;
-
-                _isLoadingNextPage = false;
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var genres = await _genreService.LoadNextGenres();
+                Genres.AddRange(genres);
             }
         }
 
@@ -92,32 +76,22 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _genreService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiGenreResponse = await _thePageService.SearchGenres(search);
-            Genres = new MvxObservableCollection<ApiGenre>(apiGenreResponse.Docs);
-
-            _currentPage = apiGenreResponse.Page;
-            _hasNextPage = apiGenreResponse.HasNextPage;
+            var genres = await _genreService.Search(search);
+            Genres = new MvxObservableCollection<Genre>(genres);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_genreService.IsSearching)
+                await Refresh();
         }
 
         #endregion
@@ -128,11 +102,9 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var result = await _thePageService.GetAllGenres();
-            Genres = new MvxObservableCollection<ApiGenre>(result.Docs);
+            var genres = await _genreService.GetGenres();
+            Genres = new MvxObservableCollection<Genre>(genres);
 
-            _currentPage = result.Page;
-            _hasNextPage = result.HasNextPage;
             IsLoading = false;
         }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
-using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -11,7 +10,7 @@ namespace ThePage.Core
 
         #region Properties
 
-        public ApiGenre Genre { get; }
+        public Genre Genre { get; }
 
         #endregion
 
@@ -28,7 +27,7 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookGenreItem(ApiGenre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
+        public CellBookGenreItem(Genre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
         {
             Genre = genre;
             _removeGenre = removeGenre;

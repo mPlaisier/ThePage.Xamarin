@@ -16,13 +16,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public ApiBook Book { get; }
+        public Book Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public BookDetailParameter(ApiBook book)
+        public BookDetailParameter(Book book)
         {
             Book = book;
         }
@@ -33,11 +33,12 @@ namespace ThePage.Core
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
 
-        ApiBook _book;
+        readonly IBookService _bookService;
+
+        Book _book;
 
         #region Properties
 
@@ -45,7 +46,7 @@ namespace ThePage.Core
 
         public override string LblTitle => _book != null ? _book.Title : "Book detail";
 
-        public ApiBookDetailResponse BookDetail { get; internal set; }
+        public BookDetail BookDetail { get; internal set; }
 
         public bool IsEditing { get; set; }
 
@@ -63,10 +64,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public BookDetailViewModel(IMvxNavigationService navigation, IBookService bookService, IUserInteraction userInteraction, IDevice device)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
+            _bookService = bookService;
             _userInteraction = userInteraction;
             _device = device;
         }
@@ -86,7 +87,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchData().Forget();
+            await FetchData();
         }
 
         #endregion
@@ -105,12 +106,7 @@ namespace ThePage.Core
 
             if (request != null)
             {
-                var result = await _thePageService.UpdateBook(BookDetail.Id, request);
-
-                if (result != null)
-                    _userInteraction.ToastMessage("Book updated", EToastType.Success);
-                else
-                    _userInteraction.Alert("Failure updating book");
+                await _bookService.UpdateBook(request);
             }
 
             ToggleEditValue();
@@ -127,18 +123,11 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBook(BookDetail.Id);
-
+                var result = await _bookService.DeleteBook(BookDetail.Id);
                 if (result)
-                {
-                    _userInteraction.ToastMessage("Book removed");
                     await _navigation.Close(this, true);
-                }
                 else
-                {
-                    _userInteraction.Alert("Failure removing book");
                     IsLoading = false;
-                }
             }
         }
 
@@ -149,14 +138,14 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            BookDetail = await _thePageService.GetBook(_book.Id);
+            BookDetail = await _bookService.FetchBook(_book.Id);
 
             Items = new MvxObservableCollection<ICellBook>(BookBusinessLogic.CreateCellsBookDetail(BookDetail,
-                                                                                                       UpdateValidation,
-                                                                                                       RemoveGenre,
-                                                                                                       DeleteBook,
-                                                                                                       _navigation,
-                                                                                                       _device));
+                                                                                                   UpdateValidation,
+                                                                                                   RemoveGenre,
+                                                                                                   DeleteBook,
+                                                                                                   _navigation,
+                                                                                                   _device));
             IsLoading = false;
             UpdateValidation();
         }
@@ -167,11 +156,11 @@ namespace ThePage.Core
                 return;
 
             var selectedGenres = Items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<ApiGenre>>(new SelectedGenreParameters(selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
 
             if (genres != null)
             {
-                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>());
 
                 var genreItems = new List<CellBookGenreItem>();
                 genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
@@ -186,7 +175,7 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            var lstInput = Items.OfType<CellBookInput>().ToList();
+            var lstInput = Items.OfType<CellBookInput>();
             var isValid = lstInput.All(x => x.IsValid);
 
             Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
@@ -244,7 +233,7 @@ namespace ThePage.Core
             _book.Author = author;
 
             if (genres == null)
-                BookDetail.Genres = new List<ApiGenre>();
+                BookDetail.Genres = new List<Genre>();
 
             BookDetail.ISBN = updatedBook.ISBN;
 

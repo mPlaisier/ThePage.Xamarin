@@ -1,19 +1,18 @@
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using PropertyChanged;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class AddAuthorViewModel : BaseViewModel<ApiAuthor, ApiAuthor>
+    public class AddAuthorViewModel : BaseViewModel<Author, Author>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+        readonly IAuthorService _authorService;
 
         string _olkey;
 
@@ -34,8 +33,8 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _addAuthorCommand;
-        public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
+        IMvxAsyncCommand _addAuthorCommand;
+        public IMvxAsyncCommand AddAuthorCommand => _addAuthorCommand ??= new MvxAsyncCommand(async () =>
         {
             _device.HideKeyboard();
             await AddAuthor();
@@ -45,11 +44,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddAuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AddAuthorViewModel(IMvxNavigationService navigation, IAuthorService authorService, IDevice device)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
+            _authorService = authorService;
             _device = device;
         }
 
@@ -57,7 +55,7 @@ namespace ThePage.Core
 
         #region LifeCycle
 
-        public override void Prepare(ApiAuthor parameter)
+        public override void Prepare(Author parameter)
         {
             _olkey = parameter.Olkey;
             TxtName = parameter.Name;
@@ -81,20 +79,11 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var author = new ApiAuthorRequest(TxtName.Trim(), _olkey);
-
-            var result = await _thePageService.AddAuthor(author);
-
-            if (result != null)
-            {
-                _userInteraction.ToastMessage("Author added");
+            var result = await _authorService.AddAuthor(TxtName);
+            if (result.IsNotNull())
                 await _navigation.Close(this, result);
-            }
             else
-            {
-                _userInteraction.Alert("Failure adding author");
                 IsLoading = false;
-            }
         }
 
         #endregion

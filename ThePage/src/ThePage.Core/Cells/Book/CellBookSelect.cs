@@ -3,21 +3,21 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class CellBookSelect : MvxNotifyPropertyChanged, ICellBaseSelect<ApiBook>
+    public class CellBookSelect : MvxNotifyPropertyChanged, ICellBaseSelect<Book>
     {
         #region Properties
 
-        public ApiBook Item { get; set; }
+        public Book Item { get; set; }
 
         public bool IsSelected { get; set; }
 
-        public string IconSelected => "ic_check";
+        public string IconSelected => Constants.ICON_CHECK;
 
         #endregion
 
         #region Contructor
 
-        public CellBookSelect(ApiBook book, bool isSelected = false)
+        public CellBookSelect(Book book, bool isSelected = false)
         {
             Item = book;
             IsSelected = book != null && isSelected;

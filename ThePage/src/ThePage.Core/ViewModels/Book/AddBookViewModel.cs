@@ -36,15 +36,17 @@ namespace ThePage.Core
     public class AddBookViewModel : BaseViewModel<AddBookParameter, string>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
         readonly IGoogleBooksService _googleBooksService;
 
+        readonly IBookService _bookService;
+        readonly IAuthorService _authorService;
+
         OLObject _olBook;
         string _isbn;
 
-        ApiAuthorResponse _authors;
+        IEnumerable<Author> _authors;
 
         #region Properties
 
@@ -64,16 +66,19 @@ namespace ThePage.Core
         #region Constructor
 
         public AddBookViewModel(IMvxNavigationService navigation,
-                                IThePageService thePageService,
                                 IUserInteraction userInteraction,
                                 IDevice device,
-                                IGoogleBooksService googleBooksService)
+                                IGoogleBooksService googleBooksService,
+                                IBookService bookService,
+                                IAuthorService authorService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
             _userInteraction = userInteraction;
             _device = device;
             _googleBooksService = googleBooksService;
+
+            _bookService = bookService;
+            _authorService = authorService;
         }
 
         #endregion
@@ -92,7 +97,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            FetchData().Forget();
+            await FetchData();
         }
 
         #endregion
@@ -106,21 +111,11 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            _device.HideKeyboard();
-
-            var (book, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items);
-            var result = await _thePageService.AddBook(book);
-
-            if (result != null)
-            {
-                _userInteraction.ToastMessage("Book added");
+            var result = await _bookService.AddBook(Items);
+            if (result.IsNotNull())
                 await _navigation.Close(this, result.Id);
-            }
             else
-            {
-                _userInteraction.Alert("Failure adding book");
                 IsLoading = false;
-            }
         }
 
         async Task FetchData()
@@ -130,10 +125,9 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            _authors = await _thePageService.GetAllAuthors();
-            var _genres = await _thePageService.GetAllGenres();
+            _authors = await _authorService.GetAuthors();
 
-            if (_authors == null || _genres == null)
+            if (_authors == null)
             {
                 _userInteraction.Alert("Error retrieving data from Server", null, "Error");
                 await _navigation.Close(this, null);
@@ -148,14 +142,11 @@ namespace ThePage.Core
             UpdateValidation();
         }
 
-        void CreateCellBooks(string title = null, ApiAuthor author = null, string pages = null, string isbn = null)
+        void CreateCellBooks(string title = null, Author author = null, string pages = null, string isbn = null, ImageLinks images = null)
         {
             Items = new MvxObservableCollection<ICellBook>
                 {
-                    new CellBookTextView.TextViewBuilder("Title",EBookInputType.Title, UpdateValidation)
-                                        .SetValue(title).IsEdit().AllowSearch(SearchForBookTitle)
-                                        .Build(),
-                    new CellBookAuthor(author, _navigation, _device, UpdateValidation,true),
+                    new CellBasicBook.Builder(title, author, images, UpdateValidation, SearchForBookTitle).IsEdit().Build(),
                     new CellBookTitle("Genres"),
                     new CellBookAddGenre(AddGenreAction),
                     new CellBookNumberTextView.NumberTextViewBuilder("Pages", EBookInputType.Pages,UpdateValidation)
@@ -175,12 +166,12 @@ namespace ThePage.Core
             var olAuthor = _olBook.Authors.First();
             var olkey = GetAuthorKey(olAuthor?.Url.ToString());
 
-            ApiAuthor author = null;
-            author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
+            Author author = null;
+            author = _authors.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
 
             if (author == null)
             {
-                author = new ApiAuthor
+                author = new Author
                 {
                     Name = olAuthor?.Name,
                     Olkey = olkey
@@ -191,14 +182,14 @@ namespace ThePage.Core
                     author = newAuthor;
                 else
                 {
-                    _authors = await _thePageService.GetAllAuthors();
-                    author = _authors.Docs.FirstOrDefault(a => a.Olkey != null && a.Olkey.Equals(olkey));
+                    _authors = await _authorService.GetAuthors();
+                    author = _authors.FirstOrNull(a => a.Olkey != null && a.Olkey.Equals(olkey));
                 }
             }
 
             CreateCellBooks(_olBook.Title, author, _olBook.Pages.ToString(), _isbn);
 
-            string GetAuthorKey(string key)
+            static string GetAuthorKey(string key)
             {
                 if (key != null)
                 {
@@ -215,7 +206,7 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>().ToList();
+            var lstInput = Items.Where(x => x is CellBookInput).OfType<CellBookInput>();
             var isValid = lstInput.All(x => x.IsValid);
 
             Items.OfType<CellBookButton>().ForEach(x => x.IsValid = isValid);
@@ -226,12 +217,12 @@ namespace ThePage.Core
             var selectedGenres = Items.Where(g => g is CellBookGenreItem)
                     .OfType<CellBookGenreItem>()
                     .Select(i => i.Genre).ToList();
-            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<ApiGenre>>(new SelectedGenreParameters(selectedGenres));
+            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
 
             if (genres != null)
             {
                 //Remove all old genres:
-                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>());
 
                 var genreItems = new List<CellBookGenreItem>();
                 genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
@@ -278,12 +269,12 @@ namespace ThePage.Core
                 var book = await _navigation.Navigate<BookSearchViewModel, GoogleBooksResult, GoogleBook>(result);
 
                 var title = book.VolumeInfo.Title;
-                var author = await SelectOrCreateAuthor(new ApiAuthor(book.VolumeInfo.Authors.First()));
+                var author = await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First()));
 
                 var pages = book.VolumeInfo.PageCount;
                 var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
 
-                CreateCellBooks(title, author, pages.ToString(), isbn);
+                CreateCellBooks(title, author, pages.ToString(), isbn, book.VolumeInfo.ImageLinks);
             }
             else
             {
@@ -291,25 +282,25 @@ namespace ThePage.Core
             }
         }
 
-        async Task<ApiAuthor> SelectOrCreateAuthor(ApiAuthor author, string olKey = null)
+        async Task<Author> SelectOrCreateAuthor(Author author, string olKey = null)
         {
-            var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?", null,
-                                                                                   neutral: "Choose from list");
+            var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?",
+                                                                             neutral: "Choose from list");
 
-            ApiAuthor newAuthor = null;
+            Author newAuthor = null;
             if (userChoice == ConfirmThreeButtonsResponse.Positive)
             {
-                newAuthor = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor, ApiAuthor>(author);
+                newAuthor = await _navigation.Navigate<AddAuthorViewModel, Author, Author>(author);
             }
             //Select author from list
             else if (userChoice == ConfirmThreeButtonsResponse.Neutral)
             {
-                newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(null));
+                newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter());
 
                 if (olKey.IsNotNull())
                 {
                     newAuthor.Olkey = olKey;
-                    newAuthor = await _thePageService.UpdateAuthor(newAuthor.Id, new ApiAuthorRequest(newAuthor));
+                    newAuthor = await _authorService.UpdateAuthor(newAuthor);
                 }
             }
 

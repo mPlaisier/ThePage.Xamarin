@@ -14,13 +14,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public ApiAuthor Author { get; }
+        public Author Author { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorDetailParameter(ApiAuthor author)
+        public AuthorDetailParameter(Author author)
         {
             Author = author;
         }
@@ -39,7 +39,7 @@ namespace ThePage.Core
 
         public override string LblTitle => Author != null ? Author.Name : "Author Detail";
 
-        public ApiAuthor Author { get; internal set; }
+        public Author Author { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -68,11 +68,11 @@ namespace ThePage.Core
             IsEditing = !IsEditing;
         });
 
-        IMvxCommand _deleteAuthorCommand;
-        public IMvxCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxCommand(() => DeleteAuthor().Forget());
+        IMvxAsyncCommand _deleteAuthorCommand;
+        public IMvxAsyncCommand DeleteAuthorCommand => _deleteAuthorCommand ??= new MvxAsyncCommand(DeleteAuthor);
 
-        IMvxCommand _updateAuthorCommand;
-        public IMvxCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxCommand(() => UpdateAuthor().Forget());
+        IMvxAsyncCommand _updateAuthorCommand;
+        public IMvxAsyncCommand UpdateAuthorCommand => _updateAuthorCommand ??= new MvxAsyncCommand(UpdateAuthor);
 
         #endregion
 
@@ -148,7 +148,7 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteAuthor(Author);
+                var result = await _thePageService.DeleteAuthor(Author.Id);
 
                 if (result)
                 {

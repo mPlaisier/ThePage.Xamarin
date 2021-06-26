@@ -29,6 +29,7 @@
     <PackageReference Include="NodaTime" Version="3.0.5" />
     <PackageReference Include="cbp-extensions" Version="1.7.0" />
     <PackageReference Include="Google.Apis.Books.v1" Version="1.51.0.2231" />
+    <PackageReference Include="TinyMapper" Version="3.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Author\" />
@@ -53,6 +54,16 @@
     <Folder Include="ViewModels\BookShelf\" />
     <Folder Include="Cells\BookShelf\" />
     <Folder Include="Cells\GoogleBook\" />
+    <Folder Include="Models\" />
+    <Folder Include="Models\Author\" />
+    <Folder Include="Services\Author\" />
+    <Folder Include="Services\Book\" />
+    <Folder Include="Models\Book\" />
+    <Folder Include="Models\Genre\" />
+    <Folder Include="Services\Genre\" />
+    <Folder Include="Services\BookShelf\" />
+    <Folder Include="Models\Bookshelf\" />
+    <Folder Include="Constants\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />

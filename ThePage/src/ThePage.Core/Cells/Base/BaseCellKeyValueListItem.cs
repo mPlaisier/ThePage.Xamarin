@@ -35,7 +35,7 @@ namespace ThePage.Core
 
         public BaseCellKeyValueListItem(string key, string value,
                                         Action<ICell> actionEditClick, Action<ICell> actionClick = null,
-                                        string icon = "ic_delete", bool isEdit = false)
+                                        string icon = Constants.ICON_DELETE, bool isEdit = false)
         {
             Key = key;
             Value = value;

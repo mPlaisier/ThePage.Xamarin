@@ -3,21 +3,21 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
-    public class CellGenreSelect : MvxNotifyPropertyChanged, ICellBaseSelect<ApiGenre>
+    public class CellGenreSelect : MvxNotifyPropertyChanged, ICellBaseSelect<Genre>
     {
         #region Properties
 
-        public ApiGenre Item { get; set; }
+        public Genre Item { get; set; }
 
         public bool IsSelected { get; set; }
 
-        public string IconSelected => "ic_check";
+        public string IconSelected => Constants.ICON_CHECK;
 
         #endregion
 
         #region Contructor
 
-        public CellGenreSelect(ApiGenre genre, bool isSelected = false)
+        public CellGenreSelect(Genre genre, bool isSelected = false)
         {
             Item = genre;
             IsSelected = genre != null && isSelected;
