@@ -30,6 +30,7 @@
 		<PackageReference Include="Moq" Version="4.16.1" />
 		<PackageReference Include="MvvmCross.Tests" Version="7.1.2" />
 		<PackageReference Include="FluentAssertions" Version="5.10.3" />
+		<PackageReference Include="Bogus" Version="33.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="ViewModels\" />
@@ -48,6 +49,10 @@
 		<Folder Include="BusinessLogic\" />
 		<Folder Include="ViewModels\BookShelf\" />
 		<Folder Include="Cells\Base\" />
+		<Folder Include="TestData\ApiFactory\" />
+		<Folder Include="TestData\ApiFactory\Data\" />
+		<Folder Include="TestData\CoreFactory\" />
+		<Folder Include="TestData\CoreFactory\Data\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

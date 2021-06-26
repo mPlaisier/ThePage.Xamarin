@@ -7,7 +7,6 @@
 	android:clickable="true"
 	android:padding="4dp"
     local:MvxBind="Click If(IsEdit,CommandSelectItem)">
-
 	<TextView
 		android:id="@+id/lblAuthor"
 		android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
 		local:layout_constraintBottom_toTopOf="@+id/txtInput"
 		local:layout_constraintStart_toStartOf="parent"
 		local:MvxBind="Text LblAuthor"/>
-
 	<TextView
 		android:id="@+id/txtInput"
 		android:layout_width="0dp"
@@ -28,7 +26,6 @@
 		local:layout_constraintStart_toStartOf="parent"
 		local:layout_constraintWidth_percent="0.5"
 		local:MvxBind="Text Item.Name;Visibility Visibility(IsEdit)"/>
-
 	<TextView
 		android:id="@+id/lblValue"
 		android:layout_width="wrap_content"
@@ -37,5 +34,4 @@
 		local:layout_constraintBottom_toBottomOf="parent"
 		local:layout_constraintStart_toStartOf="parent"
 		local:MvxBind="Text Item.Name;Visibility InvertedVisibility(IsEdit)"/>
-
 </android.support.constraint.ConstraintLayout>

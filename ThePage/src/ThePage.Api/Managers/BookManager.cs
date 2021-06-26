@@ -70,7 +70,7 @@ namespace ThePage.Api
 
         #region ADD
 
-        public static async Task<ApiBookDetailRequest> Add(string token, ApiBookDetailRequest book)
+        public static async Task<ApiBookDetailResponse> Add(string token, ApiBookDetailRequest book)
         {
             //Clear cache
             ManagerUtils.ClearPageBarrels(BOOKS_KEY);

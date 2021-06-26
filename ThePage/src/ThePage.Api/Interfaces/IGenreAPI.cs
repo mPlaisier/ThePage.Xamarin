@@ -25,8 +25,8 @@ namespace ThePage.Api
         [Headers("Authorization: Bearer")]
         Task<ApiGenre> Update([Body] ApiGenreRequest genre, string id);
 
-        [Delete("/genres/v2/{genre.Id}")]
+        [Delete("/genres/v2/{id}")]
         [Headers("Authorization: Bearer")]
-        Task Delete(ApiGenre genre);
+        Task Delete(string id);
     }
 }

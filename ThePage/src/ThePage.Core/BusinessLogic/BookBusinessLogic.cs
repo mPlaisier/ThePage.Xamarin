@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Navigation;
+using Nelibur.ObjectMapper;
 using ThePage.Api;
 using static ThePage.Core.CellBookInput;
 
@@ -12,7 +13,7 @@ namespace ThePage.Core
     {
         #region Public
 
-        public static (ApiBookDetailRequest request, ApiAuthor author, IEnumerable<ApiGenre> genres) CreateBookDetailRequestFromInput(IEnumerable<ICellBook> items, string id = null, ApiBookDetailResponse originalResponse = null)
+        public static (ApiBookDetailRequest request, Author author, IEnumerable<Genre> genres) CreateBookDetailRequestFromInput(IEnumerable<ICellBook> items, string id = null, BookDetail originalResponse = null)
         {
             var builder = new ApiBookDetailRequest.Builder()
                                                    .SetId(id);
@@ -59,11 +60,38 @@ namespace ThePage.Core
                     genres);
         }
 
+        public static IEnumerable<Book> MapBooks(IEnumerable<ApiBook> apiBooks)
+        {
+            return apiBooks.Select(book => MapBook(book));
+        }
+
+        public static Book MapBook(ApiBook book)
+        {
+            TinyMapper.Bind<ApiBook, Book>();
+            TinyMapper.Bind<ApiAuthor, Author>();
+            return TinyMapper.Map<Book>(book);
+        }
+
+        public static Book MapBook(BookDetail book)
+        {
+            TinyMapper.Bind<ApiBook, Book>();
+            TinyMapper.Bind<ApiAuthor, Author>();
+            return TinyMapper.Map<Book>(book);
+        }
+
+        public static BookDetail MapBookDetail(ApiBookDetailResponse bookDetail)
+        {
+            TinyMapper.Bind<ApiBookDetailResponse, BookDetail>();
+            TinyMapper.Bind<ApiAuthor, Author>();
+            TinyMapper.Bind<ApiGenre, Genre>();
+            return TinyMapper.Map<BookDetail>(bookDetail);
+        }
+
         #endregion
 
         #region Public BookDetail
 
-        public static IEnumerable<ICellBook> CreateCellsBookDetail(ApiBookDetailResponse response,
+        public static IEnumerable<ICellBook> CreateCellsBookDetail(BookDetail bookDetail,
                                                                      Action updateValidation,
                                                                      Action<CellBookGenreItem> removeGenre,
                                                                      Func<Task> deleteBook,
@@ -72,20 +100,20 @@ namespace ThePage.Core
         {
             var items = new List<ICellBook>
             {
-                new CellBookTextView("Title",response.Title, EBookInputType.Title,updateValidation),
-                new CellBookAuthor(response.Author,navigation, device, updateValidation),
+                new CellBookTextView("Title",bookDetail.Title, EBookInputType.Title,updateValidation),
+                new CellBookAuthor(bookDetail.Author,navigation, device, updateValidation),
                 new CellBookTitle("Genres")
             };
 
-            foreach (var item in response.Genres)
+            foreach (var item in bookDetail?.Genres)
             {
                 items.Add(new CellBookGenreItem(item, removeGenre));
             }
 
-            items.Add(new CellBookNumberTextView("Pages", response.Pages.ToString(), EBookInputType.Pages, updateValidation, false));
-            items.Add(new CellBookNumberTextView("ISBN", response.ISBN, EBookInputType.ISBN, updateValidation, false));
-            items.Add(new CellBookSwitch("Do you own this book?", response.Owned, EBookInputType.Owned, updateValidation));
-            items.Add(new CellBookSwitch("Have you read this book?", response.Read, EBookInputType.Read, updateValidation));
+            items.Add(new CellBookNumberTextView("Pages", bookDetail.Pages.ToString(), EBookInputType.Pages, updateValidation, false));
+            items.Add(new CellBookNumberTextView("ISBN", bookDetail.ISBN, EBookInputType.ISBN, updateValidation, false));
+            items.Add(new CellBookSwitch("Do you own this book?", bookDetail.Owned, EBookInputType.Owned, updateValidation));
+            items.Add(new CellBookSwitch("Have you read this book?", bookDetail.Read, EBookInputType.Read, updateValidation));
             items.Add(new CellBookButton("Delete Book", deleteBook, false));
 
             return items;

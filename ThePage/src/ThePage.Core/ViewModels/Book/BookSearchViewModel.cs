@@ -62,13 +62,14 @@ namespace ThePage.Core
             if (result == null)
                 return;
 
-            Items.Clear();
             if (result.Books.IsNotNullAndHasItems())
             {
-                result.Books.ForEach(b => Items.Add(new CellGoogleBook(b)));
+                var books = result.Books.Select(b => new CellGoogleBook(b));
+                Items.ReplaceWith(books);
             }
             else
             {
+                Items.Clear();
                 _userInteraction.Alert("No books found");
             }
 
@@ -76,7 +77,7 @@ namespace ThePage.Core
 
         public override void StopSearch()
         {
-
+            //Not required
         }
 
         public override Task LoadNextPage()

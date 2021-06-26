@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
@@ -21,7 +20,7 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
 
         #endregion
 
-        void LoadViewModel(ApiBookShelf parameter)
+        void LoadViewModel(Bookshelf parameter)
         {
             _vm.Prepare(parameter);
             _vm.Initialize();
@@ -31,9 +30,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfItemsCountWithBooks()
         {
             //Arrange
-            MockThePageService
-                   .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                  .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
 
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
@@ -41,16 +40,16 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
             _vm.Initialize();
 
             //Assert
-            Assert.Equal(6, _vm.Items.Count);
+            Assert.Equal(7, _vm.Items.Count);
         }
 
         [Fact]
         public void CheckBookShelfItemsCountWithoutBooks()
         {
             //Arrange
-            MockThePageService
-                   .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                  .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithoutBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithoutBooks()));
 
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithoutBooks());
 
@@ -65,9 +64,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfItemsCountWithBooksAfterEdit()
         {
             //Arrange
-            MockThePageService
-                   .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                  .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
 
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
@@ -77,16 +76,16 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
             _vm.EditBookShelfCommand.Execute();
 
             //Assert
-            Assert.Equal(7, _vm.Items.Count);
+            Assert.Equal(8, _vm.Items.Count);
         }
 
         [Fact]
         public void CheckBookShelfItemsCountWithoutBooksAfterEdit()
         {
             //Arrange
-            MockThePageService
-                   .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                  .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithoutBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithoutBooks()));
 
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithoutBooks());
 
@@ -103,9 +102,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfWithBooksCellItemsTypesAndOrder()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
             //Execute
@@ -124,9 +123,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfWithoutBooksCellItemsTypesAndOrder()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithoutBooks()));
+            MockBookShelfService
+                  .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithoutBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithoutBooks());
 
             //Execute
@@ -142,9 +141,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfWithBooksCellItemsTypesAndOrderAfterEditCommand()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                  .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
             //Execute
@@ -165,9 +164,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void CheckBookShelfWithoutBooksCellItemsTypesAndOrderAfterEditCommand()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithoutBooks()));
+            MockBookShelfService
+                  .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithoutBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithoutBooks());
 
             //Execute
@@ -185,9 +184,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void BookDetailEditIsDisabledAStart()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                  .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
             //Execute
@@ -201,9 +200,9 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void BookShelfDetailEditIsEnabledAferEditCommand()
         {
             //Arrange
-            MockThePageService
-                  .Setup(x => x.GetBookShelf(It.IsAny<string>()))
-                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetApiBookShelfDetailResponseWithBooks()));
+            MockBookShelfService
+                .Setup(x => x.FetchBookShelf(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookShelfDataFactory.GetBookShelfDetailWithBooks()));
             LoadViewModel(BookShelfDataFactory.GetSingleBookfShelfWithBooks());
 
             //Excute

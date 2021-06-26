@@ -32,22 +32,22 @@ namespace ThePage.UnitTests.ViewModels.Book
 
         void PrepareThePageServiceResults(bool containsGenres = true)
         {
-            MockThePageService
-               .Setup(x => x.GetAllGenres())
-               .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
+            MockGenreService
+               .Setup(x => x.GetGenres())
+               .Returns(() => Task.FromResult(GenreDataFactory.GetGenre4ElementsComplete()));
 
-            MockThePageService
-               .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+               .Setup(x => x.GetAuthors())
                .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
 
             if (containsGenres)
-                MockThePageService
-                    .Setup(x => x.GetBook(It.IsAny<string>()))
-                   .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseWithGenres()));
+                MockBookService
+                    .Setup(x => x.FetchBook(It.IsAny<string>()))
+                    .Returns(() => Task.FromResult(BookDataFactory.GetBookDetailWithGenres()));
             else
-                MockThePageService
-                    .Setup(x => x.GetBook(It.IsAny<string>()))
-                   .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseNoGenres()));
+                MockBookService
+                    .Setup(x => x.FetchBook(It.IsAny<string>()))
+                    .Returns(() => Task.FromResult(BookDataFactory.GetBookDetailNoGenres()));
         }
 
         #endregion
@@ -57,13 +57,13 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
 
             //Assert
-            Assert.Equal(10, _vm.Items.Count);
+            Assert.Equal(12, _vm.Items.Count);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults(false);
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -85,7 +85,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -93,7 +93,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             _vm.EditBookCommand.Execute();
 
             //Assert
-            Assert.Equal(11, _vm.Items.Count);
+            Assert.Equal(13, _vm.Items.Count);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults(false);
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -117,7 +117,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -128,11 +128,13 @@ namespace ThePage.UnitTests.ViewModels.Book
             Assert.IsType<CellBookTitle>(_vm.Items[2]);
             Assert.IsType<CellBookGenreItem>(_vm.Items[3]);
             Assert.IsType<CellBookGenreItem>(_vm.Items[4]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[5]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[6]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[7]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[8]);
-            Assert.IsType<CellBookButton>(_vm.Items[9]);
+            Assert.IsType<CellBookGenreItem>(_vm.Items[5]);
+            Assert.IsType<CellBookGenreItem>(_vm.Items[6]);
+            Assert.IsType<CellBookNumberTextView>(_vm.Items[7]);
+            Assert.IsType<CellBookNumberTextView>(_vm.Items[8]);
+            Assert.IsType<CellBookSwitch>(_vm.Items[9]);
+            Assert.IsType<CellBookSwitch>(_vm.Items[10]);
+            Assert.IsType<CellBookButton>(_vm.Items[11]);
         }
 
         [Fact]
@@ -140,11 +142,11 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults(false);
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
-            MockThePageService
-                .Setup(x => x.GetBook(It.IsAny<string>()))
-               .Returns(() => Task.FromResult(BookDataFactory.GetApiBookDetailResponseNoGenres()));
+            MockBookService
+                .Setup(x => x.FetchBook(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(BookDataFactory.GetBookDetailNoGenres()));
 
             //Execute
             _vm.Initialize();
@@ -165,7 +167,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -177,12 +179,14 @@ namespace ThePage.UnitTests.ViewModels.Book
             Assert.IsType<CellBookTitle>(_vm.Items[2]);
             Assert.IsType<CellBookGenreItem>(_vm.Items[3]);
             Assert.IsType<CellBookGenreItem>(_vm.Items[4]);
-            Assert.IsType<CellBookAddGenre>(_vm.Items[5]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[6]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[7]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[8]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[9]);
-            Assert.IsType<CellBookButton>(_vm.Items[10]);
+            Assert.IsType<CellBookGenreItem>(_vm.Items[5]);
+            Assert.IsType<CellBookGenreItem>(_vm.Items[6]);
+            Assert.IsType<CellBookAddGenre>(_vm.Items[7]);
+            Assert.IsType<CellBookNumberTextView>(_vm.Items[8]);
+            Assert.IsType<CellBookNumberTextView>(_vm.Items[9]);
+            Assert.IsType<CellBookSwitch>(_vm.Items[10]);
+            Assert.IsType<CellBookSwitch>(_vm.Items[11]);
+            Assert.IsType<CellBookButton>(_vm.Items[12]);
         }
 
         [Fact]
@@ -190,7 +194,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults(false);
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -214,7 +218,7 @@ namespace ThePage.UnitTests.ViewModels.Book
             //Arrange
             PrepareThePageServiceResults();
 
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Execute
             _vm.Initialize();
@@ -228,7 +232,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
 
             //Excute
             _vm.Initialize();
@@ -251,7 +255,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Setup
             PrepareThePageServiceResults();
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
             _vm.Initialize();
 
             _vm.EditBookCommand.Execute();
@@ -276,11 +280,11 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            MockThePageService
-               .Setup(x => x.UpdateBook(It.IsAny<string>(), It.IsAny<Api.ApiBookDetailRequest>()))
-               .Returns(() => result ? Task.FromResult(new Api.ApiBookDetailResponse()) : Task.FromResult<Api.ApiBookDetailResponse>(null));
+            MockBookService
+               .Setup(x => x.UpdateBook(It.IsAny<Api.ApiBookDetailRequest>()))
+               .Returns(() => Task.FromResult(result));
 
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
             _vm.Initialize();
 
             //Set view as Edit so we get the Update button
@@ -301,14 +305,14 @@ namespace ThePage.UnitTests.ViewModels.Book
         {
             //Arrange
             PrepareThePageServiceResults();
-            MockThePageService
+            MockBookService
                .Setup(x => x.DeleteBook(It.IsAny<string>()))
                .Returns(() => Task.FromResult(result));
             MockUserInteraction
                  .Setup(x => x.ConfirmAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                  .Returns(() => Task.FromResult(true));
 
-            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleApiBook()));
+            LoadViewModel(new BookDetailParameter(BookDataFactory.GetSingleBook()));
             _vm.Initialize();
 
 

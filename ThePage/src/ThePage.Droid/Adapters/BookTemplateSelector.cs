@@ -16,27 +16,19 @@ namespace ThePage.Droid
 
         protected override int SelectItemViewType(ICell forItemObject)
         {
-            switch (forItemObject)
+            return forItemObject switch
             {
-                case CellBookTitle c:
-                    return Resource.Layout.cell_book_title;
-                case CellBookNumberTextView c:
-                    return Resource.Layout.cell_book_numbertextview;
-                case CellBookTextView c:
-                    return Resource.Layout.cell_book_textview;
-                case CellBookAuthor c:
-                    return Resource.Layout.cell_book_author;
-                case CellBookButton c:
-                    return Resource.Layout.cell_book_button;
-                case CellBookAddGenre c:
-                    return Resource.Layout.cell_book_addgenre_item;
-                case CellBookGenreItem c:
-                    return Resource.Layout.cell_book_genre_item;
-                case CellBookSwitch c:
-                    return Resource.Layout.cell_book_switch;
-                default:
-                    throw new NotSupportedException("Unknown cell type");
-            }
+                CellBasicBook _ => Resource.Layout.cell_basic_book,
+                CellBookTitle _ => Resource.Layout.cell_book_title,
+                CellBookNumberTextView _ => Resource.Layout.cell_book_numbertextview,
+                CellBookTextView _ => Resource.Layout.cell_book_textview,
+                CellBookAuthor _ => Resource.Layout.cell_book_author,
+                CellBookButton _ => Resource.Layout.cell_book_button,
+                CellBookAddGenre _ => Resource.Layout.cell_book_addgenre_item,
+                CellBookGenreItem _ => Resource.Layout.cell_book_genre_item,
+                CellBookSwitch _ => Resource.Layout.cell_book_switch,
+                _ => throw new NotSupportedException($"Unknown cell type {forItemObject.GetType()}"),
+            };
         }
 
         #endregion

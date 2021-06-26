@@ -4,11 +4,11 @@ using Moq;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels
 {
     public class GenreDetailViewModelTests : BaseViewModelTests
     {
-        GenreDetailViewModel _vm;
+        readonly GenreDetailViewModel _vm;
 
         #region Constructor
 
@@ -73,6 +73,8 @@ namespace ThePage.UnitTests.ViewModels.Genre
         [InlineData(false)]
         public void LoadingAndEditingToFalseAfterEdit(bool result)
         {
+            //TODO only place using ThePageService
+            // => Fix to use GenreService!
             //Arrange
             MockThePageService
                 .Setup(x => x.UpdateGenre(It.IsAny<string>(), It.IsAny<Api.ApiGenreRequest>()))

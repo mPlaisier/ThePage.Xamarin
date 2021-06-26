@@ -32,14 +32,10 @@ namespace ThePage.UnitTests.ViewModels.Book
             _vm.Initialize();
         }
 
-        void PrepareAuthorAndGenreData()
+        void PrepareAuthorData()
         {
-            MockThePageService
-               .Setup(x => x.GetAllGenres())
-               .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
-
-            MockThePageService
-               .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+               .Setup(x => x.GetAuthors())
                .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
         }
 
@@ -50,20 +46,20 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void CheckBookCellItemsCountWithoutVMParameter()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             //Execute
             _vm.Initialize();
 
             //Assert
-            Assert.Equal(9, _vm.Items.Count);
+            Assert.Equal(8, _vm.Items.Count);
         }
 
         [Fact]
         public void CheckBookCellItemsCountWithVMParameter()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             var isbn = "5456554412";
             var olObject = BookDataFactory.GetSingleOLObject();
@@ -73,35 +69,34 @@ namespace ThePage.UnitTests.ViewModels.Book
             LoadViewModel(param);
 
             //Assert
-            Assert.Equal(9, _vm.Items.Count);
+            Assert.Equal(8, _vm.Items.Count);
         }
 
         [Fact]
         public void CheckCellBookTypesAreCreatedInCorrectPositionWithoutVmParameter()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             //Execute
             _vm.Initialize();
 
             //Assert
-            Assert.IsType<CellBookTextView>(_vm.Items[0]);
-            Assert.IsType<CellBookAuthor>(_vm.Items[1]);
-            Assert.IsType<CellBookTitle>(_vm.Items[2]);
-            Assert.IsType<CellBookAddGenre>(_vm.Items[3]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[4]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[5]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[6]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[7]);
-            Assert.IsType<CellBookButton>(_vm.Items[8]);
+            _vm.Items[0].Should().BeOfType<CellBasicBook>();
+            _vm.Items[1].Should().BeOfType<CellBookTitle>();
+            _vm.Items[2].Should().BeOfType<CellBookAddGenre>();
+            _vm.Items[3].Should().BeOfType<CellBookNumberTextView>();
+            _vm.Items[4].Should().BeOfType<CellBookNumberTextView>();
+            _vm.Items[5].Should().BeOfType<CellBookSwitch>();
+            _vm.Items[6].Should().BeOfType<CellBookSwitch>();
+            _vm.Items[7].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
         public void CheckCellBookTypesAreCreatedInCorrectPositionWithVmParameter()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             var isbn = "5456554412";
             var olObject = BookDataFactory.GetSingleOLObject();
@@ -111,15 +106,14 @@ namespace ThePage.UnitTests.ViewModels.Book
             LoadViewModel(param);
 
             //Assert
-            Assert.IsType<CellBookTextView>(_vm.Items[0]);
-            Assert.IsType<CellBookAuthor>(_vm.Items[1]);
-            Assert.IsType<CellBookTitle>(_vm.Items[2]);
-            Assert.IsType<CellBookAddGenre>(_vm.Items[3]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[4]);
-            Assert.IsType<CellBookNumberTextView>(_vm.Items[5]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[6]);
-            Assert.IsType<CellBookSwitch>(_vm.Items[7]);
-            Assert.IsType<CellBookButton>(_vm.Items[8]);
+            _vm.Items[0].Should().BeOfType<CellBasicBook>();
+            _vm.Items[1].Should().BeOfType<CellBookTitle>();
+            _vm.Items[2].Should().BeOfType<CellBookAddGenre>();
+            _vm.Items[3].Should().BeOfType<CellBookNumberTextView>();
+            _vm.Items[4].Should().BeOfType<CellBookNumberTextView>();
+            _vm.Items[5].Should().BeOfType<CellBookSwitch>();
+            _vm.Items[6].Should().BeOfType<CellBookSwitch>();
+            _vm.Items[7].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
@@ -141,7 +135,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void IsLoadingSetToFalseAfterInitialize()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             //Execute
             _vm.Initialize();
@@ -154,7 +148,7 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void ButtonsAreDisabledAfterInitialize()
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
 
             //Execute
             _vm.Initialize();
@@ -166,18 +160,17 @@ namespace ThePage.UnitTests.ViewModels.Book
         }
 
         [Theory, MemberData(nameof(InputDataForBooks))]
-        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Api.ApiAuthor author, string pages, bool isValid)
+        public void CheckIfButtonsHaveCorrectValidationAfterInput(string title, Core.Author author, string pages, bool isValid)
         {
             //Setup
-            PrepareAuthorAndGenreData();
+            PrepareAuthorData();
             _vm.Initialize();
 
             //Execute
-            var cellTitle = _vm.Items.OfType<CellBookTextView>().Where(x => x.InputType == EBookInputType.Title).First();
-            cellTitle.TxtInput = title;
+            var cellBasicInfo = _vm.Items.OfType<CellBasicBook>().Where(x => x.InputType == EBookInputType.BasicInfo).First();
+            cellBasicInfo.TxtTitle = title;
 
-            var cellAuthor = _vm.Items.OfType<CellBookAuthor>().First();
-            cellAuthor.Item = author;
+            cellBasicInfo.Author = author;
 
             var cellPages = _vm.Items.OfType<CellBookNumberTextView>().Where(x => x.InputType == EBookInputType.Pages).First();
             cellPages.TxtInput = pages;

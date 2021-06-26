@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintTop_toTopOf="parent"
+        local:MvxBind="Url ImageUri"/>
+    <!-- Normal view-->
+    <TextView
+        android:id="@+id/lblTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="18dp"
+        local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toTopOf="@id/image"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintBottom_toTopOf="@id/lblValue"
+        local:MvxBind="Text TxtTitle;Visibility InvertedVisibility(IsEdit)"/>
+    <TextView
+        android:id="@+id/lblAuthor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="14dp"
+        local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toBottomOf="@id/lblTitle"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Text Author.Name;Visibility InvertedVisibility(IsEdit)"/>
+    <!-- Edit view -->
+    <EditText
+        android:id="@+id/txtInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords"
+        android:imeOptions="actionDone"
+        local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toTopOf="@id/image"
+        local:layout_constraintEnd_toStartOf="@+id/imgsearch"
+        local:layout_constraintBottom_toTopOf="@id/lblValue"
+        local:MvxBind="Text TxtTitle;Visibility Visibility(IsEdit);"/>
+    <ImageView
+        android:id="@+id/imgsearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:tint="@color/primaryColor"
+        android:src="@drawable/ic_search"
+        local:layout_constraintTop_toTopOf="@id/txtInput"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Visibility Visibility(IsEdit);Click CommandSearchClick"/>
+    <TextView
+		android:id="@+id/txtAuthor"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+        android:drawableRight="@drawable/ic_account_edit"
+		local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toBottomOf="@id/txtInput"
+        local:layout_constraintEnd_toStartOf="@+id/imgauthor"
+		local:MvxBind="Text Author.Name;Visibility Visibility(IsEdit)"/>
+    <ImageView
+        android:id="@+id/imgauthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:tint="@color/primaryColor"
+        android:src="@drawable/ic_account_edit"
+        local:layout_constraintTop_toTopOf="@id/txtAuthor"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Visibility Visibility(IsEdit);Click CommandSelectItem)"/>
+</android.support.constraint.ConstraintLayout>

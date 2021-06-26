@@ -7,6 +7,7 @@ namespace ThePage.Core
     {
         public enum EBookInputType
         {
+            BasicInfo,
             Title,
             Author,
             Genre,

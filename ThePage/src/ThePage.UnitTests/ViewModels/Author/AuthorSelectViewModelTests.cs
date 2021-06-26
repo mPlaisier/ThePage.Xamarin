@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using ThePage.Api;
 using ThePage.Core;
 using Xunit;
 
@@ -39,8 +39,8 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void CountSelectedItemsCountWithAuthorParameter()
         {
             //Arrange
-            MockThePageService
-               .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+               .Setup(x => x.GetAuthors())
                .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
             LoadViewModel(GetSingleSelectedItemParameter());
 
@@ -52,8 +52,8 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void CountSelectedItemsCountWithNullParameter()
         {
             //Arrange
-            MockThePageService
-               .Setup(x => x.GetAllAuthors())
+            MockAuthorService
+               .Setup(x => x.GetAuthors())
                .Returns(() => Task.FromResult(AuthorDataFactory.GetListAuthor4ElementsComplete()));
             LoadViewModel(new AuthorSelectParameter(null));
 
@@ -65,9 +65,9 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void NoCrashWhenNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllAuthors())
-                .Returns(() => Task.FromResult<ApiAuthorResponse>(null));
+            MockAuthorService
+                .Setup(x => x.GetAuthors())
+                .Returns(() => Task.FromResult<IEnumerable<Core.Author>>(null));
             LoadViewModel(GetSingleSelectedItemParameter());
 
             Assert.Empty(_vm.Items);

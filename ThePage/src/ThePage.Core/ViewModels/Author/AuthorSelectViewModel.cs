@@ -1,9 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,13 +12,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public ApiAuthor SelectedAuthor { get; }
+        public Author SelectedAuthor { get; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorSelectParameter(ApiAuthor selectedAuthor)
+        public AuthorSelectParameter(Author selectedAuthor = null)
         {
             SelectedAuthor = selectedAuthor;
         }
@@ -26,21 +26,19 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class AuthorSelectViewModel : BaseListViewModel<AuthorSelectParameter, ApiAuthor>,
-                                         IBaseSelectSingleItemViewModel<ApiAuthor, CellAuthorSelect>
+    public class AuthorSelectViewModel : BaseListViewModel<AuthorSelectParameter, Author>,
+                                         IBaseSelectSingleItemViewModel<Author, CellAuthorSelect>
     {
-        readonly IThePageService _thePageService;
         readonly IMvxNavigationService _navigationService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IAuthorService _authorService;
 
         #region Properties
 
         public override string LblTitle => "Select Author";
 
-        public MvxObservableCollection<CellAuthorSelect> Items { get; set; }
+        public MvxObservableCollection<CellAuthorSelect> Items { get; set; } = new MvxObservableCollection<CellAuthorSelect>();
 
-        public ApiAuthor SelectedItem { get; private set; }
+        public Author SelectedItem { get; private set; }
 
         #endregion
 
@@ -52,10 +50,10 @@ namespace ThePage.Core
             _navigationService.Close(this, cell.Item);
         });
 
-        IMvxCommand _commandAddItem;
-        public IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        IMvxAsyncCommand _commandAddItem;
+        public IMvxAsyncCommand CommandAddItem => _commandAddItem ??= new MvxAsyncCommand(async () =>
         {
-            var result = await _navigationService.Navigate<AddAuthorViewModel, ApiAuthor>();
+            var result = await _navigationService.Navigate<AddAuthorViewModel, Author>();
             if (result != null)
                 await _navigationService.Close(this, result);
 
@@ -65,15 +63,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AuthorSelectViewModel(IThePageService thePageService,
-                                     IMvxNavigationService navigationService,
-                                     IUserInteraction userInteraction,
-                                     IDevice device)
+        public AuthorSelectViewModel(IMvxNavigationService navigationService,
+                                     IAuthorService authorService)
         {
-            _thePageService = thePageService;
             _navigationService = navigationService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _authorService = authorService;
         }
 
         #endregion
@@ -85,11 +79,11 @@ namespace ThePage.Core
             SelectedItem = parameter.SelectedAuthor;
         }
 
-        public override Task Initialize()
+        public override async Task Initialize()
         {
-            Refresh().Forget();
+            await Refresh();
 
-            return base.Initialize();
+            await base.Initialize();
         }
 
         #endregion
@@ -100,36 +94,22 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var apiAuthorResponse = await _thePageService.GetAllAuthors();
+            var authors = await _authorService.GetAuthors();
+            var cells = authors.Select(x => new CellAuthorSelect(x, x == SelectedItem));
 
-            Items = new MvxObservableCollection<CellAuthorSelect>();
-            apiAuthorResponse.Docs.ForEach(x => Items.Add(
-                new CellAuthorSelect(x, x == SelectedItem)));
+            if (cells.IsNotNull())
+                Items = new MvxObservableCollection<CellAuthorSelect>(cells);
 
-            _currentPage = apiAuthorResponse.Page;
-            _hasNextPage = apiAuthorResponse.HasNextPage;
             IsLoading = false;
         }
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                ApiAuthorResponse apiAuthorResponse = _isSearching
-                    ? await _thePageService.SearchAuthors(_search, _currentPage + 1)
-                    : await _thePageService.GetNextAuthors(_currentPage + 1);
-
-                apiAuthorResponse.Docs.ForEach(x => Items.Add(
-                    new CellAuthorSelect(x, x == SelectedItem)));
-
-                _currentPage = apiAuthorResponse.Page;
-                _hasNextPage = apiAuthorResponse.HasNextPage;
-                _isLoadingNextPage = false;
-
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var authors = await _authorService.LoadNextAuthors();
+                var cells = authors.Select(x => new CellAuthorSelect(x, x == SelectedItem));
+                Items.AddRange(cells);
             }
         }
 
@@ -138,35 +118,23 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _authorService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiAuthorResponse = await _thePageService.SearchAuthors(search, null);
-
-            Items = new MvxObservableCollection<CellAuthorSelect>();
-            apiAuthorResponse.Docs.ForEach(x => Items.Add(
-                new CellAuthorSelect(x, x == SelectedItem)));
-
-            _currentPage = apiAuthorResponse.Page;
-            _hasNextPage = apiAuthorResponse.HasNextPage;
+            var authors = await _authorService.Search(search);
+            var cells = authors.Select(x => new CellAuthorSelect(x, x == SelectedItem));
+            Items = new MvxObservableCollection<CellAuthorSelect>(cells);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_authorService.IsSearching)
+                await Refresh();
         }
 
         #endregion
