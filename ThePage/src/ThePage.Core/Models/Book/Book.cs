@@ -10,6 +10,10 @@ namespace ThePage.Core
 
         public Author Author { get; set; }
 
+        public ImageLinks Images { get; set; }
+
+        public string ImageUri => Images.GetImageUrl();
+
         #endregion
 
         #region public
