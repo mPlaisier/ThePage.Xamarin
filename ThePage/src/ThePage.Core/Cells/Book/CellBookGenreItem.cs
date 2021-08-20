@@ -1,17 +1,17 @@
 using System;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
-using ThePage.Api;
+using static ThePage.Core.Enums;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
-    public class CellBookGenreItem : CellBookInput, ICellBook
+    public class CellBookGenreItem : CellBaseBookInput, ICellBook
     {
         readonly Action<CellBookGenreItem> _removeGenre;
 
         #region Properties
 
-        public ApiGenre Genre { get; }
+        public Genre Genre { get; }
 
         #endregion
 
@@ -22,13 +22,12 @@ namespace ThePage.Core
 
         public override bool IsValid => true;
 
-        public override EBookInputType InputType => EBookInputType.Genre;
-
         #endregion
 
         #region Constructor
 
-        public CellBookGenreItem(ApiGenre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
+        public CellBookGenreItem(Genre genre, Action<CellBookGenreItem> removeGenre, bool isEdit = false)
+            : base(EBookInputType.Genre)
         {
             Genre = genre;
             _removeGenre = removeGenre;

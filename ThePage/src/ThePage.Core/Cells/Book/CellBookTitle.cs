@@ -1,4 +1,4 @@
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellBookTitle : ICellBook
     {

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
 
 namespace ThePage.UnitTests.Cells.Book
@@ -10,7 +11,7 @@ namespace ThePage.UnitTests.Cells.Book
         public void CreateValidCellBookSelectNotSelected()
         {
             //Setup
-            var cell = new CellBookSelect(BookDataFactory.GetSingleApiBook());
+            var cell = new CellBookSelect(BookDataFactory.GetSingleBook());
 
             //Check
             cell.Item.Should().NotBeNull();
@@ -21,7 +22,7 @@ namespace ThePage.UnitTests.Cells.Book
         public void CreateValidBookSelectIsSelected()
         {
             //Setup
-            var cell = new CellBookSelect(BookDataFactory.GetSingleApiBook(), true);
+            var cell = new CellBookSelect(BookDataFactory.GetSingleBook(), true);
 
             //Check
             cell.Item.Should().NotBeNull();

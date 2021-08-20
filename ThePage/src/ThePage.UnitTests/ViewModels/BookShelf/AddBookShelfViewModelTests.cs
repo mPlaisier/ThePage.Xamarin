@@ -1,15 +1,11 @@
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
-using Moq;
 using ThePage.Core;
 using Xunit;
-using static ThePage.Core.CellBookInput;
 
 namespace ThePage.UnitTests.ViewModels.BookShelf
 {
-    public class AddBookShelfViewModelTests : BaseViewModelTests
+    public class AddBookShelfViewModelTests : BaseServicesTests
     {
         readonly AddBookShelfViewModel _vm;
 

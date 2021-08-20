@@ -2,6 +2,7 @@ using MonkeyCache.LiteDB;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public partial class ThePageService : IThePageService
     {
         readonly IAuthService _authService;

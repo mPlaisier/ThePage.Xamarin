@@ -4,6 +4,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class GoogleBooksService : IGoogleBooksService
     {
         readonly IExceptionService _exceptionService;

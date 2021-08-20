@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -36,23 +35,34 @@ namespace ThePage.Api
 
     public class ImageLinks
     {
+        #region Properties
+
         [JsonProperty("smallThumbnail")]
-        public string SmallThumbnail { get; internal set; }
+        public string SmallThumbnail { get; set; }
 
         [JsonProperty("thumbnail")]
-        public string Thumbnail { get; internal set; }
+        public string Thumbnail { get; set; }
 
         [JsonProperty("small")]
-        public string Small { get; internal set; }
+        public string Small { get; set; }
 
         [JsonProperty("medium")]
-        public string Medium { get; internal set; }
+        public string Medium { get; set; }
 
         [JsonProperty("large")]
-        public string Large { get; internal set; }
+        public string Large { get; set; }
 
         [JsonProperty("extraLarge")]
-        public string ExtraLarge { get; internal set; }
+        public string ExtraLarge { get; set; }
+
+        #endregion
+
+        #region Public
+
+        public string GetImageUrl()
+            => Thumbnail ?? Small ?? SmallThumbnail ?? Medium ?? Large ?? ExtraLarge ?? null;
+
+        #endregion
     }
 
     public class VolumeInfo
@@ -76,7 +86,7 @@ namespace ThePage.Api
         public List<IndustryIdentifier> IndustryIdentifiers { get; set; }
 
         [JsonProperty("pageCount")]
-        public int PageCount { get; set; }
+        public int? PageCount { get; set; }
 
         [JsonProperty("dimensions")]
         public Dimensions Dimensions { get; set; }
@@ -189,6 +199,8 @@ namespace ThePage.Api
 
     public class GoogleBook
     {
+        #region Properties
+
         [JsonProperty("kind")]
         public string Kind { get; internal set; }
 
@@ -212,5 +224,16 @@ namespace ThePage.Api
 
         [JsonProperty("searchInfo")]
         public SearchInfo SearchInfo { get; internal set; }
+
+        #endregion
+
+        #region Public
+
+        public string GetImageUrl()
+        {
+            return VolumeInfo?.ImageLinks?.GetImageUrl();
+        }
+
+        #endregion
     }
 }

@@ -1,5 +1,10 @@
+using System;
 using System.Collections.Generic;
+using FluentAssertions;
+using Moq;
+using MvvmCross.Navigation;
 using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
 
 namespace ThePage.UnitTests.Cells.Book
@@ -10,7 +15,7 @@ namespace ThePage.UnitTests.Cells.Book
         public void CreateCellBookAuthorAndCheckValidProperty(CellBookAuthor cell, bool isValid)
         {
             //Check
-            Assert.Equal(isValid, cell.IsValid);
+            cell.IsValid.Should().Be(isValid);
         }
 
         [Fact]
@@ -23,7 +28,7 @@ namespace ThePage.UnitTests.Cells.Book
             cell.Item = AuthorDataFactory.GetSingleAuthor();
 
             //Execute
-            Assert.True(cell.IsValid);
+            cell.IsValid.Should().BeTrue();
         }
 
         [Fact]
@@ -36,7 +41,7 @@ namespace ThePage.UnitTests.Cells.Book
             cell.Item = null;
 
             //Execute
-            Assert.False(cell.IsValid);
+            cell.IsValid.Should().BeFalse();
         }
 
         public static IEnumerable<object[]> CellBookAuthorScenarios =>
@@ -51,15 +56,15 @@ namespace ThePage.UnitTests.Cells.Book
             public static CellBookAuthor GetCellBookAuthorIsValid()
             {
                 var author = AuthorDataFactory.GetSingleAuthor();
-                var cell = new CellBookAuthor(author, null, null, null);
+                var cell = new CellBookAuthor(author, It.IsAny<MvxNavigationService>(), It.IsAny<IDevice>(), () => { });
 
                 return cell;
             }
 
             public static CellBookAuthor GetCellBookAuthorIsNotValid()
             {
-                Api.ApiAuthor author = null;
-                var cell = new CellBookAuthor(author, null, null, null);
+                Core.Author author = null;
+                var cell = new CellBookAuthor(author, It.IsAny<MvxNavigationService>(), It.IsAny<IDevice>(), () => { });
 
                 return cell;
             }

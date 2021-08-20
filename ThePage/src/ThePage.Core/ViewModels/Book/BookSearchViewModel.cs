@@ -6,6 +6,7 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
+using ThePage.Core.Cells;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -62,20 +63,16 @@ namespace ThePage.Core
             if (result == null)
                 return;
 
-            Items.Clear();
             if (result.Books.IsNotNullAndHasItems())
             {
-                result.Books.ForEach(b => Items.Add(new CellGoogleBook(b)));
+                var books = result.Books.Select(b => new CellGoogleBook(b));
+                Items.ReplaceWith(books);
             }
             else
             {
+                Items.Clear();
                 _userInteraction.Alert("No books found");
             }
-
-        }
-
-        public override void StopSearch()
-        {
 
         }
 

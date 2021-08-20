@@ -1,12 +1,10 @@
 using CBP.Extensions;
 using ThePage.Api;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellGoogleBook
     {
-
-
         #region Properties
 
         public GoogleBook Book { get; }
@@ -15,7 +13,7 @@ namespace ThePage.Core
 
         public string Author => GetAuthors();
 
-        public string ImageUri => GetImage();
+        public string ImageUri => Book.GetImageUrl();
 
         #endregion
 
@@ -36,38 +34,11 @@ namespace ThePage.Core
             {
                 var authors = "";
                 Book.VolumeInfo.Authors.ForEach((a) => authors += $", {a}");
-                authors.Substring(1);
+                authors = authors.Remove(0, 2);
 
                 return authors;
             }
             return "";
-        }
-
-        string GetImage()
-        {
-            if (Book != null && Book.VolumeInfo.ImageLinks != null)
-            {
-                var images = Book.VolumeInfo.ImageLinks;
-                if (images.Thumbnail != null)
-                    return images.Thumbnail;
-
-                if (images.Small != null)
-                    return images.Small;
-
-                if (images.SmallThumbnail != null)
-                    return images.SmallThumbnail;
-
-                if (images.Medium != null)
-                    return images.Medium;
-
-                if (images.Large != null)
-                    return images.Large;
-
-                if (images.ExtraLarge != null)
-                    return images.ExtraLarge;
-            }
-
-            return null;
         }
 
         #endregion

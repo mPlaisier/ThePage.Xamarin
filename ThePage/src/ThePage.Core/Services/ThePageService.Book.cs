@@ -76,9 +76,9 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book)
+        public async Task<ApiBookDetailResponse> AddBook(ApiBookDetailRequest book)
         {
-            ApiBookDetailRequest result = null;
+            ApiBookDetailResponse result = null;
             try
             {
                 var token = await _authService.GetSessionToken();

@@ -6,7 +6,7 @@ using ThePage.Core;
 
 namespace ThePage.UnitTests
 {
-    public class BaseViewModelTests : MvxIoCSupportingTest
+    public class BaseServicesTests : MvxIoCSupportingTest
     {
         #region Properties
 
@@ -14,6 +14,11 @@ namespace ThePage.UnitTests
         protected Mock<IThePageService> MockThePageService { get; private set; }
         protected Mock<IAuthService> MockAuthService { get; private set; }
         protected Mock<IUserInteraction> MockUserInteraction { get; private set; }
+
+        protected Mock<IBookService> MockBookService { get; private set; }
+        protected Mock<IAuthorService> MockAuthorService { get; private set; }
+        protected Mock<IGenreService> MockGenreService { get; private set; }
+        protected Mock<IBookShelfService> MockBookShelfService { get; private set; }
 
         #endregion
 
@@ -33,6 +38,18 @@ namespace ThePage.UnitTests
 
             MockThePageService = new Mock<IThePageService>();
             Ioc.RegisterSingleton(MockThePageService.Object);
+
+            MockBookService = new Mock<IBookService>();
+            Ioc.RegisterSingleton(MockBookService.Object);
+
+            MockAuthorService = new Mock<IAuthorService>();
+            Ioc.RegisterSingleton(MockAuthorService.Object);
+
+            MockGenreService = new Mock<IGenreService>();
+            Ioc.RegisterSingleton(MockGenreService.Object);
+
+            MockBookShelfService = new Mock<IBookShelfService>();
+            Ioc.RegisterSingleton(MockBookShelfService.Object);
 
             MockUserInteraction = new Mock<IUserInteraction>();
             Ioc.RegisterSingleton(MockUserInteraction.Object);

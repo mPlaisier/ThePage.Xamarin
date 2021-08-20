@@ -41,6 +41,9 @@ namespace ThePage.Api
         [JsonProperty("olcover")]
         public Olcover OlCover { get; internal set; }
 
+        [JsonProperty("images")]
+        public ImageLinks Images { get; internal set; }
+
         #endregion
 
         public class Builder
@@ -70,6 +73,14 @@ namespace ThePage.Api
                 isEmpty = false;
 
                 _apiRequest.AuthorId = authorId;
+                return this;
+            }
+
+            public Builder SetImages(ImageLinks images)
+            {
+                isEmpty = false;
+
+                _apiRequest.Images = images;
                 return this;
             }
 

@@ -2,12 +2,13 @@ using System;
 using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Commands;
+using static ThePage.Core.Enums;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
-    public class CellBookTextView : CellBookInput
+    public class CellBookTextView : CellBaseBookInputValidation
     {
-        protected bool _isRequired = true;
+        protected bool _isRequired;
         protected Func<string, Task> _searchFunc;
 
         #region Properties
@@ -27,8 +28,6 @@ namespace ThePage.Core
 
         public override bool IsValid => CheckValidation();
 
-        public override EBookInputType InputType { get; }
-
         public bool HasSearch => _searchFunc.IsNotNull() && IsEdit;
 
         #endregion
@@ -43,10 +42,9 @@ namespace ThePage.Core
         #region Constructor
 
         public CellBookTextView(string lblTitle, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
+            : base(updateValidation, inputType)
         {
             LblTitle = lblTitle;
-            InputType = inputType;
-            UpdateValidation = updateValidation;
             _isRequired = isRequired;
             IsEdit = isEdit;
         }
@@ -54,7 +52,7 @@ namespace ThePage.Core
         public CellBookTextView(string lblTitle, string value, EBookInputType inputType, Action updateValidation, bool isRequired = true, bool isEdit = false)
             : this(lblTitle, inputType, updateValidation, isRequired, isEdit)
         {
-            TxtInput = value;
+            _txtInput = value;
         }
 
         #endregion

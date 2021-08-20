@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
-using static ThePage.Core.CellBookInput;
+using static ThePage.Core.Enums;
 
 namespace ThePage.UnitTests.Cells.Book
 {
@@ -57,7 +57,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var type = EBookInputType.Read;
                 var isEdit = false;
 
-                return new CellBookSwitch(title, value, type, null, isEdit);
+                return new CellBookSwitch(title, value, type, EmptyAction, isEdit);
             }
 
             public static CellBookSwitch GetFalseValueCellBookSwitch()
@@ -67,7 +67,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var type = EBookInputType.Read;
                 var isEdit = false;
 
-                return new CellBookSwitch(title, value, type, null, isEdit);
+                return new CellBookSwitch(title, value, type, EmptyAction, isEdit);
             }
 
             public static CellBookSwitch GetEmptyValueCellBookSwitch()
@@ -76,8 +76,10 @@ namespace ThePage.UnitTests.Cells.Book
                 var type = EBookInputType.Read;
                 var isEdit = false;
 
-                return new CellBookSwitch(title, type, null, isEdit);
+                return new CellBookSwitch(title, type, EmptyAction, isEdit);
             }
+
+            static void EmptyAction() { }
         }
     }
 }

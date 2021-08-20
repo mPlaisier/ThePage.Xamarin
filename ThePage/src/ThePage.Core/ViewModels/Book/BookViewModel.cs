@@ -5,7 +5,6 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -13,14 +12,12 @@ namespace ThePage.Core
     public class BookViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
         readonly IOpenLibraryService _openLibraryService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IBookService _bookService;
 
         #region Properties
 
-        public MvxObservableCollection<ApiBook> Books { get; private set; }
+        public MvxObservableCollection<Book> Books { get; private set; }
 
         public override string LblTitle => "Books";
 
@@ -32,24 +29,20 @@ namespace ThePage.Core
         #region Constructor
 
         public BookViewModel(IMvxNavigationService navigation,
-                             IThePageService thePageService,
                              IOpenLibraryService openLibraryService,
-                             IUserInteraction userInteraction,
-                             IDevice device)
+                             IBookService bookService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
             _openLibraryService = openLibraryService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _bookService = bookService;
         }
 
         #endregion
 
         #region Commands
 
-        IMvxCommand<ApiBook> _itemClickCommand;
-        public IMvxCommand<ApiBook> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiBook>(async (item) =>
+        IMvxAsyncCommand<Book> _itemClickCommand;
+        public IMvxAsyncCommand<Book> ItemClickCommand => _itemClickCommand ??= new MvxAsyncCommand<Book>(async (item) =>
         {
             var result = await _navigation.Navigate<BookDetailViewModel, BookDetailParameter, bool>(new BookDetailParameter(item));
             if (result)
@@ -57,8 +50,8 @@ namespace ThePage.Core
 
         });
 
-        IMvxCommand _addbookCommand;
-        public IMvxCommand AddBookCommand => _addbookCommand ??= new MvxCommand(async () =>
+        IMvxAsyncCommand _addbookCommand;
+        public IMvxAsyncCommand AddBookCommand => _addbookCommand ??= new MvxAsyncCommand(async () =>
         {
             var result = await _navigation.Navigate<AddBookViewModel, string>();
             if (result != null)
@@ -78,7 +71,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            Refresh().Forget();
+            await Refresh();
         }
 
         #endregion
@@ -87,22 +80,10 @@ namespace ThePage.Core
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiBookResponse = _isSearching
-                    ? await _thePageService.SearchBooksTitle(_search, _currentPage + 1)
-                    : await _thePageService.GetNextBooks(_currentPage + 1);
-
-                Books.AddRange(apiBookResponse.Docs);
-
-                _currentPage = apiBookResponse.Page;
-                _hasNextPage = apiBookResponse.HasNextPage;
-                _isLoadingNextPage = false;
-
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var books = await _bookService.LoadNextBooks();
+                Books.AddRange(books);
             }
         }
 
@@ -111,32 +92,22 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _bookService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiBookResponse = await _thePageService.SearchBooksTitle(search, null);
-            Books = new MvxObservableCollection<ApiBook>(apiBookResponse.Docs);
-
-            _currentPage = apiBookResponse.Page;
-            _hasNextPage = apiBookResponse.HasNextPage;
+            var books = await _bookService.Search(search);
+            Books = new MvxObservableCollection<Book>(books);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_bookService.IsSearching)
+                await Refresh();
         }
 
         #endregion
@@ -147,10 +118,8 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var apiBookResponse = await _thePageService.GetAllBooks();
-            Books = new MvxObservableCollection<ApiBook>(apiBookResponse.Docs);
-            _currentPage = apiBookResponse.Page;
-            _hasNextPage = apiBookResponse.HasNextPage;
+            var books = await _bookService.FetchBooks();
+            Books = new MvxObservableCollection<Book>(books);
 
             IsLoading = false;
         }

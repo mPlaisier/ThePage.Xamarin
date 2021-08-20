@@ -94,13 +94,13 @@ namespace ThePage.Api
 
         #region DELETE
 
-        public static async Task<bool> Delete(string token, ApiGenre genre)
+        public static async Task<bool> Delete(string token, string id)
         {
             //Clear cache
-            ManagerUtils.ClearPageBarrels(GENRES_KEY, GENRES_SINGLE_KEY, genre.Id);
+            ManagerUtils.ClearPageBarrels(GENRES_KEY, GENRES_SINGLE_KEY, id);
 
             var api = RestService.For<IGenreApi>(HttpUtils.GetHttpClient(Constants.ThePage_Api_Url, token));
-            await api.Delete(genre);
+            await api.Delete(id);
 
             return true;
         }
