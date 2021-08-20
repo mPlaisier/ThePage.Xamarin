@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/book_cover"
         local:MvxBind="Url ImageUri"/>
     <!-- Normal view-->
     <TextView
@@ -42,8 +42,10 @@
         android:id="@+id/txtInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="textCapWords"
+        android:layout_marginStart="10dp"
+        android:inputType="textCapSentences|textMultiLine"
         android:imeOptions="actionDone"
+        android:textSize="15sp"
         local:layout_constraintStart_toEndOf="@id/image"
         local:layout_constraintTop_toTopOf="@id/image"
         local:layout_constraintEnd_toStartOf="@+id/imgsearch"
@@ -61,14 +63,15 @@
         local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="Visibility Visibility(IsEdit);Click CommandSearchClick"/>
     <TextView
-		android:id="@+id/txtAuthor"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-        android:drawableRight="@drawable/ic_account_edit"
-		local:layout_constraintStart_toEndOf="@id/image"
+        android:id="@+id/txtAuthor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="J.R.R. Tolkien"
+        local:layout_constraintStart_toEndOf="@id/image"
         local:layout_constraintTop_toBottomOf="@id/txtInput"
         local:layout_constraintEnd_toStartOf="@+id/imgauthor"
-		local:MvxBind="Text Author.Name;Visibility Visibility(IsEdit)"/>
+        local:MvxBind="Text Author.Name;Visibility Visibility(IsEdit)"/>
     <ImageView
         android:id="@+id/imgauthor"
         android:layout_width="wrap_content"
@@ -79,5 +82,5 @@
         android:src="@drawable/ic_account_edit"
         local:layout_constraintTop_toTopOf="@id/txtAuthor"
         local:layout_constraintEnd_toEndOf="parent"
-        local:MvxBind="Visibility Visibility(IsEdit);Click CommandSelectItem)"/>
-</android.support.constraint.ConstraintLayout>
+        local:MvxBind="Visibility Visibility(IsEdit);Click CommandSelectAuthor"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

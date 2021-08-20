@@ -1,6 +1,7 @@
 using System;
 using MvvmCross.DroidX.RecyclerView.ItemTemplates;
 using ThePage.Core;
+using ThePage.Core.Cells;
 
 namespace ThePage.Droid
 {
