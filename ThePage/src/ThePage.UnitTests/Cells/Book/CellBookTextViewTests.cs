@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
-using static ThePage.Core.CellBookInput;
+using static ThePage.Core.Enums;
 
 namespace ThePage.UnitTests.Cells.Book
 {
@@ -52,7 +52,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetEmptyInputValueCellBookTextViewIsRequiredAndIsNotEdit()
@@ -63,7 +63,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetNullInputValueCellBookTextViewIsRequiredAndIsNotEdit()
@@ -74,7 +74,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetNoValueCellBookTextViewNoValueIsRequiredAndIsNotEdit()
@@ -84,7 +84,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookTextView(title, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetNoValueCellBookTextViewNoValueIsNotRequiredAndIsNotEdit()
@@ -94,7 +94,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookTextView(title, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetValidInputCellBookTextViewIsNotRequiredAndIsNotEdit()
@@ -105,7 +105,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetCellBookTextViewNoValueIsNotRequiredAndIsNotEdit()
@@ -115,7 +115,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookTextView(title, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookTextView GetNullInputValueCellBookTextViewIsNotRequiredAndIsNotEdit()
@@ -126,8 +126,10 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
+
+            static void EmptyAction() { }
         }
     }
 }

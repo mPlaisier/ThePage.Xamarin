@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels
 {
-    public class AddGenreViewModelTests : BaseViewModelTests
+    public class AddGenreViewModelTests : BaseServicesTests
     {
         readonly AddGenreViewModel _vm;
 

@@ -5,6 +5,7 @@ using Bogus;
 using Newtonsoft.Json;
 using ThePage.Api;
 using ThePage.Core;
+using ThePage.Core.Cells;
 
 namespace ThePage.UnitTests
 {

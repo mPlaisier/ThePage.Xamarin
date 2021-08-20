@@ -8,8 +8,6 @@ namespace ThePage.UnitTests
 {
     public static partial class AuthorDataFactory
     {
-
-
         public static Author GetSingleAuthor()
         {
             return GetFakeAuthor().Generate();

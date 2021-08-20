@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using ThePage.Core;
+using FluentAssertions;
+using ThePage.Core.Cells;
 using Xunit;
-using static ThePage.Core.CellBookInput;
+using static ThePage.Core.Enums;
 
 namespace ThePage.UnitTests.Cells.Book
 {
@@ -11,7 +12,7 @@ namespace ThePage.UnitTests.Cells.Book
         public void CreateCellBookNumberTextViewAndCheckIfValid(CellBookNumberTextView cell, bool isValid)
         {
             //Assert
-            Assert.Equal(isValid, cell.IsValid);
+            cell.IsValid.Should().Be(isValid);
         }
 
         [Fact]
@@ -24,7 +25,7 @@ namespace ThePage.UnitTests.Cells.Book
             cell.TxtInput = DataFactory.ValidNumberString;
 
             //Assert
-            Assert.True(cell.IsValid);
+            cell.IsValid.Should().BeTrue();
         }
 
         public static IEnumerable<object[]> CellBookNumberTextViewScenarios =>
@@ -54,7 +55,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetEmptyInputValueCellBookNumberTextViewIsRequiredAndIsNotEdit()
@@ -65,7 +66,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetNullInputValueCellBookNumberTextViewIsRequiredAndIsNotEdit()
@@ -76,7 +77,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetNoValueCellBookNumberTextViewNoValueIsRequiredAndIsNotEdit()
@@ -86,7 +87,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetNoValueCellBookNumberTextViewNoValueIsNotRequiredAndIsNotEdit()
@@ -96,7 +97,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetValidInputCellBookNumberTextViewIsNotRequiredAndIsNotEdit()
@@ -107,7 +108,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetCellBookNumberTextViewNoValueIsNotRequiredAndIsNotEdit()
@@ -117,7 +118,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetNullInputValueCellBookNumberTextViewIsNotRequiredAndIsNotEdit()
@@ -128,7 +129,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = false;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
 
             public static CellBookNumberTextView GetStringInputCellBookNumberTextViewIsRequiredAndIsNotEdit()
@@ -139,8 +140,10 @@ namespace ThePage.UnitTests.Cells.Book
                 var isRequired = true;
                 var isEdit = false;
 
-                return new CellBookNumberTextView(title, value, type, null, isRequired, isEdit);
+                return new CellBookNumberTextView(title, value, type, EmptyAction, isRequired, isEdit);
             }
+
+            static void EmptyAction() { }
         }
     }
 }

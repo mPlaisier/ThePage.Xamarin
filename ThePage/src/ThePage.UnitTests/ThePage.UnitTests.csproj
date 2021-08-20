@@ -53,6 +53,9 @@
 		<Folder Include="TestData\ApiFactory\Data\" />
 		<Folder Include="TestData\CoreFactory\" />
 		<Folder Include="TestData\CoreFactory\Data\" />
+		<Folder Include="Services\" />
+		<Folder Include="Services\Book\" />
+		<Folder Include="Services\Book\ScreenManager\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ThePage.Core\ThePage.Core.csproj" />

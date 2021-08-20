@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels
 {
-    public class GenreDetailViewModelTests : BaseViewModelTests
+    public class GenreDetailViewModelTests : BaseServicesTests
     {
         readonly GenreDetailViewModel _vm;
 

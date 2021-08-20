@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.Book
 {
-    public class BookViewModelTests : BaseViewModelTests
+    public class BookViewModelTests : BaseServicesTests
     {
         readonly BookViewModel _vm;
 

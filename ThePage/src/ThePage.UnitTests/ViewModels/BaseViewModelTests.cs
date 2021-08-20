@@ -6,7 +6,7 @@ using ThePage.Core;
 
 namespace ThePage.UnitTests
 {
-    public class BaseViewModelTests : MvxIoCSupportingTest
+    public class BaseServicesTests : MvxIoCSupportingTest
     {
         #region Properties
 

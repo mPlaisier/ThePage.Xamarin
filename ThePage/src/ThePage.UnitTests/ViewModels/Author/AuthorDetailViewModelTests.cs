@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.Author
 {
-    public class AuthorDetailViewModelTests : BaseViewModelTests
+    public class AuthorDetailViewModelTests : BaseServicesTests
     {
         AuthorDetailViewModel _vm;
 
