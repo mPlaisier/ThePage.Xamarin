@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThePage.Api;
+using ThePage.Core.Cells;
 
 namespace ThePage.Core
 {

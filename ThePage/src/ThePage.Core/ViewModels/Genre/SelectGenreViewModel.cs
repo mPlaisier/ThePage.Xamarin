@@ -83,11 +83,11 @@ namespace ThePage.Core
             SelectedItems = parameter.SelectedGenres;
         }
 
-        public override Task Initialize()
+        public override async Task Initialize()
         {
-            Refresh().Forget();
+            await Refresh();
 
-            return base.Initialize();
+            await base.Initialize();
         }
 
         #endregion

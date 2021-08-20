@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Navigation;
 using ThePage.Api;
+using ThePage.Core.Cells;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class BookService : IBookService
     {
         readonly IDevice _device;

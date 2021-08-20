@@ -17,7 +17,10 @@ namespace ThePage.Core.ViewModels
 
         public abstract Task Search(string search);
 
-        public abstract void StopSearch();
+        public virtual void StopSearch()
+        {
+            //Not always required
+        }
 
         #endregion
     }

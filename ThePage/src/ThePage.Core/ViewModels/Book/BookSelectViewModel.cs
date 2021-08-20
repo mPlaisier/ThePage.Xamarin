@@ -5,6 +5,7 @@ using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using ThePage.Core.Cells;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core

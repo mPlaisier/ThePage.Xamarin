@@ -5,6 +5,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class GenreService : IGenreService
     {
         readonly IDevice _device;

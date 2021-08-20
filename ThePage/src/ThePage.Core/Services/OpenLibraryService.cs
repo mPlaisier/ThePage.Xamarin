@@ -4,6 +4,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class OpenLibraryService : IOpenLibraryService
     {
         readonly IExceptionService _exceptionService;

@@ -6,6 +6,7 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Api;
+using ThePage.Core.Cells;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -73,11 +74,6 @@ namespace ThePage.Core
                 _userInteraction.Alert("No books found");
             }
 
-        }
-
-        public override void StopSearch()
-        {
-            //Not required
         }
 
         public override Task LoadNextPage()

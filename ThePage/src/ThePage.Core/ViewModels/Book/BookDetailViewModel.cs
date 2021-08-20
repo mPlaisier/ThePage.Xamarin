@@ -1,14 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
 using System.Threading.Tasks;
-using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
+using ThePage.Core.Cells;
 using ThePage.Core.ViewModels;
-using static ThePage.Core.CellBookInput;
 
 namespace ThePage.Core
 {
@@ -32,44 +29,35 @@ namespace ThePage.Core
 
     public class BookDetailViewModel : BaseViewModel<BookDetailParameter, bool>
     {
-        readonly IMvxNavigationService _navigation;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
-
-        readonly IBookService _bookService;
-
-        Book _book;
+        readonly IBookDetailScreenManagerService _screenManager;
+        readonly IMvxNavigationService _navigationService;
 
         #region Properties
 
-        public MvxObservableCollection<ICellBook> Items { get; set; } = new MvxObservableCollection<ICellBook>();
+        public MvxObservableCollection<ICellBook> Items { get; private set; } = new MvxObservableCollection<ICellBook>();
 
-        public override string LblTitle => _book != null ? _book.Title : "Book detail";
-
-        public BookDetail BookDetail { get; internal set; }
-
-        public bool IsEditing { get; set; }
+        public override string LblTitle => _screenManager.Title;
 
         readonly MvxInteraction _updateToolbarInteraction = new MvxInteraction();
         public IMvxInteraction UpdateToolbarInteraction => _updateToolbarInteraction;
+
+        public bool IsEditing { get; private set; }
 
         #endregion
 
         #region Commands
 
         IMvxCommand _editbookCommand;
-        public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(ToggleEditValue);
+        public IMvxCommand EditBookCommand => _editbookCommand ??= new MvxCommand(_screenManager.ToggleEditValue);
 
         #endregion
 
         #region Constructor
 
-        public BookDetailViewModel(IMvxNavigationService navigation, IBookService bookService, IUserInteraction userInteraction, IDevice device)
+        public BookDetailViewModel(IBookDetailScreenManagerService screenManager, IMvxNavigationService navigationService)
         {
-            _navigation = navigation;
-            _bookService = bookService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _screenManager = screenManager;
+            _navigationService = navigationService;
         }
 
         #endregion
@@ -78,7 +66,7 @@ namespace ThePage.Core
 
         public override void Prepare(BookDetailParameter parameter)
         {
-            _book = parameter.Book;
+            _screenManager.Init(parameter, Close);
         }
 
         public override async Task Initialize()
@@ -87,167 +75,41 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            await FetchData();
+            _screenManager.PropertyChanged += _screenManager_PropertyChanged;
+
+            await _screenManager.FetchData();
+        }
+
+        public override void ViewDestroy(bool viewFinishing = true)
+        {
+            base.ViewDestroy(viewFinishing);
+
+            _screenManager.PropertyChanged -= _screenManager_PropertyChanged;
         }
 
         #endregion
 
         #region Private
 
-        async Task UpdateBook()
+        void _screenManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (IsLoading)
-                return;
-
-            _device.HideKeyboard();
-            IsLoading = true;
-
-            var request = UpdateBookCellData();
-
-            if (request != null)
+            if (e.PropertyName.Equals(nameof(_screenManager.Items)))
             {
-                await _bookService.UpdateBook(request);
+                Items = _screenManager.Items;
             }
-
-            ToggleEditValue();
-            IsLoading = false;
-        }
-
-        async Task DeleteBook()
-        {
-            if (IsLoading)
-                return;
-
-            var answer = await _userInteraction.ConfirmAsync("Remove book?", "Confirm", "DELETE");
-            if (answer)
+            else if (e.PropertyName.Equals(nameof(_screenManager.IsLoading)))
             {
-                IsLoading = true;
-
-                var result = await _bookService.DeleteBook(BookDetail.Id);
-                if (result)
-                    await _navigation.Close(this, true);
-                else
-                    IsLoading = false;
+                IsLoading = _screenManager.IsLoading;
             }
-        }
-
-        async Task FetchData()
-        {
-            if (IsLoading)
-                return;
-
-            IsLoading = true;
-
-            BookDetail = await _bookService.FetchBook(_book.Id);
-
-            Items = new MvxObservableCollection<ICellBook>(BookBusinessLogic.CreateCellsBookDetail(BookDetail,
-                                                                                                   UpdateValidation,
-                                                                                                   RemoveGenre,
-                                                                                                   DeleteBook,
-                                                                                                   _navigation,
-                                                                                                   _device));
-            IsLoading = false;
-            UpdateValidation();
-        }
-
-        async Task AddGenreAction()
-        {
-            if (!IsEditing)
-                return;
-
-            var selectedGenres = Items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            var genres = await _navigation.Navigate<SelectGenreViewModel, SelectedGenreParameters, List<Genre>>(new SelectedGenreParameters(selectedGenres));
-
-            if (genres != null)
+            else if (e.PropertyName.Equals(nameof(_screenManager.IsEditing)))
             {
-                Items.RemoveItems(Items.OfType<CellBookGenreItem>());
-
-                var genreItems = new List<CellBookGenreItem>();
-                genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));
-
-                var index = Items.FindIndex(x => x is CellBookAddGenre);
-                Items.InsertRange(index, genreItems);
+                IsEditing = _screenManager.IsEditing;
             }
-        }
-
-        void UpdateValidation()
-        {
-            if (IsLoading)
-                return;
-
-            var lstInput = Items.OfType<CellBookInput>();
-            var isValid = lstInput.All(x => x.IsValid);
-
-            Items.ForEachType<ICellBook, CellBookButton>(x => x.IsValid = isValid);
-        }
-
-        void RemoveGenre(CellBookGenreItem obj)
-        {
-            Items.Remove(obj);
-        }
-
-        void ToggleEditValue()
-        {
-            _device.HideKeyboard();
-            IsEditing = !IsEditing;
-
-            //Remove update/Delete button
-            Items.Remove(Items.OfType<CellBookButton>().First());
-
-            //Set all input or info fields visible
-            foreach (var item in Items.OfType<CellBookInput>())
-                item.IsEdit = IsEditing;
-
-            if (IsEditing)
-            {
-                var index = Items.FindIndex(x => x is CellBookNumberTextView y && y.InputType == EBookInputType.Pages);
-                Items.Insert(index, new CellBookAddGenre(AddGenreAction));
-
-                Items.Add(new CellBookButton("Update Book", UpdateBook));
-                UpdateValidation();
-            }
-            else
-            {
-                Items.Remove(Items.OfType<CellBookAddGenre>().First());
-                Items.Add(new CellBookButton("Delete Book", DeleteBook, false));
-            }
-        }
-
-        ApiBookDetailRequest UpdateBookCellData()
-        {
-            //Create update object
-            var (updatedBook, author, genres) = BookBusinessLogic.CreateBookDetailRequestFromInput(Items, BookDetail.Id, BookDetail);
-
-            if (updatedBook == null)
-                return null;
-
-            if (updatedBook.Title != null)
-            {
-                BookDetail.Title = updatedBook.Title;
-                _book.Title = updatedBook.Title;
-
+            else if (e.PropertyName.Equals(nameof(_screenManager.Title)))
                 _updateToolbarInteraction.Raise();
-            }
-
-            BookDetail.Author = author;
-            _book.Author = author;
-
-            if (genres == null)
-                BookDetail.Genres = new List<Genre>();
-
-            BookDetail.ISBN = updatedBook.ISBN;
-
-            if (updatedBook.Owned.HasValue)
-                BookDetail.Owned = updatedBook.Owned.Value;
-
-            if (updatedBook.Read.HasValue)
-                BookDetail.Read = updatedBook.Read.Value;
-
-            if (updatedBook.Pages.HasValue)
-                BookDetail.Pages = updatedBook.Pages.Value;
-
-            return updatedBook;
         }
+
+        void Close() => _navigationService.Close(this, true);
 
         #endregion
     }

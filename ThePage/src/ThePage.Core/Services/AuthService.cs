@@ -5,6 +5,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class AuthService : IAuthService
     {
         readonly IExceptionService _exceptionService;

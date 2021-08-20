@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
-using ThePage.Api;
+using static ThePage.Core.Enums;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
-    public class CellBasicBook : CellBookInput
+    public class CellBasicBook : CellBaseBookInputValidation
     {
-        readonly ImageLinks _images;
         readonly Func<string, Task> _searchFunc;
+        readonly Func<Author, Task<Author>> _funcSelectAuthor;
 
         #region Properties
 
@@ -34,11 +34,11 @@ namespace ThePage.Core
             }
         }
 
-        public string ImageUri => _images.GetImageUrl();
+        public string ImageUri => Images?.GetImageUrl();
 
         public override bool IsValid => Author != null && !string.IsNullOrWhiteSpace(TxtTitle);
 
-        public override EBookInputType InputType => EBookInputType.BasicInfo;
+        public ImageLinks Images { get; }
 
         #endregion
 
@@ -54,17 +54,20 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBasicBook()
-        {
-        }
-
-        public CellBasicBook(string title, Author author, ImageLinks images, Action updateValidation, Func<string, Task> searchFunc)
+        public CellBasicBook(string title,
+                             Author author,
+                             ImageLinks images,
+                             Action updateValidation,
+                             Func<string, Task> searchFunc,
+                             Func<Author, Task<Author>> funcSelectAuthor)
+                : base(updateValidation, EBookInputType.BasicInfo)
         {
             _txtInput = title;
             _author = author;
-            _images = images;
-            UpdateValidation = updateValidation;
+            Images = images;
+
             _searchFunc = searchFunc;
+            _funcSelectAuthor = funcSelectAuthor;
         }
 
         #endregion
@@ -77,14 +80,11 @@ namespace ThePage.Core
                 await _searchFunc(TxtTitle);
         }
 
-        //TODO
         async Task HandleSelectAuthor()
         {
-            //_device.HideKeyboard();
-
-            //var result = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, ApiAuthor>(new AuthorSelectParameter(Author));
-            //if (result != null)
-            //    Author = result;
+            var result = await _funcSelectAuthor.Invoke(Author);
+            if (result != null)
+                Author = result;
         }
 
         #endregion
@@ -110,9 +110,9 @@ namespace ThePage.Core
 
             #region Constructor
 
-            public Builder(string title, Author author, ImageLinks images, Action updateValidation, Func<string, Task> searchFunc)
+            public Builder(string title, Author author, ImageLinks images, Action updateValidation, Func<string, Task> searchFunc, Func<Author, Task<Author>> funcSelectAuthor)
             {
-                _cellBasicBook = new CellBasicBook(title, author, images, updateValidation, searchFunc);
+                _cellBasicBook = new CellBasicBook(title, author, images, updateValidation, searchFunc, funcSelectAuthor);
             }
 
             #endregion

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellBookButton : MvxNotifyPropertyChanged, ICellBook
     {

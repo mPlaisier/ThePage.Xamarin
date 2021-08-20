@@ -1,6 +1,6 @@
 using MvvmCross.ViewModels;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellBookSelect : MvxNotifyPropertyChanged, ICellBaseSelect<Book>
     {

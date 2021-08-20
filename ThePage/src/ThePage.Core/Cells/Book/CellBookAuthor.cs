@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using static ThePage.Core.Enums;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
-    public class CellBookAuthor : CellBookInput
+    public class CellBookAuthor : CellBaseBookInputValidation
     {
         readonly IDevice _device;
         readonly IMvxNavigationService _navigation;
@@ -28,8 +29,6 @@ namespace ThePage.Core
 
         public override bool IsValid => Item != null;
 
-        public override EBookInputType InputType => EBookInputType.Author;
-
         #endregion
 
         #region Commands
@@ -42,17 +41,17 @@ namespace ThePage.Core
         #region Constructor
 
         public CellBookAuthor(IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
+            : base(updateValidation, EBookInputType.Author)
         {
             _device = device;
             _navigation = navigation;
-            UpdateValidation = updateValidation;
             IsEdit = isEdit;
         }
 
         public CellBookAuthor(Author selectedAuthor, IMvxNavigationService navigation, IDevice device, Action updateValidation, bool isEdit = false)
             : this(navigation, device, updateValidation, isEdit)
         {
-            Item = selectedAuthor;
+            _item = selectedAuthor;
         }
 
         #endregion

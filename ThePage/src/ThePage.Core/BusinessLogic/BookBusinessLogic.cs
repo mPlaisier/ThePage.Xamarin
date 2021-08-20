@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MvvmCross.Navigation;
+using CBP.Extensions;
 using Nelibur.ObjectMapper;
 using ThePage.Api;
-using static ThePage.Core.CellBookInput;
+using ThePage.Core.Cells;
+using static ThePage.Core.Enums;
 
 namespace ThePage.Core
 {
@@ -18,46 +17,95 @@ namespace ThePage.Core
             var builder = new ApiBookDetailRequest.Builder()
                                                    .SetId(id);
 
-            //Title
-            var title = items.OfType<CellBookTextView>().First(p => p.InputType == EBookInputType.Title).TxtInput.Trim();
-            if (title != null && !title.Equals(originalResponse?.Title))
-                builder.SetTitle(title);
+            CellBasicBook cellBook = null;
+            if (items.Has<ICellBook, CellBasicBook>())
+            {
+                cellBook = items.OfType<CellBasicBook>()
+                                .FirstOrNull(p => p.InputType == EBookInputType.BasicInfo);
+            }
 
-            //Author
-            var responseAuthor = items.OfType<CellBookAuthor>().First(p => p.InputType == EBookInputType.Author).Item;
-            var author = responseAuthor;
-            if (author != null && !author.Id.Equals(originalResponse?.Author.Id))
-                builder.SetAuthor(author.Id);
+            SetTitle();
+            var author = SetAuthor();
+            var genres = SetGenres();
 
-            //Genres
-            var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
-            if (genres != null && (genres.Count != originalResponse?.Genres.Count || genres.Except(originalResponse?.Genres).Any()))
-                builder.SetGenres(genres.GetIdStrings().ToList());
+            SetImages();
+            SetIsbn();
 
-            //Isbn
-            long? isbn = items.OfType<CellBookNumberTextView>().First(p => p.InputType == EBookInputType.ISBN).TxtNumberInput;
-            if (isbn != null && isbn.HasValue && !isbn.ToString().Equals(originalResponse?.ISBN) && isbn != -1)
-                builder.SetIsbn(isbn.Value);
-
-            //Owned
-            bool? owned = items.OfType<CellBookSwitch>().First(p => p.InputType == EBookInputType.Owned).IsSelected;
-            if (owned != null && owned.HasValue && owned != originalResponse?.Owned)
-                builder.SetOwned(owned.Value);
-
-            //Read
-            bool? read = items.OfType<CellBookSwitch>().First(p => p.InputType == EBookInputType.Read).IsSelected;
-            if (read != null && read.HasValue && read != originalResponse?.Read)
-                builder.SetRead(read.Value);
-
-            //Pages
-            long? pages = items.OfType<CellBookNumberTextView>().First(p => p.InputType == EBookInputType.Pages).TxtNumberInput;
-            if (pages != null && pages.HasValue && pages != originalResponse?.Pages && pages != -1)
-                builder.SetPages(pages.Value);
+            SetOwned();
+            SetRead();
+            SetPages();
 
             //Build
             return (builder.Build(),
-                    responseAuthor,
+                    author,
                     genres);
+
+            void SetTitle()
+            {
+                var title = cellBook.IsNull()
+                    ? items.OfType<CellBookTextView>()
+                           .First(p => p.InputType == EBookInputType.Title).TxtInput
+                    : cellBook.TxtTitle;
+
+                if (!title.Trim().Equals(originalResponse?.Title))
+                    builder.SetTitle(title);
+            }
+
+            Author SetAuthor()
+            {
+                var author = cellBook.IsNull()
+                    ? items.OfType<CellBookAuthor>().First(p => p.InputType == EBookInputType.Author).Item
+                    : cellBook.Author;
+
+                if (author != null && !author.Id.Equals(originalResponse?.Author.Id))
+                    builder.SetAuthor(author.Id);
+
+                return author;
+            }
+
+            void SetImages()
+            {
+                var images = cellBook?.Images;
+                if (images != null && !images.Equals(originalResponse?.Images))
+                    builder.SetImages(MapImageLinksToApi(images));
+            }
+
+            IEnumerable<Genre> SetGenres()
+            {
+                var genres = items.OfType<CellBookGenreItem>().Select(i => i.Genre).ToList();
+                if (genres != null && (genres.Count != originalResponse?.Genres.Count || genres.Except(originalResponse?.Genres).Any()))
+                    builder.SetGenres(genres.GetIdStrings().ToList());
+
+                return genres;
+            }
+
+            void SetIsbn()
+            {
+                long? isbn = items.OfType<CellBookNumberTextView>().First(p => p.InputType == EBookInputType.ISBN).TxtNumberInput;
+                if (isbn != null && isbn.HasValue && !isbn.ToString().Equals(originalResponse?.ISBN) && isbn != -1)
+                    builder.SetIsbn(isbn.Value);
+            }
+
+            void SetOwned()
+            {
+                bool? owned = items.OfType<CellBookSwitch>().First(p => p.InputType == EBookInputType.Owned).IsSelected;
+                if (owned != null && owned.HasValue && owned != originalResponse?.Owned)
+                    builder.SetOwned(owned.Value);
+            }
+
+            void SetRead()
+            {
+                bool? read = items.OfType<CellBookSwitch>().First(p => p.InputType == EBookInputType.Read).IsSelected;
+                if (read != null && read.HasValue && read != originalResponse?.Read)
+                    builder.SetRead(read.Value);
+            }
+
+            void SetPages()
+            {
+                long? pages = items.OfType<CellBookNumberTextView>().First(p => p.InputType == EBookInputType.Pages).TxtNumberInput;
+                if (pages != null && pages.HasValue && pages != originalResponse?.Pages && pages != -1)
+                    builder.SetPages(pages.Value);
+            }
         }
 
         public static IEnumerable<Book> MapBooks(IEnumerable<ApiBook> apiBooks)
@@ -87,36 +135,16 @@ namespace ThePage.Core
             return TinyMapper.Map<BookDetail>(bookDetail);
         }
 
-        #endregion
-
-        #region Public BookDetail
-
-        public static IEnumerable<ICellBook> CreateCellsBookDetail(BookDetail bookDetail,
-                                                                     Action updateValidation,
-                                                                     Action<CellBookGenreItem> removeGenre,
-                                                                     Func<Task> deleteBook,
-                                                                     IMvxNavigationService navigation,
-                                                                     IDevice device)
+        public static ImageLinks MapImageLinksToCore(Api.ImageLinks images)
         {
-            var items = new List<ICellBook>
-            {
-                new CellBookTextView("Title",bookDetail.Title, EBookInputType.Title,updateValidation),
-                new CellBookAuthor(bookDetail.Author,navigation, device, updateValidation),
-                new CellBookTitle("Genres")
-            };
+            TinyMapper.Bind<Api.ImageLinks, ImageLinks>();
+            return TinyMapper.Map<ImageLinks>(images);
+        }
 
-            foreach (var item in bookDetail?.Genres)
-            {
-                items.Add(new CellBookGenreItem(item, removeGenre));
-            }
-
-            items.Add(new CellBookNumberTextView("Pages", bookDetail.Pages.ToString(), EBookInputType.Pages, updateValidation, false));
-            items.Add(new CellBookNumberTextView("ISBN", bookDetail.ISBN, EBookInputType.ISBN, updateValidation, false));
-            items.Add(new CellBookSwitch("Do you own this book?", bookDetail.Owned, EBookInputType.Owned, updateValidation));
-            items.Add(new CellBookSwitch("Have you read this book?", bookDetail.Read, EBookInputType.Read, updateValidation));
-            items.Add(new CellBookButton("Delete Book", deleteBook, false));
-
-            return items;
+        public static Api.ImageLinks MapImageLinksToApi(ImageLinks images)
+        {
+            TinyMapper.Bind<ImageLinks, Api.ImageLinks>();
+            return TinyMapper.Map<Api.ImageLinks>(images);
         }
 
         #endregion

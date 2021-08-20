@@ -1,7 +1,7 @@
 using CBP.Extensions;
 using ThePage.Api;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellGoogleBook
     {

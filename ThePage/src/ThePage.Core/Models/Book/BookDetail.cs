@@ -24,6 +24,8 @@ namespace ThePage.Core
 
         public bool Ebook { get; set; }
 
+        public ImageLinks Images { get; set; }
+
         #endregion
     }
 }
