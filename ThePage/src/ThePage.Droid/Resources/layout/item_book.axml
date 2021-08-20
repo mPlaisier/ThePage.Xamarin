@@ -14,7 +14,7 @@
         android:layout_height="130dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-		android:src="@drawable/book_cover"
+        android:src="@drawable/book_cover"
         local:layout_constraintStart_toStartOf="parent"
         local:layout_constraintTop_toTopOf="parent"
         local:MvxBind="Url ImageUri"/>
@@ -40,11 +40,11 @@
         local:layout_constraintEnd_toStartOf="@+id/imgArrow"
         local:MvxBind="Text Author.Name"/>
 	<ImageView
-		android:id="@+id/imgArrow"
-		android:layout_width="30dp"
-		android:layout_height="30dp"
-		android:src="@drawable/ic_chevron_right"
-		local:layout_constraintTop_toTopOf="parent"
-		local:layout_constraintBottom_toBottomOf="parent"
-		local:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/imgArrow"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_chevron_right"
+        local:layout_constraintTop_toTopOf="parent"
+        local:layout_constraintBottom_toBottomOf="parent"
+        local:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>
