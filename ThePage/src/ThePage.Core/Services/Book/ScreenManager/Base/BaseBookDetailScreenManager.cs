@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using CBP.Extensions;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 using ThePage.Core.Cells;
+using static ThePage.Core.Enums;
 
 namespace ThePage.Core
 {
@@ -13,6 +15,10 @@ namespace ThePage.Core
         protected readonly IMvxNavigationService _navigation;
         protected readonly IUserInteraction _userInteraction;
         protected readonly IDevice _device;
+        protected readonly IGoogleBooksService _googleBooksService;
+        protected readonly IAuthorService _authorService;
+
+        readonly IBookService _bookService;
 
         #region Properties
 
@@ -33,24 +39,63 @@ namespace ThePage.Core
         public MvxObservableCollection<ICellBook> Items { get; internal set; }
             = new MvxObservableCollection<ICellBook>();
 
+        public BookDetail BookDetail { get; internal set; }
+
         #endregion
 
         #region Constructor
 
+        //TODO update ctor services
         protected BaseBookDetailScreenManager(IMvxNavigationService navigationService,
-                                           IUserInteraction userInteraction,
-                                           IDevice device)
+                                              IUserInteraction userInteraction,
+                                              IDevice device,
+                                              IGoogleBooksService googleBooksService,
+                                              IAuthorService authorService)
         {
             _navigation = navigationService;
             _userInteraction = userInteraction;
             _device = device;
+            _googleBooksService = googleBooksService;
+            _authorService = authorService;
         }
 
         #endregion
 
         #region public abstract
 
-        public abstract void CreateCellBooks(BookDetail bookDetail);
+        public virtual void CreateCellBooks(BookDetail bookDetail, bool isEdit)
+        {
+            var items = new MvxObservableCollection<ICellBook>
+            {
+                new CellBasicBook.Builder(bookDetail.Title, bookDetail.Author, bookDetail.Images, UpdateValidation, SearchForBookTitle, SelectAuthor).IsEdit(isEdit).Build(),
+                new CellBookTitle("Genres")
+            };
+
+            foreach (var item in bookDetail?.Genres)
+            {
+                items.Add(new CellBookGenreItem(item, RemoveGenre, isEdit));
+            }
+
+            if (isEdit)
+                items.Add(new CellBookAddGenre(AddGenre));
+
+            items.Add(new CellBookNumberTextView.NumberTextViewBuilder("Pages", EBookInputType.Pages, UpdateValidation)
+                                                .IsEdit(isEdit).SetValue(bookDetail.Pages.ToString()).NotRequired()
+                                                .Build());
+            items.Add(new CellBookNumberTextView.NumberTextViewBuilder("ISBN", EBookInputType.ISBN, UpdateValidation)
+                                                .IsEdit(isEdit).SetValue(bookDetail.ISBN).NotRequired()
+                                                .AllowSearch(SearchForBookIsbn)
+                                                .Build());
+            items.Add(new CellBookSwitch("Do you own this book?", EBookInputType.Owned, UpdateValidation, isEdit));
+            items.Add(new CellBookSwitch("Have you read this book?", EBookInputType.Read, UpdateValidation, isEdit));
+
+            Items.ReplaceWith(items);
+        }
+
+        public virtual Task DeleteBook()
+        {
+            return Task.FromResult(0);
+        }
 
         public abstract Task SaveBook();
 
@@ -62,6 +107,9 @@ namespace ThePage.Core
 
         protected void UpdateValidation()
         {
+            if (Items.IsNullOrEmpty())
+                return;
+
             var lstInput = Items.OfType<CellBaseBookInput>();
             var isValid = lstInput.All(x => x.IsValid);
 
@@ -94,6 +142,104 @@ namespace ThePage.Core
         {
             Items.Remove(obj);
             RaisePropertyChanged(nameof(Items));
+        }
+
+        protected async Task SearchForBookTitle(string title)
+        {
+            _device.HideKeyboard();
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByTitle(title);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        protected async Task HandleSearchResults(GoogleBooksResult result)
+        {
+            if (result == null)
+                return;
+
+            if (result.Books.IsNotNullAndHasItems())
+            {
+                var book = await _navigation.Navigate<BookSearchViewModel, GoogleBooksResult, GoogleBook>(result);
+
+                if (book != null)
+                {
+                    var title = book.VolumeInfo.Title;
+                    var author = await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First()));
+
+                    var pages = book.VolumeInfo.PageCount;
+                    var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
+
+                    var bookDetail = new BookDetail
+                    {
+                        Title = title,
+                        Author = author,
+                        Pages = pages,
+                        ISBN = isbn,
+                        Images = BookBusinessLogic.MapImageLinksToCore(book.VolumeInfo.ImageLinks)
+                    };
+
+                    CreateCellBooks(bookDetail, true);
+                    UpdateValidation();
+                }
+            }
+            else
+            {
+                _userInteraction.Alert("No books found");
+            }
+        }
+
+        protected async Task SearchForBookIsbn(string isbn)
+        {
+            _device.HideKeyboard();
+            IsLoading = true;
+
+            var result = await _googleBooksService.SearchBookByISBN(isbn);
+            await HandleSearchResults(result);
+
+            IsLoading = false;
+        }
+
+        protected async Task<Author> SelectOrCreateAuthor(Author author, string olKey = null)
+        {
+            Author newAuthor = null;
+
+            var searchAuthors = await _authorService.Search(author.Name);
+            if (searchAuthors.Count() == 1)
+                newAuthor = searchAuthors.First();
+            else
+            {
+                var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?",
+                                                                             neutral: "Choose from list");
+
+
+                if (userChoice == ConfirmThreeButtonsResponse.Positive)
+                {
+                    newAuthor = await _navigation.Navigate<AddAuthorViewModel, Author, Author>(author);
+                }
+                //Select author from list
+                else if (userChoice == ConfirmThreeButtonsResponse.Neutral)
+                {
+                    newAuthor = await _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter());
+
+                    if (olKey.IsNotNull())
+                    {
+                        newAuthor.Olkey = olKey;
+                        newAuthor = await _authorService.UpdateAuthor(newAuthor);
+                    }
+                }
+            }
+
+            return newAuthor;
+        }
+
+        protected Task<Author> SelectAuthor(Author author)
+        {
+            _device.HideKeyboard();
+
+            return _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter(author));
         }
 
         #endregion

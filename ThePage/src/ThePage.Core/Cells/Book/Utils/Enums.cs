@@ -13,5 +13,12 @@ namespace ThePage.Core
             Read,
             Pages
         }
+
+        public enum EButtonType
+        {
+            Save,
+            Update,
+            Delete
+        }
     }
 }
