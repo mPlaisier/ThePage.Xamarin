@@ -65,7 +65,7 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             LoadData();
 
             //Assert
-            _screenManager.Items.Should().HaveCount(12);
+            _screenManager.Items.Should().HaveCount(11);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             LoadData();
 
             //Assert
-            _screenManager.Items.Should().HaveCount(8);
+            _screenManager.Items.Should().HaveCount(7);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             _screenManager.ToggleEditValue();
 
             //Assert
-            _screenManager.Items.Should().HaveCount(13);
+            _screenManager.Items.Should().HaveCount(12);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             _screenManager.ToggleEditValue();
 
             //Assert
-            _screenManager.Items.Should().HaveCount(9);
+            _screenManager.Items.Should().HaveCount(8);
         }
 
         [Fact]
@@ -120,18 +120,17 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
 
             //Assert
             var items = _screenManager.Items;
-            items[0].Should().BeOfType<CellBookTextView>();
-            items[1].Should().BeOfType<CellBookAuthor>();
-            items[2].Should().BeOfType<CellBookTitle>();
+            items[0].Should().BeOfType<CellBasicBook>();
+            items[1].Should().BeOfType<CellBookTitle>();
+            items[2].Should().BeOfType<CellBookGenreItem>();
             items[3].Should().BeOfType<CellBookGenreItem>();
             items[4].Should().BeOfType<CellBookGenreItem>();
             items[5].Should().BeOfType<CellBookGenreItem>();
-            items[6].Should().BeOfType<CellBookGenreItem>();
+            items[6].Should().BeOfType<CellBookNumberTextView>();
             items[7].Should().BeOfType<CellBookNumberTextView>();
-            items[8].Should().BeOfType<CellBookNumberTextView>();
+            items[8].Should().BeOfType<CellBookSwitch>();
             items[9].Should().BeOfType<CellBookSwitch>();
-            items[10].Should().BeOfType<CellBookSwitch>();
-            items[11].Should().BeOfType<CellBookButton>();
+            items[10].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
@@ -146,19 +145,18 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
 
             //Assert
             var items = _screenManager.Items;
-            items[0].Should().BeOfType<CellBookTextView>();
-            items[1].Should().BeOfType<CellBookAuthor>();
-            items[2].Should().BeOfType<CellBookTitle>();
+            items[0].Should().BeOfType<CellBasicBook>();
+            items[1].Should().BeOfType<CellBookTitle>();
+            items[2].Should().BeOfType<CellBookGenreItem>();
             items[3].Should().BeOfType<CellBookGenreItem>();
             items[4].Should().BeOfType<CellBookGenreItem>();
             items[5].Should().BeOfType<CellBookGenreItem>();
-            items[6].Should().BeOfType<CellBookGenreItem>();
-            items[7].Should().BeOfType<CellBookAddGenre>();
+            items[6].Should().BeOfType<CellBookAddGenre>();
+            items[7].Should().BeOfType<CellBookNumberTextView>();
             items[8].Should().BeOfType<CellBookNumberTextView>();
-            items[9].Should().BeOfType<CellBookNumberTextView>();
+            items[9].Should().BeOfType<CellBookSwitch>();
             items[10].Should().BeOfType<CellBookSwitch>();
-            items[11].Should().BeOfType<CellBookSwitch>();
-            items[12].Should().BeOfType<CellBookButton>();
+            items[11].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
@@ -174,15 +172,14 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
 
             //Assert
             var items = _screenManager.Items;
-            items[0].Should().BeOfType<CellBookTextView>();
-            items[1].Should().BeOfType<CellBookAuthor>();
-            items[2].Should().BeOfType<CellBookTitle>();
-            items[3].Should().BeOfType<CellBookAddGenre>();
+            items[0].Should().BeOfType<CellBasicBook>();
+            items[1].Should().BeOfType<CellBookTitle>();
+            items[2].Should().BeOfType<CellBookAddGenre>();
+            items[3].Should().BeOfType<CellBookNumberTextView>();
             items[4].Should().BeOfType<CellBookNumberTextView>();
-            items[5].Should().BeOfType<CellBookNumberTextView>();
+            items[5].Should().BeOfType<CellBookSwitch>();
             items[6].Should().BeOfType<CellBookSwitch>();
-            items[7].Should().BeOfType<CellBookSwitch>();
-            items[8].Should().BeOfType<CellBookButton>();
+            items[7].Should().BeOfType<CellBookButton>();
         }
 
         [Fact]
@@ -228,10 +225,10 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             _screenManager.ToggleEditValue();
 
             //Execute
-            var cellTitle = _screenManager.Items.OfType<CellBookTextView>()
-                                                .Where(x => x.InputType == EBookInputType.Title)
+            var cellBasicBook = _screenManager.Items.OfType<CellBasicBook>()
+                                                .Where(x => x.InputType == EBookInputType.BasicInfo)
                                                 .First();
-            cellTitle.TxtInput = title;
+            cellBasicBook.TxtTitle = title;
 
             var cellPages = _screenManager.Items.OfType<CellBookNumberTextView>()
                                                 .Where(x => x.InputType == EBookInputType.Pages)
