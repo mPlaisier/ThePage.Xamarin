@@ -13,8 +13,6 @@ namespace ThePage.Core
     [ThePageTypeService]
     public class BookDetailScreenManagerService : BaseBookDetailScreenManager, IBookDetailScreenManagerService
     {
-        readonly IBookService _bookService;
-
         Action _actionClose;
         Book _book;
 
@@ -34,9 +32,8 @@ namespace ThePage.Core
                                            IBookService bookService,
                                            IGoogleBooksService googleBooksService,
                                            IAuthorService authorService)
-            : base(navigationService, userInteraction, device, googleBooksService, authorService)
+            : base(navigationService, userInteraction, device, googleBooksService, authorService, bookService)
         {
-            _bookService = bookService;
         }
 
         #endregion
@@ -57,6 +54,8 @@ namespace ThePage.Core
             IsLoading = true;
 
             BookDetail = await _bookService.FetchBook(_book.Id);
+            await RaisePropertyChanged(nameof(Title));
+
             CreateCellBooks(BookDetail, false);
 
             IsLoading = false;
@@ -67,7 +66,10 @@ namespace ThePage.Core
         {
             base.CreateCellBooks(bookDetail, isEdit);
 
-            Items.Add(new CellBookButton("Delete Book", DeleteBook, EButtonType.Delete, false));
+            if (isEdit)
+                Items.Add(new CellBookButton("Update Book", SaveBook, EButtonType.Update));
+            else
+                Items.Add(new CellBookButton("Delete Book", DeleteBook, EButtonType.Delete, false));
         }
 
         public override async Task SaveBook()
@@ -106,7 +108,7 @@ namespace ThePage.Core
                 var index = Items.FindIndex(x => x is CellBookNumberTextView y && y.InputType == EBookInputType.Pages);
                 Items.Insert(index, new CellBookAddGenre(AddGenre));
 
-                Items.Add(new CellBookButton("Update Book", SaveBook, EButtonType.Save));
+                Items.Add(new CellBookButton("Update Book", SaveBook, EButtonType.Update));
                 UpdateValidation();
             }
             else

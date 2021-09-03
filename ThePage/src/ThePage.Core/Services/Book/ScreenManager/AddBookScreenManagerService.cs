@@ -11,8 +11,6 @@ namespace ThePage.Core
     [ThePageTypeService]
     public class AddBookScreenManagerService : BaseBookDetailScreenManager, IAddBookScreenManagerService
     {
-        readonly IBookService _bookService;
-
         Action<string> _actionClose;
 
         OLObject _olBook;
@@ -26,9 +24,8 @@ namespace ThePage.Core
                                            IGoogleBooksService googleBooksService,
                                            IBookService bookService,
                                            IAuthorService authorService)
-            : base(navigationService, userInteraction, device, googleBooksService, authorService)
+            : base(navigationService, userInteraction, device, googleBooksService, authorService, bookService)
         {
-            _bookService = bookService;
         }
 
         #endregion
@@ -77,7 +74,7 @@ namespace ThePage.Core
         {
             base.CreateCellBooks(bookDetail, isEdit);
 
-            Items.Add(new CellBookButton("Add Book", SaveBook, Enums.EButtonType.Save));
+            Items.Add(new CellBookButton("Add Book", SaveBook, Enums.EButtonType.Create));
         }
 
         #endregion

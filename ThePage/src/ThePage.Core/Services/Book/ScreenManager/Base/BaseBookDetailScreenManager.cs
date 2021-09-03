@@ -17,8 +17,7 @@ namespace ThePage.Core
         protected readonly IDevice _device;
         protected readonly IGoogleBooksService _googleBooksService;
         protected readonly IAuthorService _authorService;
-
-        readonly IBookService _bookService;
+        protected readonly IBookService _bookService;
 
         #region Properties
 
@@ -45,18 +44,19 @@ namespace ThePage.Core
 
         #region Constructor
 
-        //TODO update ctor services
         protected BaseBookDetailScreenManager(IMvxNavigationService navigationService,
                                               IUserInteraction userInteraction,
                                               IDevice device,
                                               IGoogleBooksService googleBooksService,
-                                              IAuthorService authorService)
+                                              IAuthorService authorService,
+                                              IBookService bookService)
         {
             _navigation = navigationService;
             _userInteraction = userInteraction;
             _device = device;
             _googleBooksService = googleBooksService;
             _authorService = authorService;
+            _bookService = bookService;
         }
 
         #endregion
@@ -126,7 +126,7 @@ namespace ThePage.Core
             if (genres.IsNotNull())
             {
                 //Remove all old genres:
-                Items.RemoveItems(Items.OfType<CellBookGenreItem>());
+                Items.RemoveItems(Items.OfType<CellBookGenreItem>().ToList());
 
                 var genreItems = new List<CellBookGenreItem>();
                 genres.ForEach(x => genreItems.Add(new CellBookGenreItem(x, RemoveGenre, true)));

@@ -16,7 +16,7 @@ namespace ThePage.Core
 
         public enum EButtonType
         {
-            Save,
+            Create,
             Update,
             Delete
         }
