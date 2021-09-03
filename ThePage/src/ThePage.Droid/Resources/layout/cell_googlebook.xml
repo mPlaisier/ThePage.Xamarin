@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:elevation="3dp"
+    android:layout_margin="10dp">
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintTop_toTopOf="parent"
+        local:MvxBind="Url ImageUri"/>
+    <TextView
+        android:id="@+id/lblKey"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="18dp"
+        local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toTopOf="@id/image"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:layout_constraintBottom_toTopOf="@id/lblValue"
+        local:MvxBind="Text Title"/>
+    <TextView
+        android:id="@+id/lblValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="14dp"
+        local:layout_constraintStart_toEndOf="@id/image"
+        local:layout_constraintTop_toBottomOf="@id/lblKey"
+        local:layout_constraintEnd_toEndOf="parent"
+        local:MvxBind="Text Author"/>
+</android.support.constraint.ConstraintLayout>

@@ -110,14 +110,14 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteAuthor(ApiAuthor author)
+        public async Task<bool> DeleteAuthor(string id)
         {
             try
             {
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    return await AuthorManager.Delete(token, author);
+                    return await AuthorManager.Delete(token, id);
             }
             catch (Exception ex)
             {

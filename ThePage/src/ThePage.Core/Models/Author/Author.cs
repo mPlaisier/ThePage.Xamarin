@@ -1,19 +1,14 @@
-using Newtonsoft.Json;
-
-namespace ThePage.Api
+namespace ThePage.Core
 {
     public class Author
     {
         #region Properties
 
-        [JsonProperty("_id")]
         public string Id { get; set; }
 
-        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("olkey")]
-        public string OLKey { get; set; }
+        public string Olkey { get; set; }
 
         #endregion
 
@@ -25,12 +20,6 @@ namespace ThePage.Api
 
         public Author(string name)
         {
-            Name = name;
-        }
-
-        public Author(string id, string name)
-        {
-            Id = id;
             Name = name;
         }
 

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -14,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public ApiGenre Genre { get; }
+        public Genre Genre { get; }
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailParameter(ApiGenre genre)
+        public GenreDetailParameter(Genre genre)
         {
             Genre = genre;
         }
@@ -31,15 +30,16 @@ namespace ThePage.Core
     public class GenreDetailViewModel : BaseViewModel<GenreDetailParameter, bool>
     {
         readonly IMvxNavigationService _navigation;
+        readonly IDevice _device;
         readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IGenreService _genreService;
 
         #region Properties
 
         public override string LblTitle => Genre != null ? Genre.Name : "Genre Detail";
 
-        public ApiGenre Genre { get; internal set; }
+        public Genre Genre { get; internal set; }
 
         public string LblName => "Name:";
 
@@ -68,22 +68,28 @@ namespace ThePage.Core
             IsEditing = !IsEditing;
         });
 
-        IMvxCommand _deleteGenreCommand;
-        public IMvxCommand DeleteGenreCommand => _deleteGenreCommand ??= new MvxCommand(() => DeleteGenre().Forget());
+        IMvxAsyncCommand _deleteGenreCommand;
+        public IMvxAsyncCommand DeleteGenreCommand => _deleteGenreCommand ??= new MvxAsyncCommand(DeleteGenre);
 
-        IMvxCommand _updateGenreCommand;
-        public IMvxCommand UpdateGenreCommand => _updateGenreCommand ??= new MvxCommand(() => UpdateGenre().Forget());
+        IMvxAsyncCommand _updateGenreCommand;
+        public IMvxAsyncCommand UpdateGenreCommand => _updateGenreCommand ??= new MvxAsyncCommand(UpdateGenre);
 
         #endregion
 
         #region Constructor
 
-        public GenreDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public GenreDetailViewModel(IMvxNavigationService navigation,
+                                    IThePageService thePageService,
+                                    IUserInteraction userInteraction,
+                                    IDevice device,
+                                    IGenreService genreService)
         {
             _navigation = navigation;
             _thePageService = thePageService;
             _userInteraction = userInteraction;
             _device = device;
+
+            _genreService = genreService;
         }
 
         #endregion
@@ -148,18 +154,12 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteGenre(Genre);
+                var result = await _genreService.DeleteGenre(Genre.Id);
 
                 if (result)
-                {
-                    _userInteraction.ToastMessage("Genre removed");
                     await _navigation.Close(this, true);
-                }
                 else
-                {
-                    _userInteraction.Alert("Failure removing genre");
                     IsLoading = false;
-                }
             }
         }
 

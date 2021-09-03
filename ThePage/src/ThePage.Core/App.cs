@@ -7,10 +7,8 @@ namespace ThePage.Core
     {
         public override void Initialize()
         {
-            CreatableTypes()
-                .EndingWith("Service")
-                .AsInterfaces()
-                .RegisterAsLazySingleton();
+            CreatableTypes().WithAttribute<ThePageLazySingletonServiceAttribute>().AsInterfaces().RegisterAsLazySingleton();
+            CreatableTypes().WithAttribute<ThePageTypeServiceAttribute>().AsInterfaces().RegisterAsDynamic();
 
             RegisterCustomAppStart<CustomAppStart>();
         }

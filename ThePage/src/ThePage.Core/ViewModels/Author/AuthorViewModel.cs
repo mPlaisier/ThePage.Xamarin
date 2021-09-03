@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
-using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -12,34 +10,30 @@ namespace ThePage.Core
     public class AuthorViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IAuthorService _authorService;
 
         #region Properties
 
         public override string LblTitle => "Authors";
 
-        public MvxObservableCollection<ApiAuthor> Authors { get; private set; }
+        public MvxObservableCollection<Author> Authors { get; private set; }
 
         #endregion
 
         #region Constructor
 
-        public AuthorViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AuthorViewModel(IMvxNavigationService navigation, IAuthorService authorService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _authorService = authorService;
         }
 
         #endregion
 
         #region Commands
 
-        IMvxCommand<ApiAuthor> _itemClickCommand;
-        public IMvxCommand<ApiAuthor> ItemClickCommand => _itemClickCommand ??= new MvxCommand<ApiAuthor>(async (item) =>
+        IMvxAsyncCommand<Author> _itemClickCommand;
+        public IMvxAsyncCommand<Author> ItemClickCommand => _itemClickCommand ??= new MvxAsyncCommand<Author>(async (item) =>
         {
             var result = await _navigation.Navigate<AuthorDetailViewModel, AuthorDetailParameter, bool>(new AuthorDetailParameter(item));
             if (result)
@@ -50,7 +44,7 @@ namespace ThePage.Core
         IMvxCommand _addAuthorCommand;
         public IMvxCommand AddAuthorCommand => _addAuthorCommand ??= new MvxCommand(async () =>
         {
-            var result = await _navigation.Navigate<AddAuthorViewModel, ApiAuthor>();
+            var result = await _navigation.Navigate<AddAuthorViewModel, Author>();
             if (result != null)
                 await Refresh();
         });
@@ -65,7 +59,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            Refresh().Forget();
+            await Refresh();
         }
 
         #endregion
@@ -74,22 +68,10 @@ namespace ThePage.Core
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiAuthorResponse = _isSearching
-                    ? await _thePageService.SearchAuthors(_search, _currentPage + 1)
-                    : await _thePageService.GetNextAuthors(_currentPage + 1);
-
-                Authors.AddRange(apiAuthorResponse.Docs);
-
-                _currentPage = apiAuthorResponse.Page;
-                _hasNextPage = apiAuthorResponse.HasNextPage;
-
-                _isLoadingNextPage = false;
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var authors = await _authorService.LoadNextAuthors();
+                Authors.AddRange(authors);
             }
         }
 
@@ -98,32 +80,22 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _authorService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiAuthorResponse = await _thePageService.SearchAuthors(search);
-            Authors = new MvxObservableCollection<ApiAuthor>(apiAuthorResponse.Docs);
-
-            _currentPage = apiAuthorResponse.Page;
-            _hasNextPage = apiAuthorResponse.HasNextPage;
+            var authors = await _authorService.Search(search);
+            Authors = new MvxObservableCollection<Author>(authors);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_authorService.IsSearching)
+                await Refresh();
         }
 
         #endregion
@@ -134,11 +106,9 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var authors = await _thePageService.GetAllAuthors();
-            Authors = new MvxObservableCollection<ApiAuthor>(authors.Docs);
+            var authors = await _authorService.GetAuthors();
+            Authors = new MvxObservableCollection<Author>(authors);
 
-            _currentPage = authors.Page;
-            _hasNextPage = authors.HasNextPage;
             IsLoading = false;
         }
 

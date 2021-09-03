@@ -1,7 +1,9 @@
 using System;
-namespace ThePage.Core
+using static ThePage.Core.Enums;
+
+namespace ThePage.Core.Cells
 {
-    public class CellBookSwitch : CellBookInput
+    public class CellBookSwitch : CellBaseBookInputValidation
     {
         #region Properties
 
@@ -20,17 +22,15 @@ namespace ThePage.Core
 
         public override bool IsValid => true;
 
-        public override EBookInputType InputType { get; }
-
         #endregion
 
         #region Constructor
 
         public CellBookSwitch(string lblTitle, EBookInputType inputType, Action updateValidation, bool isEdit = false)
+            : base(updateValidation, inputType)
         {
             LblTitle = lblTitle;
-            InputType = inputType;
-            UpdateValidation = updateValidation;
+
             IsEdit = isEdit;
         }
 

@@ -40,6 +40,9 @@ namespace ThePage.Api
         [JsonProperty("olcover")]
         public Olcover OlCover { get; set; }
 
+        [JsonProperty("images")]
+        public ImageLinks Images { get; internal set; }
+
         #endregion
     }
 

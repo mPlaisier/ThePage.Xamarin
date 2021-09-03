@@ -19,6 +19,9 @@ namespace ThePage.Api
         [JsonProperty("author")]
         public ApiAuthor Author { get; set; }
 
+        [JsonProperty("images")]
+        public ImageLinks Images { get; internal set; }
+
         #endregion
 
         #region Constructor

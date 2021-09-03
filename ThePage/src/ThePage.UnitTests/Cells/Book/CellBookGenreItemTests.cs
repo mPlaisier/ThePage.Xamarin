@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
 
 namespace ThePage.UnitTests.Cells.Book
@@ -42,7 +42,7 @@ namespace ThePage.UnitTests.Cells.Book
 
             public static CellBookGenreItem GetNullValueCellBookGenreItem()
             {
-                Api.ApiGenre genre = null;
+                Core.Genre genre = null;
                 var isEdit = false;
 
                 return new CellBookGenreItem(genre, null, isEdit);

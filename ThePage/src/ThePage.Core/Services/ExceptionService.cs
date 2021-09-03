@@ -9,6 +9,7 @@ using ThePage.Api;
 
 namespace ThePage.Core
 {
+    [ThePageLazySingletonService]
     public class ExceptionService : IExceptionService
     {
         readonly IUserInteraction _userInteraction;
@@ -137,6 +138,19 @@ namespace ThePage.Core
             {
                 _userInteraction.Alert(exception.Message, null, "Error");
             }
+        }
+
+        public void HandleGoogleException(Exception exception, string requestType, string searchValue)
+        {
+            var data = new Dictionary<string, string>
+            {
+                { "Service", nameof(GoogleBooksService) },
+                { "RequestType", requestType },
+                { "search", searchValue }
+            };
+            AddExceptionForLogging(exception, data);
+
+            _userInteraction.Alert(exception.Message, null, "Error");
         }
 
         #endregion

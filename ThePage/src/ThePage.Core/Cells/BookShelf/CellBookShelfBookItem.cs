@@ -1,5 +1,4 @@
 using System;
-using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -9,16 +8,16 @@ namespace ThePage.Core
 
         public EBookShelfInputType InputType => EBookShelfInputType.Book;
 
-        public ApiBook Book { get; }
+        public Book Book { get; }
 
         #endregion
 
         #region Constructor
 
-        public CellBookShelfBookItem(ApiBook book,
+        public CellBookShelfBookItem(Book book,
                                      Action<ICell> actionEditClick, Action<ICell> actionClick = null,
-                                     string icon = "ic_delete", bool isEdit = false)
-            : base(book.Title, book.Author.Name, actionEditClick, actionClick, icon, isEdit)
+                                     string icon = Constants.ICON_DELETE, bool isEdit = false)
+            : base(book.Title, book.Author?.Name, actionEditClick, actionClick, icon, isEdit)
         {
             Book = book;
         }

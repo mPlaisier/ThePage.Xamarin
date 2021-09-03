@@ -110,14 +110,14 @@ namespace ThePage.Core
             return result;
         }
 
-        public async Task<bool> DeleteGenre(ApiGenre genre)
+        public async Task<bool> DeleteGenre(string id)
         {
             try
             {
                 var token = await _authService.GetSessionToken();
 
                 if (token != null)
-                    return await GenreManager.Delete(token, genre);
+                    return await GenreManager.Delete(token, id);
             }
             catch (Exception ex)
             {

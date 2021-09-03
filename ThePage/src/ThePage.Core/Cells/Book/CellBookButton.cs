@@ -2,8 +2,9 @@ using System;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
+using static ThePage.Core.Enums;
 
-namespace ThePage.Core
+namespace ThePage.Core.Cells
 {
     public class CellBookButton : MvxNotifyPropertyChanged, ICellBook
     {
@@ -22,6 +23,8 @@ namespace ThePage.Core
             set => SetProperty(ref _isValid, value);
         }
 
+        public EButtonType ButtonType { get; }
+
         #endregion
 
         #region Commands
@@ -33,10 +36,11 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public CellBookButton(string lblBtn, Func<Task> btnAction, bool requireValidation = true)
+        public CellBookButton(string lblBtn, Func<Task> btnAction, EButtonType buttonType, bool requireValidation = true)
         {
             Label = lblBtn;
             _btnAction = btnAction;
+            ButtonType = buttonType;
             _requireValidation = requireValidation;
         }
 

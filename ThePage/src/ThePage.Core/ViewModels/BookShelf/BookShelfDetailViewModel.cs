@@ -11,20 +11,21 @@ using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookShelfDetailViewModel : BaseViewModel<ApiBookShelf, bool>
+    public class BookShelfDetailViewModel : BaseViewModel<Bookshelf, bool>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
         readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
 
-        ApiBookShelf _bookShelf;
+        readonly IBookShelfService _bookShelfService;
+
+        Bookshelf _bookShelf;
 
         #region Properties
 
         public override string LblTitle => _bookShelf != null ? _bookShelf.Name : "Bookshelf detail";
 
-        public ApiBookShelfDetailResponse BookShelfDetail { get; internal set; }
+        public BookshelfDetail BookShelfDetail { get; internal set; }
 
         public MvxObservableCollection<ICell> Items { get; set; } = new MvxObservableCollection<ICell>();
 
@@ -56,19 +57,23 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BookShelfDetailViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public BookShelfDetailViewModel(IMvxNavigationService navigation,
+                                        IUserInteraction userInteraction,
+                                        IDevice device,
+                                        IBookShelfService bookShelfService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
             _userInteraction = userInteraction;
             _device = device;
+
+            _bookShelfService = bookShelfService;
         }
 
         #endregion
 
         #region LifeCycle
 
-        public override void Prepare(ApiBookShelf parameter)
+        public override void Prepare(Bookshelf parameter)
         {
             _bookShelf = parameter;
         }
@@ -78,7 +83,7 @@ namespace ThePage.Core
             Analytics.TrackEvent($"Initialize {nameof(BookShelfDetailViewModel)}");
             await base.Initialize();
 
-            Refresh().Forget();
+            await Refresh();
         }
 
         #endregion
@@ -92,7 +97,7 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            BookShelfDetail = await _thePageService.GetBookShelf(_bookShelf.Id);
+            BookShelfDetail = await _bookShelfService.FetchBookShelf(_bookShelf.Id);
 
             Items = new MvxObservableCollection<ICell>
             {
@@ -125,7 +130,7 @@ namespace ThePage.Core
             var selectedBooks = Items.Where(b => b is CellBookShelfBookItem)
                 .OfType<CellBookShelfBookItem>()
                 .Select(i => i.Book).ToList();
-            var books = await _navigation.Navigate<BookSelectViewModel, List<ApiBook>, List<ApiBook>>(selectedBooks);
+            var books = await _navigation.Navigate<BookSelectViewModel, List<Book>, List<Book>>(selectedBooks);
 
             if (books != null)
             {
@@ -152,7 +157,6 @@ namespace ThePage.Core
                 if (result)
                     await Refresh();
             }
-
         }
 
         void ToggleEditValue()
@@ -190,14 +194,7 @@ namespace ThePage.Core
             var request = UpdateBookShelfCellData();
 
             if (request != null)
-            {
-                var result = await _thePageService.UpdateBookShelf(BookShelfDetail.Id, request);
-
-                if (result != null)
-                    _userInteraction.ToastMessage("Bookshelf updated", EToastType.Success);
-                else
-                    _userInteraction.Alert("Failure updating bookshelf");
-            }
+                await _bookShelfService.UpdateBookShelf(request);
 
             ToggleEditValue();
             IsLoading = false;
@@ -213,18 +210,11 @@ namespace ThePage.Core
             {
                 IsLoading = true;
 
-                var result = await _thePageService.DeleteBookShelf(BookShelfDetail.Id);
-
+                var result = await _bookShelfService.DeleteBookShelf(BookShelfDetail.Id);
                 if (result)
-                {
-                    _userInteraction.ToastMessage("Bookshelf removed", EToastType.Success);
                     await _navigation.Close(this, true);
-                }
                 else
-                {
-                    _userInteraction.Alert("Failure removing bookshelf");
                     IsLoading = false;
-                }
             }
         }
 

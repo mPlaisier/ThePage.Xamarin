@@ -1,4 +1,4 @@
-using ThePage.Core;
+using ThePage.Core.Cells;
 using Xunit;
 
 namespace ThePage.UnitTests.Cells.Book

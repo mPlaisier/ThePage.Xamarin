@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.Authentication
 {
-    public class LoginViewModelTests : BaseViewModelTests
+    public class LoginViewModelTests : BaseServicesTests
     {
         LoginViewModel _vm;
 

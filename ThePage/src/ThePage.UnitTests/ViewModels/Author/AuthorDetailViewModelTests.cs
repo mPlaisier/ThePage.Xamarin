@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.Author
 {
-    public class AuthorDetailViewModelTests : BaseViewModelTests
+    public class AuthorDetailViewModelTests : BaseServicesTests
     {
         AuthorDetailViewModel _vm;
 
@@ -73,9 +73,9 @@ namespace ThePage.UnitTests.ViewModels.Author
         public void LoadingAndEditingToFalseAfterEdit(bool result)
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.UpdateAuthor(It.IsAny<string>(), It.IsAny<Api.ApiAuthorRequest>()))
-                .Returns(() => result ? Task.FromResult(new Api.ApiAuthor()) : Task.FromResult<Api.ApiAuthor>(null));
+            MockAuthorService
+                .Setup(x => x.UpdateAuthor(It.IsAny<Core.Author>()))
+                .Returns(() => result ? Task.FromResult(It.IsAny<Core.Author>()) : Task.FromResult<Core.Author>(null));
             LoadViewModel(new AuthorDetailParameter(AuthorDataFactory.GetSingleAuthor()));
 
             //Execute

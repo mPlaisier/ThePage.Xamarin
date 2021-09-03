@@ -13,5 +13,7 @@ namespace ThePage.Api
 #endif
 
         public const string OpenLibrary_Api_Url = "http://openlibrary.org/api";
+
+        public const string Google_Books_Url = "https://www.googleapis.com/books/v1";
     }
 }
