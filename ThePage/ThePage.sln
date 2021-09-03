@@ -183,6 +183,6 @@ Global
 		$0.DotNetNamingPolicy = $1
 		$0.StandardHeader = $2
 		$0.VersionControlPolicy = $3
-		version = 2.5
+		version = 3.0
 	EndGlobalSection
 EndGlobal

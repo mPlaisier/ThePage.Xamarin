@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<IsPackable>false</IsPackable>
-		<ReleaseVersion>2.5</ReleaseVersion>
+		<ReleaseVersion>3.0</ReleaseVersion>
 		<Configurations>Unit-Test;Debug;Release</Configurations>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
