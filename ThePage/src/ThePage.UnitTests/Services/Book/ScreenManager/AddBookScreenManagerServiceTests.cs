@@ -34,7 +34,7 @@ namespace ThePage.UnitTests.Services.Book.ScreenManager
             _screenManager.FetchData();
         }
 
-        void PrepareAuthorData(bool containsGenres = true)
+        void PrepareAuthorData()
         {
             MockAuthorService
              .Setup(x => x.GetAuthors())

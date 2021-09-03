@@ -28,6 +28,16 @@ namespace ThePage.Core.Cells
 
         public override bool IsValid => CheckValidation();
 
+        public override bool IsEdit
+        {
+            get => base.IsEdit;
+            set
+            {
+                base.IsEdit = value;
+                RaisePropertyChanged(nameof(HasSearch));
+            }
+        }
+
         public bool HasSearch => _searchFunc.IsNotNull() && IsEdit;
 
         #endregion
@@ -185,9 +195,9 @@ namespace ThePage.Core.Cells
                 return this;
             }
 
-            public NumberTextViewBuilder IsEdit()
+            public NumberTextViewBuilder IsEdit(bool isEdit = true)
             {
-                _cellBookNumberTextView.IsEdit = true;
+                _cellBookNumberTextView.IsEdit = isEdit;
                 return this;
             }
 

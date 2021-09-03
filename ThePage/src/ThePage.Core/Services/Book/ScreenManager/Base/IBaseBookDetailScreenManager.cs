@@ -17,7 +17,7 @@ namespace ThePage.Core
 
         #region Methods
 
-        void CreateCellBooks(BookDetail bookDetail);
+        void CreateCellBooks(BookDetail bookDetail, bool isEdit);
 
         Task SaveBook();
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ThePage.Core.Cells;
 using Xunit;
+using static ThePage.Core.Enums;
 
 namespace ThePage.UnitTests.Cells.Book
 {
@@ -29,7 +30,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var title = string.Empty;
                 var isRequired = true;
 
-                var cell = new CellBookButton(title, null, isRequired)
+                var cell = new CellBookButton(title, null, EButtonType.Delete, isRequired)
                 {
                     IsValid = true
                 };
@@ -41,7 +42,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var title = string.Empty;
                 var isRequired = false;
 
-                var cell = new CellBookButton(title, null, isRequired)
+                var cell = new CellBookButton(title, null, EButtonType.Delete, isRequired)
                 {
                     IsValid = true
                 };
@@ -53,7 +54,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var title = string.Empty;
                 var isRequired = true;
 
-                return new CellBookButton(title, null, isRequired);
+                return new CellBookButton(title, null, EButtonType.Delete, isRequired);
             }
 
             public static CellBookButton GetCellBookButtonIsNotRequiredAndNotValidNullAction()
@@ -61,7 +62,7 @@ namespace ThePage.UnitTests.Cells.Book
                 var title = string.Empty;
                 var isRequired = false;
 
-                return new CellBookButton(title, null, isRequired);
+                return new CellBookButton(title, null, EButtonType.Delete, isRequired);
             }
         }
     }

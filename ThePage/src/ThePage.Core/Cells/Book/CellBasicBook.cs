@@ -95,9 +95,9 @@ namespace ThePage.Core.Cells
 
             #region Public
 
-            public Builder IsEdit()
+            public Builder IsEdit(bool isEdit = true)
             {
-                _cellBasicBook.IsEdit = true;
+                _cellBasicBook.IsEdit = isEdit;
                 return this;
             }
 

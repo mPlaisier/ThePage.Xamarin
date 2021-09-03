@@ -13,16 +13,12 @@ namespace ThePage.Core
     [ThePageTypeService]
     public class BookDetailScreenManagerService : BaseBookDetailScreenManager, IBookDetailScreenManagerService
     {
-        readonly IBookService _bookService;
-
         Action _actionClose;
         Book _book;
 
         #region Properties
 
         public string Title => BookDetail?.Title;
-
-        public BookDetail BookDetail { get; private set; }
 
         public bool IsEditing { get; private set; }
 
@@ -33,10 +29,11 @@ namespace ThePage.Core
         public BookDetailScreenManagerService(IMvxNavigationService navigationService,
                                            IUserInteraction userInteraction,
                                            IDevice device,
-                                           IBookService bookService)
-            : base(navigationService, userInteraction, device)
+                                           IBookService bookService,
+                                           IGoogleBooksService googleBooksService,
+                                           IAuthorService authorService)
+            : base(navigationService, userInteraction, device, googleBooksService, authorService, bookService)
         {
-            _bookService = bookService;
         }
 
         #endregion
@@ -57,11 +54,22 @@ namespace ThePage.Core
             IsLoading = true;
 
             BookDetail = await _bookService.FetchBook(_book.Id);
+            await RaisePropertyChanged(nameof(Title));
 
-            CreateCellBooks(BookDetail);
+            CreateCellBooks(BookDetail, false);
 
             IsLoading = false;
             UpdateValidation();
+        }
+
+        public override void CreateCellBooks(BookDetail bookDetail, bool isEdit)
+        {
+            base.CreateCellBooks(bookDetail, isEdit);
+
+            if (isEdit)
+                Items.Add(new CellBookButton("Update Book", SaveBook, EButtonType.Update));
+            else
+                Items.Add(new CellBookButton("Delete Book", DeleteBook, EButtonType.Delete, false));
         }
 
         public override async Task SaveBook()
@@ -83,29 +91,6 @@ namespace ThePage.Core
             IsLoading = false;
         }
 
-        public override void CreateCellBooks(BookDetail bookDetail)
-        {
-            var items = new List<ICellBook>
-            {
-                new CellBookTextView("Title",bookDetail.Title, EBookInputType.Title, UpdateValidation),
-                new CellBookAuthor(bookDetail.Author, _navigation, _device, UpdateValidation),
-                new CellBookTitle("Genres")
-            };
-
-            foreach (var item in bookDetail?.Genres)
-            {
-                items.Add(new CellBookGenreItem(item, RemoveGenre));
-            }
-
-            items.Add(new CellBookNumberTextView("Pages", bookDetail.Pages.ToString(), EBookInputType.Pages, UpdateValidation, false));
-            items.Add(new CellBookNumberTextView("ISBN", bookDetail.ISBN, EBookInputType.ISBN, UpdateValidation, false));
-            items.Add(new CellBookSwitch("Do you own this book?", bookDetail.Owned, EBookInputType.Owned, UpdateValidation));
-            items.Add(new CellBookSwitch("Have you read this book?", bookDetail.Read, EBookInputType.Read, UpdateValidation));
-            items.Add(new CellBookButton("Delete Book", DeleteBook, false));
-
-            Items.ReplaceWith(items);
-        }
-
         public void ToggleEditValue()
         {
             _device.HideKeyboard();
@@ -123,13 +108,13 @@ namespace ThePage.Core
                 var index = Items.FindIndex(x => x is CellBookNumberTextView y && y.InputType == EBookInputType.Pages);
                 Items.Insert(index, new CellBookAddGenre(AddGenre));
 
-                Items.Add(new CellBookButton("Update Book", SaveBook));
+                Items.Add(new CellBookButton("Update Book", SaveBook, EButtonType.Update));
                 UpdateValidation();
             }
             else
             {
                 Items.Remove(Items.OfType<CellBookAddGenre>().First());
-                Items.Add(new CellBookButton("Delete Book", DeleteBook, false));
+                Items.Add(new CellBookButton("Delete Book", DeleteBook, EButtonType.Delete, false));
             }
         }
 
@@ -144,11 +129,7 @@ namespace ThePage.Core
                     : base.AddGenre();
         }
 
-        #endregion
-
-        #region Private
-
-        async Task DeleteBook()
+        public override async Task DeleteBook()
         {
             if (IsLoading)
                 return;
@@ -165,6 +146,10 @@ namespace ThePage.Core
                     IsLoading = false;
             }
         }
+
+        #endregion
+
+        #region Private
 
         ApiBookDetailRequest UpdateBookCellData()
         {

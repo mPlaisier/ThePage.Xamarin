@@ -12,7 +12,7 @@ namespace ThePage.Core
 
         public Author Author { get; set; }
 
-        public List<Genre> Genres { get; set; }
+        public List<Genre> Genres { get; set; } = new List<Genre>();
 
         public string ISBN { get; set; }
 

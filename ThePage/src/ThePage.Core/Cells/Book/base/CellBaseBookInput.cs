@@ -7,7 +7,7 @@ namespace ThePage.Core.Cells
     {
         #region Properties
 
-        public bool IsEdit { get; set; }
+        public virtual bool IsEdit { get; set; }
 
         public abstract bool IsValid { get; }
 

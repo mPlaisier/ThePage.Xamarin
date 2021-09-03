@@ -12,7 +12,7 @@ namespace ThePage.Core
 
         public ImageLinks Images { get; set; }
 
-        public string ImageUri => Images.GetImageUrl();
+        public string ImageUri => Images?.GetImageUrl();
 
         #endregion
 
