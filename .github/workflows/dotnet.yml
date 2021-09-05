@@ -16,6 +16,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
     - name: Build
       run: |
+        echo env.private_nuget_user
         cd ThePage
         nuget restore
         msbuild src/ThePage.Api/ThePage.Api.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
