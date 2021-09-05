@@ -20,6 +20,9 @@ namespace ThePage.Core
 
             Barrel.ApplicationId = "thepageapplication";
             Barrel.EncryptionKey = "encryptionKey";
+
+            //LiteDB Upgrade (4 -> 5) | NuGet 1.3 -> 1.5
+            Barrel.Upgrade = true;
         }
 
         #endregion
