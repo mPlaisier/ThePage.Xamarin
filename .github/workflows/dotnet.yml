@@ -4,44 +4,38 @@ on: [pull_request]
 
 jobs: 
   API:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Restore dependencies
-      run: |
-        cd ThePage
-        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        dotnet build src/ThePage.Api/ThePage.Api.csproj --no-restore -c Unit-Test
+        nuget restore
+        msbuild src/ThePage.Api/ThePage.Api.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
 
   Core:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Restore dependencies
-      run: |
-        cd ThePage
-        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        dotnet build src/ThePage.Core/ThePage.Core.csproj --no-restore -c Unit-Test
+        nuget restore
+        msbuild src/ThePage.Core/ThePage.Core.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   Android:
     runs-on: macos-latest
@@ -57,7 +51,7 @@ jobs:
     - name: Build
       run: |
         cd ThePage
-        dotnet restore
+        nuget restore
         msbuild src/ThePage.Droid/ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   iOS:
@@ -78,21 +72,18 @@ jobs:
         msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
         
   UnitTests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 3.1.403
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
-    - name: Restore dependencies
-      run: |
-        cd ThePage
-        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj --no-restore -c Unit-Test
+        nuget restore
+        msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
