@@ -24,21 +24,24 @@ jobs:
         dotnet build src/ThePage.Api/ThePage.Api.csproj --no-restore -c Unit-Test
 
   Core:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.403
+        dotnet-version: 3.1.x
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Restore dependencies
+      run: |
+        cd ThePage
+        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        nuget restore
-        msbuild src/ThePage.Core/ThePage.Core.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        dotnet build src/ThePage.Core/ThePage.Core.csproj --no-restore -c Unit-Test
         
   Android:
     runs-on: macos-latest
@@ -54,7 +57,7 @@ jobs:
     - name: Build
       run: |
         cd ThePage
-        nuget restore
+        dotnet restore
         msbuild src/ThePage.Droid/ThePage.Droid.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
         
   iOS:
@@ -75,18 +78,21 @@ jobs:
         msbuild src/ThePage.iOS/ThePage.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
         
   UnitTests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.403
+        dotnet-version: 3.1.x
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Restore dependencies
+      run: |
+        cd ThePage
+        dotnet restore
     - name: Build
       run: |
         cd ThePage
-        nuget restore
-        msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug        
+        msbuild src/ThePage.UnitTests/ThePage.UnitTests.csproj --no-restore -c Unit-Test
