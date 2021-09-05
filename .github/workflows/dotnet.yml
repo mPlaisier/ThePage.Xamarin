@@ -14,15 +14,14 @@ jobs:
         source-url: https://nuget.pkg.github.com/mplaisier/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.TOKEN}}
+    - name: Restore dependencies
+      run: |
+        cd ThePage
+        dotnet restore
     - name: Build
       run: |
-        echo "env.private_nuget_user"
-        echo "$private_nuget_user"
-        echo "%private_nuget_user"
-        echo "%private_nuget_user%"
         cd ThePage
-        nuget restore
-        msbuild src/ThePage.Api/ThePage.Api.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        dotnet build src/ThePage.Api/ThePage.Api.csproj --no-restore -c Unit-Test
 
   Core:
     runs-on: macos-latest
