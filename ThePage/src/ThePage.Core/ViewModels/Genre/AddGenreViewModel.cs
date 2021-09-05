@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using PropertyChanged;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -11,9 +11,7 @@ namespace ThePage.Core
     public class AddGenreViewModel : BaseViewModelResult<string>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IGenreService _genreService;
 
         #region Properties
 
@@ -32,23 +30,17 @@ namespace ThePage.Core
 
         #region Commands
 
-        IMvxCommand _addGenreCommand;
-        public IMvxCommand AddGenreCommand => _addGenreCommand ??= new MvxCommand(async () =>
-        {
-            _device.HideKeyboard();
-            await AddGenre();
-        });
+        IMvxAsyncCommand _addGenreCommand;
+        public IMvxAsyncCommand AddGenreCommand => _addGenreCommand ??= new MvxAsyncCommand(AddGenre);
 
         #endregion
 
         #region Constructor
 
-        public AddGenreViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AddGenreViewModel(IMvxNavigationService navigation, IGenreService genreService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _genreService = genreService;
         }
 
         #endregion
@@ -64,7 +56,6 @@ namespace ThePage.Core
 
         #endregion
 
-
         #region Private
 
         async Task AddGenre()
@@ -74,17 +65,11 @@ namespace ThePage.Core
 
             IsLoading = true;
 
-            var result = await _thePageService.AddGenre(new ApiGenreRequest(TxtName.Trim()));
-            if (result != null)
-            {
-                _userInteraction.ToastMessage("Genre added");
+            var result = await _genreService.AddGenre(TxtName);
+            if (result.IsNotNull())
                 await _navigation.Close(this, result.Id);
-            }
             else
-            {
-                _userInteraction.Alert("Failure adding genre");
                 IsLoading = false;
-            }
         }
 
         #endregion

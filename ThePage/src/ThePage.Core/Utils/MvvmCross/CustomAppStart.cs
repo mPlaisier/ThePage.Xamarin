@@ -1,7 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AppCenter.Crashes;
-using MvvmCross.Exceptions;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using ThePage.Core.ViewModels.Main;
@@ -10,38 +9,41 @@ namespace ThePage.Core
 {
     public class CustomAppStart : MvxAppStart
     {
-        readonly IMvxNavigationService _mvxNavigationService;
+        readonly IMvxNavigationService _navigationService;
         readonly IAuthService _authService;
+        readonly IExceptionService _exceptionService;
 
         public CustomAppStart(IMvxApplication app,
-                        IMvxNavigationService mvxNavigationService,
-                        IAuthService authService)
-            : base(app, mvxNavigationService)
+                              IMvxNavigationService navigationService,
+                              IAuthService authService,
+                              IExceptionService exceptionService)
+            : base(app, navigationService)
         {
-            _mvxNavigationService = mvxNavigationService;
+            _navigationService = navigationService;
             _authService = authService;
+            _exceptionService = exceptionService;
         }
 
         protected override async Task NavigateToFirstViewModel(object hint = null)
         {
+            var isAuthenticated = false;
             try
             {
-                var isAuthenticated = await _authService.IsAuthenticated();
-
-                if (isAuthenticated)
-                {
-                    await _mvxNavigationService.Navigate<MainViewModel>();
-                }
-                else
-                {
-                    await _mvxNavigationService.Navigate<LoginViewModel>();
-                }
+                isAuthenticated = await _authService.IsAuthenticated();
             }
             catch (Exception exception)
             {
-                Crashes.TrackError(exception);
-                throw exception.MvxWrap("Problem navigating to ViewModel {0}", typeof(MvxViewModel).Name);
+                _exceptionService.AddExceptionForLogging(exception, new Dictionary<string, string>
+                {
+                    { "Service", nameof(AuthService) },
+                    { "AppStart", nameof(CustomAppStart) }
+                });
             }
+
+            if (isAuthenticated)
+                await _navigationService.Navigate<MainViewModel>();
+            else
+                await _navigationService.Navigate<LoginViewModel>();
         }
     }
 }

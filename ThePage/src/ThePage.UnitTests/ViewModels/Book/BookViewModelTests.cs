@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
+using FluentAssertions;
 using ThePage.Core;
 using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.Book
 {
-    public class BookViewModelTests : BaseViewModelTests
+    public class BookViewModelTests : BaseServicesTests
     {
-        BookViewModel _vm;
+        readonly BookViewModel _vm;
 
         #region Constructor
 
@@ -32,9 +33,9 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void ShowBooksWhenDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllBooks())
-                .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
+            MockBookService
+               .Setup(x => x.FetchBooks())
+               .Returns(() => Task.FromResult(BookDataFactory.GetListBook4ElementsComplete()));
 
             //Setup
             LoadViewModel();
@@ -49,26 +50,16 @@ namespace ThePage.UnitTests.ViewModels.Book
         public void ShowEmptyBooksNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllBooks())
+            MockBookService
+                .Setup(x => x.FetchBooks())
                 .Returns(() => Task.FromResult(BookDataFactory.GetListBookEmpty()));
 
             //Setup
             LoadViewModel();
 
             //Check
-            Assert.NotNull(_vm.Books);
-            Assert.Empty(_vm.Books);
-        }
-
-        [Fact]
-        public void ShowNullBooksNoDataAvailable()
-        {
-            //Setup
-            LoadViewModel();
-
-            //Check
-            Assert.Null(_vm.Books);
+            _vm.Books.Should().NotBeNull();
+            _vm.Books.Should().BeEmpty();
         }
     }
 }

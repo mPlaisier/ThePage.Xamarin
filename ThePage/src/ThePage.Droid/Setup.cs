@@ -37,6 +37,9 @@ namespace ThePage.Droid
 
             registry.RegisterCustomBindingFactory<TextView>("DrawableLeft",
                view => new TextViewDrawableLeftBinding(view));
+
+            registry.RegisterCustomBindingFactory<ImageView>("Url",
+                view => new ImageViewUrlBinding(view));
         }
 
         protected override IMvxLogProvider CreateLogProvider()

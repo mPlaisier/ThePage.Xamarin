@@ -1,71 +1,77 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
+using ThePage.Core.Cells;
+using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
-    public class BookSelectViewModel : BaseSelectMultipleItemsViewModel<List<ApiBook>, List<ApiBook>, CellBookSelect, ApiBook>
+    public class BookSelectViewModel : BaseListViewModel<List<Book>, List<Book>>,
+                                       IBaseSelectMultipleItemsViewModel<CellBookSelect, Book>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IBookService _bookService;
 
         #region Properties
 
         public override string LblTitle => "Select Book";
 
-        public override MvxObservableCollection<CellBookSelect> Items { get; set; }
+        public MvxObservableCollection<CellBookSelect> Items { get; set; } = new MvxObservableCollection<CellBookSelect>();
 
-        public override List<ApiBook> SelectedItems { get; internal set; }
+        public List<Book> SelectedItems { get; internal set; }
 
         #endregion
 
         #region Commandds
 
         IMvxCommand<CellBookSelect> _commandSelectItem;
-        public override IMvxCommand<CellBookSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellBookSelect>(HandleBookClick);
+        public IMvxCommand<CellBookSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellBookSelect>(HandleBookClick);
 
-        IMvxCommand _commandAddItem;
-        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        IMvxAsyncCommand _commandAddItem;
+        public IMvxAsyncCommand CommandAddItem => _commandAddItem ??= new MvxAsyncCommand(async () =>
         {
             var result = await _navigation.Navigate<AddBookViewModel, string>();
             if (result != null)
-                await Refresh(result);
+            {
+                //Add new created book to Selected list
+                await AddNewCreatedBookToList(result);
+                await Refresh();
+            }
+
         });
 
         IMvxCommand _commandConfirm;
-        public override IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
+        public IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
 
         #endregion
 
         #region Constructor
 
-        public BookSelectViewModel(IMvxNavigationService navigationService, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public BookSelectViewModel(IMvxNavigationService navigationService,
+                                   IBookService bookService)
         {
             _navigation = navigationService;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _bookService = bookService;
         }
 
         #endregion
 
         #region LifeCycle
 
-        public override void Prepare(List<ApiBook> parameter)
+        public override void Prepare(List<Book> parameter)
         {
-            SelectedItems = parameter ?? new List<ApiBook>();
+            SelectedItems = parameter ?? new List<Book>();
         }
 
-        public override Task Initialize()
+        public override async Task Initialize()
         {
-            Refresh().Forget();
+            await Refresh();
 
-            return base.Initialize();
+            await base.Initialize();
         }
 
         #endregion
@@ -74,23 +80,11 @@ namespace ThePage.Core
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiBookResponse = _isSearching
-                    ? await _thePageService.SearchBooksTitle(_search, _currentPage + 1)
-                    : await _thePageService.GetNextBooks(_currentPage + 1);
-
-                apiBookResponse.Docs.ForEach(x => Items.Add(
-                    new CellBookSelect(x, SelectedItems.Contains(x))));
-
-                _currentPage = apiBookResponse.Page;
-                _hasNextPage = apiBookResponse.HasNextPage;
-                _isLoadingNextPage = false;
-
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var books = await _bookService.LoadNextBooks();
+                var cells = books.Select(x => new CellBookSelect(x, SelectedItems.Contains(x)));
+                Items.AddRange(cells);
             }
         }
 
@@ -99,62 +93,39 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _bookService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiBookResponse = await _thePageService.SearchBooksTitle(search);
-
-            Items = new MvxObservableCollection<CellBookSelect>();
-            apiBookResponse.Docs.ForEach(x => Items.Add(
-                new CellBookSelect(x, SelectedItems.Contains(x))));
-
-            _currentPage = apiBookResponse.Page;
-            _hasNextPage = apiBookResponse.HasNextPage;
+            var books = await _bookService.Search(search);
+            var cells = books.Select(x => new CellBookSelect(x, SelectedItems.Contains(x)));
+            Items = new MvxObservableCollection<CellBookSelect>(cells);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_bookService.IsSearching)
+                await Refresh();
         }
 
         #endregion
 
         #region Private
 
-        protected override async Task Refresh(string item = null)
+        async Task Refresh()
         {
             IsLoading = true;
 
-            var books = await _thePageService.GetAllBooks();
+            var books = await _bookService.FetchBooks();
+            var cells = books.Select(x => new CellBookSelect(x, SelectedItems.Contains(x)));
 
-            //Add new created book to Selected list
-            if (item != null)
-            {
-                var newBook = await _thePageService.GetBook(item);
-                if (newBook != null)
-                    SelectedItems.Add(new ApiBook(newBook));
-            }
+            if (cells.IsNotNull())
+                Items = new MvxObservableCollection<CellBookSelect>(cells);
 
-            //Create select cells with the already selected books = true
-            Items = new MvxObservableCollection<CellBookSelect>();
-            books.Docs.ForEach(x => Items.Add(
-                new CellBookSelect(x, SelectedItems.Contains(x))));
-
-            _currentPage = books.Page;
-            _hasNextPage = books.HasNextPage;
             IsLoading = false;
         }
 
@@ -176,6 +147,18 @@ namespace ThePage.Core
         void HandleConfirm()
         {
             _navigation.Close(this, SelectedItems);
+        }
+
+        async Task AddNewCreatedBookToList(string id)
+        {
+            if (id != null)
+            {
+                IsLoading = true;
+
+                var bookDetail = await _bookService.FetchBook(id);
+                if (bookDetail != null)
+                    SelectedItems.Add(BookBusinessLogic.MapBook(bookDetail));
+            }
         }
 
         #endregion

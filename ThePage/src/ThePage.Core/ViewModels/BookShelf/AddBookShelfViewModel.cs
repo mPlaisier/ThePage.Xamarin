@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -13,9 +13,8 @@ namespace ThePage.Core
     public class AddBookShelfViewModel : BaseViewModelResult<bool>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
         readonly IDevice _device;
+        readonly IBookShelfService _bookShelfService;
 
         #region Properties
 
@@ -41,11 +40,10 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public AddBookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public AddBookShelfViewModel(IMvxNavigationService navigation, IBookShelfService bookShelfService, IDevice device)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
+            _bookShelfService = bookShelfService;
             _device = device;
         }
 
@@ -83,12 +81,12 @@ namespace ThePage.Core
             var selectedBooks = Items.Where(g => g is CellBookShelfBookItem)
                 .OfType<CellBookShelfBookItem>()
                 .Select(i => i.Book).ToList();
-            var books = await _navigation.Navigate<BookSelectViewModel, List<ApiBook>, List<ApiBook>>(selectedBooks);
+            var books = await _navigation.Navigate<BookSelectViewModel, List<Book>, List<Book>>(selectedBooks);
 
             if (books != null)
             {
                 //Remove all old books:
-                Items.RemoveItems(Items.OfType<CellBookShelfBookItem>().ToList());
+                Items.RemoveItems(Items.OfType<CellBookShelfBookItem>());
 
                 var bookItems = new List<CellBookShelfBookItem>();
                 books.ForEach(x => bookItems.Add(new CellBookShelfBookItem(x, RemoveBook, isEdit: true)));
@@ -107,21 +105,14 @@ namespace ThePage.Core
         {
             if (IsLoading)
                 return;
+
             IsLoading = true;
 
-            var request = BookShelfBusinessLogic.CreateApiBookShelfRequestFromInput(Items).request;
-            var result = await _thePageService.AddBookShelf(request);
-
+            var result = await _bookShelfService.AddBookshelf(Items);
             if (result)
-            {
-                _userInteraction.ToastMessage("Bookshelf added");
                 await _navigation.Close(this, true);
-            }
             else
-            {
-                _userInteraction.Alert("Failure adding bookshelf");
                 IsLoading = false;
-            }
         }
 
         void UpdateValidation()
@@ -129,7 +120,7 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            var lstInput = Items.OfType<BaseCellInput>().ToList();
+            var lstInput = Items.OfType<BaseCellInput>();
             IsValid = lstInput.All(x => x.IsValid);
         }
 

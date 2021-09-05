@@ -20,7 +20,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetAllBooks");
             }
             return result;
         }
@@ -37,7 +37,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetNextBooks");
             }
             return result;
         }
@@ -54,7 +54,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "GetBook");
             }
             return result;
         }
@@ -71,14 +71,14 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "SearchBooksTitle");
             }
             return result;
         }
 
-        public async Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book)
+        public async Task<ApiBookDetailResponse> AddBook(ApiBookDetailRequest book)
         {
-            ApiBookDetailRequest result = null;
+            ApiBookDetailResponse result = null;
             try
             {
                 var token = await _authService.GetSessionToken();
@@ -88,7 +88,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "AddBook");
             }
             return result;
         }
@@ -105,7 +105,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "UpdateBook");
             }
             return result;
         }
@@ -121,7 +121,7 @@ namespace ThePage.Core
             }
             catch (Exception ex)
             {
-                HandleException(ex);
+                _exceptionService.HandleThePageException(ex, "DeleteBook");
             }
             return false;
         }

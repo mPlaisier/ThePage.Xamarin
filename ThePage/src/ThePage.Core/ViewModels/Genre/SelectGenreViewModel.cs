@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using CBP.Extensions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
+using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
 {
@@ -11,13 +13,13 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public List<ApiGenre> SelectedGenres { get; }
+        public List<Genre> SelectedGenres { get; }
 
         #endregion
 
         #region Constructor
 
-        public SelectedGenreParameters(List<ApiGenre> selectedGenres)
+        public SelectedGenreParameters(List<Genre> selectedGenres)
         {
             SelectedGenres = selectedGenres;
         }
@@ -25,52 +27,51 @@ namespace ThePage.Core
         #endregion
     }
 
-    public class SelectGenreViewModel : BaseSelectMultipleItemsViewModel<SelectedGenreParameters, List<ApiGenre>, CellGenreSelect, ApiGenre>
+    public class SelectGenreViewModel : BaseListViewModel<SelectedGenreParameters, List<Genre>>,
+                                        IBaseSelectMultipleItemsViewModel<CellGenreSelect, Genre>
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IGenreService _genreService;
 
         #region Properties
 
         public override string LblTitle => "Select Genre";
 
-        public override MvxObservableCollection<CellGenreSelect> Items { get; set; }
+        public MvxObservableCollection<CellGenreSelect> Items { get; set; } = new MvxObservableCollection<CellGenreSelect>();
 
-        public override List<ApiGenre> SelectedItems { get; internal set; }
+        public List<Genre> SelectedItems { get; internal set; }
 
         #endregion
 
         #region Commands
 
         IMvxCommand<CellGenreSelect> _commandSelectItem;
-        public override IMvxCommand<CellGenreSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellGenreSelect>(HandleGenreClick);
+        public IMvxCommand<CellGenreSelect> CommandSelectItem => _commandSelectItem ??= new MvxCommand<CellGenreSelect>(HandleGenreClick);
 
         IMvxCommand _commandAddItem;
-        public override IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
+        public IMvxCommand CommandAddItem => _commandAddItem ??= new MvxCommand(async () =>
         {
             var result = await _navigation.Navigate<AddGenreViewModel, string>();
             if (result != null)
-                await Refresh(result);
+            {
+                //Add new created genre to Selected list
+                await AddNewGenreToSelectedList(result);
+                await Refresh();
+            }
         });
 
         IMvxCommand _commandConfirm;
-        public override IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
+        public IMvxCommand CommandConfirm => _commandConfirm ??= new MvxCommand(HandleConfirm);
 
         #endregion
 
         #region Constructor
 
         public SelectGenreViewModel(IMvxNavigationService navigationService,
-                                    IThePageService thePageService,
-                                    IUserInteraction userInteraction,
-                                    IDevice device)
+                                    IGenreService genreService)
         {
             _navigation = navigationService;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _genreService = genreService;
         }
 
         #endregion
@@ -82,11 +83,11 @@ namespace ThePage.Core
             SelectedItems = parameter.SelectedGenres;
         }
 
-        public override Task Initialize()
+        public override async Task Initialize()
         {
-            Refresh().Forget();
+            await Refresh();
 
-            return base.Initialize();
+            await base.Initialize();
         }
 
         #endregion
@@ -95,23 +96,11 @@ namespace ThePage.Core
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiGenreResponse = _isSearching
-                    ? await _thePageService.SearchGenres(_search, _currentPage + 1)
-                    : await _thePageService.GetNextGenres(_currentPage + 1);
-
-                apiGenreResponse.Docs.ForEach(x => Items.Add(
-                    new CellGenreSelect(x, SelectedItems.Contains(x))));
-
-                _currentPage = apiGenreResponse.Page;
-                _hasNextPage = apiGenreResponse.HasNextPage;
-                _isLoadingNextPage = false;
-
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var genres = await _genreService.LoadNextGenres();
+                var cells = genres.Select(x => new CellGenreSelect(x, SelectedItems.Contains(x)));
+                Items.AddRange(cells);
             }
         }
 
@@ -120,61 +109,39 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _genreService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiGenreResponse = await _thePageService.SearchGenres(search);
-
-            Items = new MvxObservableCollection<CellGenreSelect>();
-            apiGenreResponse.Docs.ForEach(x => Items.Add(
-                new CellGenreSelect(x, SelectedItems.Contains(x))));
-
-            _currentPage = apiGenreResponse.Page;
-            _hasNextPage = apiGenreResponse.HasNextPage;
+            var genres = await _genreService.Search(search);
+            var cells = genres.Select(x => new CellGenreSelect(x, SelectedItems.Contains(x)));
+            Items = new MvxObservableCollection<CellGenreSelect>(cells);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_genreService.IsSearching)
+                await Refresh();
         }
 
         #endregion
 
         #region Protected
 
-        protected override async Task Refresh(string item = null)
+        async Task Refresh()
         {
             IsLoading = true;
 
-            var genres = await _thePageService.GetAllGenres();
+            var genres = await _genreService.GetGenres();
+            var cells = genres.Select(x => new CellGenreSelect(x, SelectedItems.Contains(x)));
 
-            //Add new created genre to Selected list
-            if (item != null)
-            {
-                var newGenre = await _thePageService.GetGenre(item);
-                if (newGenre != null)
-                    SelectedItems.Add(newGenre);
-            }
+            if (cells.IsNotNull())
+                Items = new MvxObservableCollection<CellGenreSelect>(cells);
 
-            Items = new MvxObservableCollection<CellGenreSelect>();
-            genres.Docs.ForEach(x => Items.Add(
-                new CellGenreSelect(x, SelectedItems.Contains(x))));
-
-            _currentPage = genres.Page;
-            _hasNextPage = genres.HasNextPage;
             IsLoading = false;
         }
 
@@ -199,6 +166,16 @@ namespace ThePage.Core
         void HandleConfirm()
         {
             _navigation.Close(this, SelectedItems);
+        }
+
+        async Task AddNewGenreToSelectedList(string id)
+        {
+            if (id != null)
+            {
+                var newGenre = await _genreService.GetGenre(id);
+                if (newGenre != null)
+                    SelectedItems.Add(newGenre);
+            }
         }
 
         #endregion

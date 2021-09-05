@@ -1,46 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <ReleaseVersion>2.5</ReleaseVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MvvmCross" Version="7.1.2" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AppCenter" Version="4.0.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
-    <PackageReference Include="Fody" Version="6.3.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="NodaTime" Version="3.0.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\Author\" />
-    <Folder Include="Services\" />
-    <Folder Include="ViewModels\Book\" />
-    <Folder Include="Cells\" />
-    <Folder Include="Cells\Menu\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="BusinessLogic\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="ViewModels\Debug\" />
-    <Folder Include="Cells\Debug\" />
-    <Folder Include="ViewModels\Genre\" />
-    <Folder Include="Cells\Book\" />
-    <Folder Include="Converters\" />
-    <Folder Include="Cells\Base\" />
-    <Folder Include="Cells\Author\" />
-    <Folder Include="Cells\Genre\" />
-    <Folder Include="Utils\" />
-    <Folder Include="ViewModels\Authentication\" />
-    <Folder Include="Utils\MvvmCross\" />
-    <Folder Include="ViewModels\BookShelf\" />
-    <Folder Include="Cells\BookShelf\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<ReleaseVersion>3.0</ReleaseVersion>
+		<Configurations>Unit-Test;Debug;Release</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
+		<DebugType>
+		</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Unit-Test</OutputPath>
+		<DefineConstants>
+		</DefineConstants>
+		<WarningLevel>4</WarningLevel>
+		<IntermediateOutputPath>obj\Unit-Test</IntermediateOutputPath>
+		<NoWarn>
+		</NoWarn>
+		<NoStdLib>false</NoStdLib>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="MvvmCross" Version="7.1.2" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.2.0" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.2.0" />
+		<PackageReference Include="Microsoft.AppCenter" Version="4.2.0" />
+		<PackageReference Include="PropertyChanged.Fody" Version="3.3.3" PrivateAssets="All" />
+		<PackageReference Include="Fody" Version="6.5.1">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="NodaTime" Version="3.0.5" />
+		<PackageReference Include="cbp-extensions" Version="1.8.0" />
+		<PackageReference Include="Google.Apis.Books.v1" Version="1.51.0.2231" />
+		<PackageReference Include="TinyMapper" Version="3.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="ViewModels\Author\" />
+		<Folder Include="Services\" />
+		<Folder Include="ViewModels\Book\" />
+		<Folder Include="Cells\" />
+		<Folder Include="Cells\Menu\" />
+		<Folder Include="Extensions\" />
+		<Folder Include="BusinessLogic\" />
+		<Folder Include="Services\Interfaces\" />
+		<Folder Include="ViewModels\Debug\" />
+		<Folder Include="Cells\Debug\" />
+		<Folder Include="ViewModels\Genre\" />
+		<Folder Include="Cells\Book\" />
+		<Folder Include="Converters\" />
+		<Folder Include="Cells\Base\" />
+		<Folder Include="Cells\Author\" />
+		<Folder Include="Cells\Genre\" />
+		<Folder Include="Utils\" />
+		<Folder Include="ViewModels\Authentication\" />
+		<Folder Include="Utils\MvvmCross\" />
+		<Folder Include="ViewModels\BookShelf\" />
+		<Folder Include="Cells\BookShelf\" />
+		<Folder Include="Cells\GoogleBook\" />
+		<Folder Include="Models\" />
+		<Folder Include="Models\Author\" />
+		<Folder Include="Services\Author\" />
+		<Folder Include="Services\Book\" />
+		<Folder Include="Models\Book\" />
+		<Folder Include="Models\Genre\" />
+		<Folder Include="Services\Genre\" />
+		<Folder Include="Services\BookShelf\" />
+		<Folder Include="Models\Bookshelf\" />
+		<Folder Include="Constants\" />
+		<Folder Include="Services\Book\Interfaces\" />
+		<Folder Include="Services\Book\ScreenManager\" />
+		<Folder Include="Services\Attributes\" />
+		<Folder Include="Services\Book\ScreenManager\Interfaces\" />
+		<Folder Include="Cells\Book\base\" />
+		<Folder Include="Cells\Book\Interfaces\" />
+		<Folder Include="Cells\Book\Utils\" />
+		<Folder Include="Cells\Base\Interfaces\" />
+		<Folder Include="Services\Book\ScreenManager\Base\" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ThePage.Api\ThePage.Api.csproj" />
+	</ItemGroup>
 </Project>

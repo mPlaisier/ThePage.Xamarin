@@ -3,7 +3,6 @@ using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using ThePage.Api;
 using ThePage.Core.ViewModels;
 
 namespace ThePage.Core
@@ -11,34 +10,30 @@ namespace ThePage.Core
     public class BookShelfViewModel : BaseListViewModel
     {
         readonly IMvxNavigationService _navigation;
-        readonly IThePageService _thePageService;
-        readonly IUserInteraction _userInteraction;
-        readonly IDevice _device;
+        readonly IBookShelfService _bookshelfService;
 
         #region Properties
 
         public override string LblTitle => "Bookshelves";
 
-        public MvxObservableCollection<ApiBookShelf> BookShelves { get; private set; }
+        public MvxObservableCollection<Bookshelf> BookShelves { get; private set; }
 
         #endregion
 
         #region Constructor
 
-        public BookShelfViewModel(IMvxNavigationService navigation, IThePageService thePageService, IUserInteraction userInteraction, IDevice device)
+        public BookShelfViewModel(IMvxNavigationService navigation, IBookShelfService bookshelfService)
         {
             _navigation = navigation;
-            _thePageService = thePageService;
-            _userInteraction = userInteraction;
-            _device = device;
+            _bookshelfService = bookshelfService;
         }
 
         #endregion
 
         #region Commands
 
-        IMvxAsyncCommand<ApiBookShelf> _itemClickCommand;
-        public IMvxAsyncCommand<ApiBookShelf> ItemClickCommand => _itemClickCommand ??= new MvxAsyncCommand<ApiBookShelf>(GoToBookShelfDetail);
+        IMvxAsyncCommand<Bookshelf> _itemClickCommand;
+        public IMvxAsyncCommand<Bookshelf> ItemClickCommand => _itemClickCommand ??= new MvxAsyncCommand<Bookshelf>(GoToBookShelfDetail);
 
         IMvxAsyncCommand _addBookShelfCommand;
         public IMvxAsyncCommand AddBookShelfCommand => _addBookShelfCommand ??= new MvxAsyncCommand(AddBookShelf);
@@ -53,7 +48,7 @@ namespace ThePage.Core
 
             await base.Initialize();
 
-            Refresh().Forget();
+            await Refresh();
         }
 
         #endregion
@@ -62,22 +57,10 @@ namespace ThePage.Core
 
         public override async Task LoadNextPage()
         {
-            if (_hasNextPage && !_isLoadingNextPage && !IsLoading)
+            if (!IsLoading)
             {
-                _isLoadingNextPage = true;
-                _userInteraction.ToastMessage("Loading data", EToastType.Info);
-
-                var apiBookShelfResponse = _isSearching
-                    ? await _thePageService.SearchBookshelves(_search, _currentPage + 1)
-                    : await _thePageService.GetNextBookshelves(_currentPage + 1);
-
-                BookShelves.AddRange(apiBookShelfResponse.Docs);
-
-                _currentPage = apiBookShelfResponse.Page;
-                _hasNextPage = apiBookShelfResponse.HasNextPage;
-
-                _isLoadingNextPage = false;
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
+                var bookshelves = await _bookshelfService.LoadNextBookshelves();
+                BookShelves.AddRange(bookshelves);
             }
         }
 
@@ -86,32 +69,22 @@ namespace ThePage.Core
             if (IsLoading)
                 return;
 
-            _device.HideKeyboard();
-
-            if (_search != null && _search.Equals(search))
+            var currentSearch = _bookshelfService.SearchText;
+            if (currentSearch != null && currentSearch.Equals(search))
                 return;
 
             IsLoading = true;
-            _search = search;
-            _isSearching = true;
 
-            var apiBookShelfResponse = await _thePageService.SearchBookshelves(search, null);
-            BookShelves = new MvxObservableCollection<ApiBookShelf>(apiBookShelfResponse.Docs);
-
-            _currentPage = apiBookShelfResponse.Page;
-            _hasNextPage = apiBookShelfResponse.HasNextPage;
+            var bookshelves = await _bookshelfService.Search(search);
+            BookShelves = new MvxObservableCollection<Bookshelf>(bookshelves);
 
             IsLoading = false;
         }
 
-        public override void StopSearch()
+        public override async void StopSearch()
         {
-            if (_isSearching)
-            {
-                _isSearching = false;
-                _search = null;
-                Refresh().Forget();
-            }
+            if (_bookshelfService.IsSearching)
+                await Refresh();
         }
 
         #endregion
@@ -122,11 +95,9 @@ namespace ThePage.Core
         {
             IsLoading = true;
 
-            var apiBookShelfResponse = await _thePageService.GetAllBookShelves();
-            BookShelves = new MvxObservableCollection<ApiBookShelf>(apiBookShelfResponse.Docs);
+            var bookshelf = await _bookshelfService.FetchBookshelves();
+            BookShelves = new MvxObservableCollection<Bookshelf>(bookshelf);
 
-            _currentPage = apiBookShelfResponse.Page;
-            _hasNextPage = apiBookShelfResponse.HasNextPage;
             IsLoading = false;
         }
 
@@ -137,9 +108,9 @@ namespace ThePage.Core
                 await Refresh();
         }
 
-        async Task GoToBookShelfDetail(ApiBookShelf bookshelf)
+        async Task GoToBookShelfDetail(Bookshelf bookshelf)
         {
-            var result = await _navigation.Navigate<BookShelfDetailViewModel, ApiBookShelf, bool>(bookshelf);
+            var result = await _navigation.Navigate<BookShelfDetailViewModel, Bookshelf, bool>(bookshelf);
             if (result)
                 await Refresh();
         }

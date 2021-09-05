@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Nelibur.ObjectMapper;
 using ThePage.Api;
 
 namespace ThePage.Core
 {
     public static class BookShelfBusinessLogic
     {
-        public static (ApiBookShelfRequest request, IEnumerable<ApiBook> books) CreateApiBookShelfRequestFromInput(IEnumerable<ICell> items, string id = null, ApiBookShelfDetailResponse originalResponse = null)
+        public static (ApiBookShelfRequest request, IEnumerable<Book> books) CreateApiBookShelfRequestFromInput(IEnumerable<ICell> items, string id = null, BookshelfDetail originalResponse = null)
         {
             //Name
             var name = items.OfType<CellBookShelfTextView>().First(p => p.InputType == EBookShelfInputType.Name).TxtInput.Trim();
@@ -20,7 +21,24 @@ namespace ThePage.Core
 
             return (name == null && books == null
                 ? null
-                : new ApiBookShelfRequest(id, name, books.GetIdStrings(true)), books);
+                : new ApiBookShelfRequest(id, name, books.GetIdList(true)), books);
+        }
+
+        public static IEnumerable<Bookshelf> MapBookshelves(IEnumerable<ApiBookShelf> bookShelves)
+        {
+            return bookShelves.Select(bookshelf => MapBookshelf(bookshelf));
+        }
+
+        public static Bookshelf MapBookshelf(ApiBookShelf bookshelf)
+        {
+            TinyMapper.Bind<ApiBookShelf, Bookshelf>();
+            return TinyMapper.Map<Bookshelf>(bookshelf);
+        }
+
+        public static BookshelfDetail MapBookshelfDetail(ApiBookShelfDetailResponse bookshelf)
+        {
+            TinyMapper.Bind<ApiBookShelfDetailResponse, BookshelfDetail>();
+            return TinyMapper.Map<BookshelfDetail>(bookshelf);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public BaseCellClickableText(string label, Func<Task> action, string icon = "ic_add")
+        public BaseCellClickableText(string label, Func<Task> action, string icon = Constants.ICON_ADD)
         {
             Label = label;
             _action = action;

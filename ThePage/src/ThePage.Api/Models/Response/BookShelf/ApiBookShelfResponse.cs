@@ -20,12 +20,6 @@ namespace ThePage.Api
         [JsonProperty("books")]
         public List<string> Books { get; set; }
 
-        [JsonIgnore]
-        public int Count => Books == null ? 0 : Books.Count;
-
-        [JsonIgnore]
-        public string LblCount => Count == 1 ? $"{Count} book" : $"{Count} books";
-
         #endregion
     }
 }

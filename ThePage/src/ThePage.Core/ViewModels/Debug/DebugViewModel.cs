@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
@@ -184,8 +185,8 @@ namespace ThePage.Core
                 var bookshelves = await _thePageService.GetAllBookShelves();
                 var books = await _thePageService.GetAllBooks();
 
-                authors.Docs.ForEach(async x => await _thePageService.DeleteAuthor(x));
-                genres.Docs.ForEach(async x => await _thePageService.DeleteGenre(x));
+                authors.Docs.ForEach(async x => await _thePageService.DeleteAuthor(x.Id));
+                genres.Docs.ForEach(async x => await _thePageService.DeleteGenre(x.Id));
                 bookshelves.Docs.ForEach(async x => await _thePageService.DeleteBookShelf(x.Id));
                 books.Docs.ForEach(async x => await _thePageService.DeleteBook(x.Id));
 
@@ -298,7 +299,7 @@ namespace ThePage.Core
                         selectedBooks.Add(genre);
                 }
 
-                var bookshelf = new ApiBookShelfRequest(null, $"BookShelf {i + 1}", selectedBooks.GetIdStrings());
+                var bookshelf = new ApiBookShelfRequest(null, $"BookShelf {i + 1}", selectedBooks.GetIdList());
                 await _thePageService.AddBookShelf(bookshelf);
             }
         }

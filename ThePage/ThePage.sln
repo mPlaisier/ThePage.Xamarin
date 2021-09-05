@@ -32,6 +32,7 @@ Global
 		Release|iPhoneSimulator = Release|iPhoneSimulator
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
+		Unit-Test|Any CPU = Unit-Test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,6 +59,8 @@ Global
 		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Release|x64.Build.0 = Release|Any CPU
 		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Release|x86.Build.0 = Release|Any CPU
+		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Unit-Test|Any CPU.ActiveCfg = Unit-Test|Any CPU
+		{29292AFB-84A1-450F-8FCD-0E699EF915C3}.Unit-Test|Any CPU.Build.0 = Unit-Test|Any CPU
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -94,6 +97,7 @@ Global
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Release|x86.Build.0 = Release|Any CPU
 		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Release|x86.Deploy.0 = Release|Any CPU
+		{2F1E97EC-196C-436E-8282-16C3819D92A6}.Unit-Test|Any CPU.ActiveCfg = Unit-Test|Any CPU
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Debug|Any CPU.ActiveCfg = Debug|iPhone
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Debug|ARM.ActiveCfg = Debug|iPhone
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Debug|iPhone.ActiveCfg = Debug|iPhone
@@ -114,6 +118,7 @@ Global
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Release|iPhoneSimulator.Deploy.0 = Release|iPhoneSimulator
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Release|x64.ActiveCfg = Release|iPhone
 		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Release|x86.ActiveCfg = Release|iPhone
+		{7EE2EAC6-7331-4437-A9FF-3E35A8DE6ACB}.Unit-Test|Any CPU.ActiveCfg = Unit-Test|Any CPU
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -138,6 +143,8 @@ Global
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Release|x64.Build.0 = Release|Any CPU
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Release|x86.ActiveCfg = Release|Any CPU
 		{CF352E55-0E85-4F6B-8118-228B38667261}.Release|x86.Build.0 = Release|Any CPU
+		{CF352E55-0E85-4F6B-8118-228B38667261}.Unit-Test|Any CPU.ActiveCfg = Unit-Test|Any CPU
+		{CF352E55-0E85-4F6B-8118-228B38667261}.Unit-Test|Any CPU.Build.0 = Unit-Test|Any CPU
 		{088F1800-8587-453B-9164-1F391801137D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{088F1800-8587-453B-9164-1F391801137D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{088F1800-8587-453B-9164-1F391801137D}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -162,6 +169,8 @@ Global
 		{088F1800-8587-453B-9164-1F391801137D}.Release|x64.Build.0 = Release|Any CPU
 		{088F1800-8587-453B-9164-1F391801137D}.Release|x86.ActiveCfg = Release|Any CPU
 		{088F1800-8587-453B-9164-1F391801137D}.Release|x86.Build.0 = Release|Any CPU
+		{088F1800-8587-453B-9164-1F391801137D}.Unit-Test|Any CPU.ActiveCfg = Unit-Test|Any CPU
+		{088F1800-8587-453B-9164-1F391801137D}.Unit-Test|Any CPU.Build.0 = Unit-Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +183,6 @@ Global
 		$0.DotNetNamingPolicy = $1
 		$0.StandardHeader = $2
 		$0.VersionControlPolicy = $3
-		version = 2.5
+		version = 3.0
 	EndGlobalSection
 EndGlobal

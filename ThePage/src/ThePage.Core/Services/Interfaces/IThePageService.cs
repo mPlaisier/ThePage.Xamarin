@@ -15,7 +15,7 @@ namespace ThePage.Core
 
         Task<ApiBookResponse> SearchBooksTitle(string search, int? page = null);
 
-        Task<ApiBookDetailRequest> AddBook(ApiBookDetailRequest book);
+        Task<ApiBookDetailResponse> AddBook(ApiBookDetailRequest book);
 
         Task<ApiBookDetailResponse> UpdateBook(string id, ApiBookDetailRequest book);
 
@@ -37,7 +37,7 @@ namespace ThePage.Core
 
         Task<ApiAuthor> UpdateAuthor(string id, ApiAuthorRequest author);
 
-        Task<bool> DeleteAuthor(ApiAuthor author);
+        Task<bool> DeleteAuthor(string id);
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace ThePage.Core
 
         Task<ApiGenre> UpdateGenre(string id, ApiGenreRequest genre);
 
-        Task<bool> DeleteGenre(ApiGenre genre);
+        Task<bool> DeleteGenre(string id);
 
         #endregion
 

@@ -8,8 +8,8 @@ namespace ThePage.Core
 
         public bool IsOpen { get; set; }
 
-        public virtual string OpenIcon => "ic_chevron_down";
+        public virtual string OpenIcon => Constants.ICON_DOWN;
 
-        public virtual string CloseIcon => "ic_chevron_up";
+        public virtual string CloseIcon => Constants.ICON_UP;
     }
 }

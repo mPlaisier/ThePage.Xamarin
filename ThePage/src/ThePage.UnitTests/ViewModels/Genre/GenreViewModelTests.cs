@@ -1,12 +1,13 @@
+using System.Linq;
 using System.Threading.Tasks;
 using ThePage.Core;
 using Xunit;
 
-namespace ThePage.UnitTests.ViewModels.Genre
+namespace ThePage.UnitTests.ViewModels
 {
-    public class GenreViewModelTests : BaseViewModelTests
+    public class GenreViewModelTests : BaseServicesTests
     {
-        GenreViewModel _vm;
+        readonly GenreViewModel _vm;
 
         #region Constructor
 
@@ -34,9 +35,9 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void ShowGenresWhenDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenre4ElementsComplete()));
+            MockGenreService
+                .Setup(x => x.GetGenres())
+                .Returns(() => Task.FromResult(GenreDataFactory.GetGenre4ElementsComplete()));
 
             //Execute
             LoadViewModel();
@@ -51,9 +52,9 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void ShowEmptyGenresNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
+            MockGenreService
+                .Setup(x => x.GetGenres())
+                .Returns(() => Task.FromResult(Enumerable.Empty<Genre>()));
 
             //Execute
             LoadViewModel();
@@ -67,9 +68,9 @@ namespace ThePage.UnitTests.ViewModels.Genre
         public void StopLoadingAfterRefresh()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllGenres())
-                .Returns(() => Task.FromResult(GenreDataFactory.GetListGenreEmpty()));
+            MockGenreService
+                .Setup(x => x.GetGenres())
+                .Returns(() => Task.FromResult(Enumerable.Empty<Genre>()));
 
             //Execute
             LoadViewModel();

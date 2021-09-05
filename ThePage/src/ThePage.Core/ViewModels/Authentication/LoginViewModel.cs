@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CBP.Extensions;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -37,14 +38,14 @@ namespace ThePage.Core
         #region Commands
 
         MvxCommand _loginCommand;
-        public IMvxCommand LoginCommand => _loginCommand = _loginCommand ?? new MvxCommand(() =>
+        public IMvxCommand LoginCommand => _loginCommand ??= new MvxCommand(() =>
         {
             _device.HideKeyboard();
             OnloginClick().Forget();
         });
 
         MvxCommand _registerCommand;
-        public IMvxCommand RegisterCommand => _registerCommand = _registerCommand ?? new MvxCommand(() =>
+        public IMvxCommand RegisterCommand => _registerCommand ??= new MvxCommand(() =>
         {
             _navigationService.Navigate<RegisterViewModel>();
         });

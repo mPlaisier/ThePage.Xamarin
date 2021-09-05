@@ -22,7 +22,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidLinkSkip>ThePage.Core</AndroidLinkSkip>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <ReleaseVersion>2.5</ReleaseVersion>
+    <ReleaseVersion>3.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -36,6 +36,7 @@
     <EnableProguard>false</EnableProguard>
     <AndroidSupportedAbis>
     </AndroidSupportedAbis>
+<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -52,6 +53,21 @@
     <AndroidLinkMode>Full</AndroidLinkMode>
     <AndroidLinkSkip>ThePage.Core;ThePage.Api;MvvmCross;MvvmCross.Plugins.Color;MvvmCross.Plugins.Color.Droid;MvvmCross.Plugins.Visibility;MvvmCross.Plugins.Visibility.Droid;MvvmCross.Droid.Support.V7.RecyclerView;MvvmCross.Droid.Support.V7.AppCompat;Newtonsoft.Json;MonkeyCache;MonkeyCache.LiteDB</AndroidLinkSkip>
     <AndroidLinkTool>r8</AndroidLinkTool>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
+    <DebugType></DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Unit-Test</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkSkip></AndroidLinkSkip>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <JavaMaximumHeapSize></JavaMaximumHeapSize>
+    <AndroidUseAapt2>false</AndroidUseAapt2>
+    <AndroidManifest></AndroidManifest>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
+<AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+<AndroidDexTool>dx</AndroidDexTool>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
@@ -100,6 +116,8 @@
     <Compile Include="Views\BookShelf\BookShelfDetailFragment.cs" />
     <Compile Include="Utils\OnScrollListener.cs" />
     <Compile Include="Views\!Base\BaseListFragment.cs" />
+    <Compile Include="Views\Book\BookSearchFragment.cs" />
+    <Compile Include="Bindings\ImageViewUrlBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -118,16 +136,16 @@
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter">
-      <Version>4.0.0</Version>
+      <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>4.0.0</Version>
+      <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>4.0.0</Version>
+      <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Distribute">
-      <Version>4.0.0</Version>
+      <Version>4.2.0</Version>
     </PackageReference>
        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.Core.UI">
       <Version>1.0.0.7</Version>
@@ -531,6 +549,22 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\grey_border.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fragment_booksearch.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_googlebook.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\cell_basic_book.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\book_cover.webp">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

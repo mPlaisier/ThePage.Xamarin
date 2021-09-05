@@ -19,7 +19,7 @@ namespace ThePage.Api
 
         [Post("/books/v2")]
         [Headers("Authorization: Bearer")]
-        Task<ApiBookDetailRequest> AddBook([Body] ApiBookDetailRequest book);
+        Task<ApiBookDetailResponse> AddBook([Body] ApiBookDetailRequest book);
 
         [Patch("/books/v2/{Id}")]
         [Headers("Authorization: Bearer")]

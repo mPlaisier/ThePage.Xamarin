@@ -30,6 +30,7 @@ namespace ThePage.Droid.Views.Main
 #else
             AppCenter.Start("1196e785-1345-401c-b733-583d7dd3afa0", typeof(Analytics), typeof(Crashes), typeof(Distribute));
 #endif
+            ViewModel.EnableExceptionLogging();
         }
 
         #endregion

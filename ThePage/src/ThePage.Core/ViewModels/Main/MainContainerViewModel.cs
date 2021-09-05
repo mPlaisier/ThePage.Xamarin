@@ -1,4 +1,5 @@
-﻿using MvvmCross.Navigation;
+﻿using CBP.Extensions;
+using MvvmCross.Navigation;
 
 namespace ThePage.Core.ViewModels.Main
 {
@@ -7,6 +8,7 @@ namespace ThePage.Core.ViewModels.Main
         readonly IMvxNavigationService _navigationService;
         readonly IUserInteraction _userInteraction;
         readonly IAuthService _authService;
+        readonly IExceptionService _exceptionService;
 
         #region Properties
 
@@ -18,14 +20,20 @@ namespace ThePage.Core.ViewModels.Main
 
         #region Constructor
 
-        public MainContainerViewModel(IMvxNavigationService navigationService, IUserInteraction userInteraction, IAuthService authService)
+        public MainContainerViewModel(IMvxNavigationService navigationService,
+                                      IUserInteraction userInteraction,
+                                      IAuthService authService,
+                                      IExceptionService exceptionService)
         {
             _navigationService = navigationService;
             _userInteraction = userInteraction;
             _authService = authService;
+            _exceptionService = exceptionService;
         }
 
         #endregion
+
+        #region Public
 
         public void LogOutUser()
         {
@@ -36,5 +44,12 @@ namespace ThePage.Core.ViewModels.Main
                 _navigationService.Navigate<LoginViewModel>();
             });
         }
+
+        public void EnableExceptionLogging()
+            => _exceptionService.LogginIsEnabled();
+
+        #endregion
+
+
     }
 }

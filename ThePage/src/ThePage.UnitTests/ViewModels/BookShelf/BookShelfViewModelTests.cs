@@ -5,9 +5,9 @@ using Xunit;
 
 namespace ThePage.UnitTests.ViewModels.BookShelf
 {
-    public class BookShelfViewModelTests : BaseViewModelTests
+    public class BookShelfViewModelTests : BaseServicesTests
     {
-        BookShelfViewModel _vm;
+        readonly BookShelfViewModel _vm;
 
         #region Constructor
 
@@ -33,8 +33,8 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void ShowBookShelvesWhenDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllBookShelves())
+            MockBookShelfService
+                .Setup(x => x.FetchBookshelves())
                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetListBookShelf2Elements()));
 
             //Setup
@@ -49,8 +49,8 @@ namespace ThePage.UnitTests.ViewModels.BookShelf
         public void ShowEmptyBookShelfNoDataAvailable()
         {
             //Arrange
-            MockThePageService
-                .Setup(x => x.GetAllBookShelves())
+            MockBookShelfService
+                .Setup(x => x.FetchBookshelves())
                 .Returns(() => Task.FromResult(BookShelfDataFactory.GetListBookShelfEmpty()));
 
             //Setup
