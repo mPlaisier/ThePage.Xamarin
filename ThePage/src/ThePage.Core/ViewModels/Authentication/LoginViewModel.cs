@@ -74,8 +74,8 @@ namespace ThePage.Core
             Analytics.TrackEvent($"Initialize {nameof(AddAuthorViewModel)}");
 
 #if DEBUG
-            Username = "mplaisier";
-            Password = "Vc6ABYQpc2sqMW";
+            Username = "destruction505";
+            Password = "abc123456";
 #endif
             return base.Initialize();
         }

@@ -183,6 +183,14 @@ namespace ThePage.Core
             if (updatedBook.Pages.HasValue)
                 BookDetail.Pages = updatedBook.Pages.Value;
 
+            if (updatedBook.Images.IsNotNull())
+            {
+                var images = ImageBusinessLogic.MapImages(updatedBook.Images);
+                BookDetail.Images = images;
+                _book.Images = images;
+            }
+
+
             return updatedBook;
         }
 
