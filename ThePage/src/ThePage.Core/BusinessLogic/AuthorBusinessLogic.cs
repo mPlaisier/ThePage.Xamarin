@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Nelibur.ObjectMapper;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -16,8 +15,12 @@ namespace ThePage.Core
 
         public static Author MapAuthor(ApiAuthor author)
         {
-            TinyMapper.Bind<ApiAuthor, Author>();
-            return TinyMapper.Map<Author>(author);
+            return new Author()
+            {
+                Id = author.Id,
+                Name = author.Name,
+                Olkey = author.Olkey
+            };
         }
 
         #endregion

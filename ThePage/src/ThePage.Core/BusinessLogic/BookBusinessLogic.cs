@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CBP.Extensions;
-using Nelibur.ObjectMapper;
 using ThePage.Api;
 using ThePage.Core.Cells;
 using static ThePage.Core.Enums;
@@ -67,7 +66,7 @@ namespace ThePage.Core
             {
                 var images = cellBook?.Images;
                 if (images != null && !images.Equals(originalResponse?.Images))
-                    builder.SetImages(MapImageLinksToApi(images));
+                    builder.SetImages(ImageBusinessLogic.MapImages(images));
             }
 
             IEnumerable<Genre> SetGenres()
@@ -115,36 +114,41 @@ namespace ThePage.Core
 
         public static Book MapBook(ApiBook book)
         {
-            TinyMapper.Bind<ApiBook, Book>();
-            TinyMapper.Bind<ApiAuthor, Author>();
-            return TinyMapper.Map<Book>(book);
+            return new Book()
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = AuthorBusinessLogic.MapAuthor(book.Author),
+                Images = ImageBusinessLogic.MapImages(book.Images)
+            };
         }
 
         public static Book MapBook(BookDetail book)
         {
-            TinyMapper.Bind<ApiBook, Book>();
-            TinyMapper.Bind<ApiAuthor, Author>();
-            return TinyMapper.Map<Book>(book);
+            return new Book()
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                Images = book.Images
+            };
         }
 
         public static BookDetail MapBookDetail(ApiBookDetailResponse bookDetail)
         {
-            TinyMapper.Bind<ApiBookDetailResponse, BookDetail>();
-            TinyMapper.Bind<ApiAuthor, Author>();
-            TinyMapper.Bind<ApiGenre, Genre>();
-            return TinyMapper.Map<BookDetail>(bookDetail);
-        }
-
-        public static ImageLinks MapImageLinksToCore(Api.ImageLinks images)
-        {
-            TinyMapper.Bind<Api.ImageLinks, ImageLinks>();
-            return TinyMapper.Map<ImageLinks>(images);
-        }
-
-        public static Api.ImageLinks MapImageLinksToApi(ImageLinks images)
-        {
-            TinyMapper.Bind<ImageLinks, Api.ImageLinks>();
-            return TinyMapper.Map<Api.ImageLinks>(images);
+            return new BookDetail()
+            {
+                Id = bookDetail.Id,
+                Title = bookDetail.Title,
+                Author = AuthorBusinessLogic.MapAuthor(bookDetail.Author),
+                Genres = GenreBusinessLogic.MapGenres(bookDetail.Genres).ToList(),
+                ISBN = bookDetail.ISBN,
+                Owned = bookDetail.Owned,
+                Read = bookDetail.Read,
+                Pages = bookDetail.Pages,
+                Ebook = bookDetail.Ebook,
+                Images = ImageBusinessLogic.MapImages(bookDetail.Images)
+            };
         }
 
         #endregion

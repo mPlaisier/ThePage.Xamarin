@@ -15,10 +15,19 @@ namespace ThePage.Api
         public string Id { get; internal set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         [JsonProperty("books")]
-        public List<string> Books { get; set; }
+        public List<string> Books { get; internal set; }
+
+        #endregion
+
+        #region Constructor
+
+        public ApiBookShelf()
+        {
+
+        }
 
         #endregion
     }
