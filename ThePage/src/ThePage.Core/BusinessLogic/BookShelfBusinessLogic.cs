@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Nelibur.ObjectMapper;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -31,14 +30,22 @@ namespace ThePage.Core
 
         public static Bookshelf MapBookshelf(ApiBookShelf bookshelf)
         {
-            TinyMapper.Bind<ApiBookShelf, Bookshelf>();
-            return TinyMapper.Map<Bookshelf>(bookshelf);
+            return new Bookshelf()
+            {
+                Id = bookshelf.Id,
+                Name = bookshelf.Name,
+                Books = bookshelf.Books
+            };
         }
 
         public static BookshelfDetail MapBookshelfDetail(ApiBookShelfDetailResponse bookshelf)
         {
-            TinyMapper.Bind<ApiBookShelfDetailResponse, BookshelfDetail>();
-            return TinyMapper.Map<BookshelfDetail>(bookshelf);
+            return new BookshelfDetail()
+            {
+                Id = bookshelf.Id,
+                Name = bookshelf.Name,
+                Books = BookBusinessLogic.MapBooks(bookshelf.Books).ToList()
+            };
         }
     }
 }

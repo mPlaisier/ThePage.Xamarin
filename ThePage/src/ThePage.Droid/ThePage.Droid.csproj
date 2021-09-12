@@ -22,7 +22,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidLinkSkip>ThePage.Core</AndroidLinkSkip>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <ReleaseVersion>3.0</ReleaseVersion>
+    <ReleaseVersion>3.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -38,6 +38,8 @@
     </AndroidSupportedAbis>
 <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 <AndroidLinkSkip>ThePage.Core;ThePage.Api;MvvmCross;MvvmCross.Plugins.Color;MvvmCross.Plugins.Color.Droid;MvvmCross.Plugins.Visibility;MvvmCross.Plugins.Visibility.Droid;MvvmCross.Droid.Support.V7.RecyclerView;MvvmCross.Droid.Support.V7.AppCompat;Newtonsoft.Json;MonkeyCache;MonkeyCache.LiteDB;LiteDB</AndroidLinkSkip>
+<AndroidLinkMode>Full</AndroidLinkMode>
+<AndroidLinkTool>r8</AndroidLinkTool>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>

@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<ReleaseVersion>3.0</ReleaseVersion>
+		<ReleaseVersion>3.1</ReleaseVersion>
 		<Configurations>Unit-Test;Debug;Release</Configurations>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Unit-Test|AnyCPU' ">
@@ -31,7 +31,6 @@
 		<PackageReference Include="NodaTime" Version="3.0.5" />
 		<PackageReference Include="cbp-extensions" Version="1.8.0" />
 		<PackageReference Include="Google.Apis.Books.v1" Version="1.51.0.2231" />
-		<PackageReference Include="TinyMapper" Version="3.0.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="ViewModels\Author\" />
