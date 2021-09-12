@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Nelibur.ObjectMapper;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -16,8 +15,11 @@ namespace ThePage.Core
 
         public static Genre MapGenre(ApiGenre genre)
         {
-            TinyMapper.Bind<ApiGenre, Genre>();
-            return TinyMapper.Map<Genre>(genre);
+            return new Genre()
+            {
+                Id = genre.Id,
+                Name = genre.Name
+            };
         }
 
         #endregion

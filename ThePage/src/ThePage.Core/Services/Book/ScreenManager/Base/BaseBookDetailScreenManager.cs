@@ -178,7 +178,7 @@ namespace ThePage.Core
                         Author = author,
                         Pages = pages,
                         ISBN = isbn,
-                        Images = BookBusinessLogic.MapImageLinksToCore(book.VolumeInfo.ImageLinks)
+                        Images = ImageBusinessLogic.MapImages(book.VolumeInfo.ImageLinks)
                     };
 
                     CreateCellBooks(bookDetail, true);

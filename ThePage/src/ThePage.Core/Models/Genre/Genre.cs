@@ -4,7 +4,7 @@ namespace ThePage.Core
     {
         #region Properties
 
-        public string Id { get; set; }
+        public string Id { get; internal set; }
 
         public string Name { get; set; }
 
