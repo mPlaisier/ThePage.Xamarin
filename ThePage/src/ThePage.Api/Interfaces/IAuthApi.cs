@@ -3,7 +3,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public interface IAuthApi
+    public interface IAuthApi : IApi
     {
         [Post("/auth/login")]
         Task<ApiUserReponse> Login([Body] ApiUserRequest request);

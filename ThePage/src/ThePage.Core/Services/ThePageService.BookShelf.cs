@@ -11,14 +11,11 @@ namespace ThePage.Core
             ApiBookShelfResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Get(token);
+                result = await _bookShelfWebService.GetList();
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetAllBookShelves");
+                _exceptionService.HandleThePageException(ex, nameof(GetAllBookShelves));
             }
             return result;
         }
@@ -28,14 +25,11 @@ namespace ThePage.Core
             ApiBookShelfResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Get(token, page);
+                result = await _bookShelfWebService.GetList(page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetNextBookshelves");
+                _exceptionService.HandleThePageException(ex, nameof(GetNextBookshelves));
             }
             return result;
         }
@@ -45,14 +39,11 @@ namespace ThePage.Core
             ApiBookShelfDetailResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Get(token, id);
+                result = await _bookShelfWebService.GetDetail(id);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetBookShelf");
+                _exceptionService.HandleThePageException(ex, nameof(GetBookShelf));
             }
             return result;
         }
@@ -62,14 +53,11 @@ namespace ThePage.Core
             ApiBookShelfResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Search(token, search, page);
+                result = await _bookShelfWebService.Search(search, page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "SearchBookshelves");
+                _exceptionService.HandleThePageException(ex, nameof(SearchBookshelves));
             }
             return result;
         }
@@ -79,14 +67,11 @@ namespace ThePage.Core
             ApiBookShelf result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Add(token, bookshelf);
+                result = await _bookShelfWebService.Add(bookshelf);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "AddBookShelf");
+                _exceptionService.HandleThePageException(ex, nameof(AddBookShelf));
             }
             return result != null;
         }
@@ -96,14 +81,11 @@ namespace ThePage.Core
             ApiBookShelfDetailResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookShelfManager.Update(token, id, bookshelf);
+                result = await _bookShelfWebService.Update(id, bookshelf);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "UpdateBookShelf");
+                _exceptionService.HandleThePageException(ex, nameof(UpdateBookShelf));
             }
             return result;
         }
@@ -112,14 +94,12 @@ namespace ThePage.Core
         {
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    return await BookShelfManager.Delete(token, id);
+                await _bookShelfWebService.Delete(id);
+                return true;
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "DeleteBookShelf");
+                _exceptionService.HandleThePageException(ex, nameof(DeleteBookShelf));
             }
             return false;
         }

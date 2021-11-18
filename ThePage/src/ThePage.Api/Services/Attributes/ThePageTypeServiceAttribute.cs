@@ -1,8 +1,8 @@
 using System;
-namespace ThePage.Core
+namespace ThePage.Api
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class ThePageLazySingletonServiceAttribute : Attribute
+    public class ThePageTypeServiceAttribute : Attribute
     {
     }
 }

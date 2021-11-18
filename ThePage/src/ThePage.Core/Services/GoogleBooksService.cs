@@ -8,12 +8,14 @@ namespace ThePage.Core
     public class GoogleBooksService : IGoogleBooksService
     {
         readonly IExceptionService _exceptionService;
+        readonly IGoogleBooksWebService _googleBooksWebService;
 
         #region Constructor
 
-        public GoogleBooksService(IExceptionService exceptionService)
+        public GoogleBooksService(IExceptionService exceptionService, IGoogleBooksWebService googleBooksWebService)
         {
             _exceptionService = exceptionService;
+            _googleBooksWebService = googleBooksWebService;
         }
 
         #endregion
@@ -25,7 +27,7 @@ namespace ThePage.Core
             GoogleBooksResult results = null;
             try
             {
-                results = await GoogleBooksManager.SearchByTitle(title);
+                results = await _googleBooksWebService.SearchByTitle(title);
             }
             catch (Exception ex)
             {
@@ -39,7 +41,7 @@ namespace ThePage.Core
             GoogleBooksResult results = null;
             try
             {
-                results = await GoogleBooksManager.SearchByIsbn(isbn);
+                results = await _googleBooksWebService.SearchByIsbn(isbn);
             }
             catch (Exception ex)
             {

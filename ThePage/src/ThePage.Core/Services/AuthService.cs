@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MonkeyCache.LiteDB;
 using ThePage.Api;
 
 namespace ThePage.Core
@@ -9,133 +8,69 @@ namespace ThePage.Core
     public class AuthService : IAuthService
     {
         readonly IExceptionService _exceptionService;
-
-        const string SESSION_KEY = "LoginKey";
+        readonly IAuthenticationWebService _authenticationWebService;
 
         #region Constructor
 
-        public AuthService(IExceptionService exceptionService)
+        public AuthService(IExceptionService exceptionService, IAuthenticationWebService authenticationWebService)
         {
             _exceptionService = exceptionService;
-
-            Barrel.ApplicationId = "thepageapplication";
-            Barrel.EncryptionKey = "encryptionKey";
-
-            //LiteDB Upgrade (4 -> 5) | NuGet 1.3 -> 1.5
-            Barrel.Upgrade = true;
+            _authenticationWebService = authenticationWebService;
         }
 
         #endregion
 
-        #region Login
+        #region Public
 
         public async Task<bool> Login(string username, string password)
         {
-            ApiUserReponse result = null;
+            var result = false;
             try
             {
-                result = await AuthManager.Login(new ApiUserRequest(username, password));
-                handleSuccessfullLogin(result);
+                result = await _authenticationWebService.Login(username, password);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleAuthException(ex, "Login");
+                _exceptionService.HandleAuthException(ex, nameof(Login));
             }
 
-            return result != null;
+            return result;
         }
 
         public async Task<bool> IsAuthenticated()
         {
-            return await GetSessionToken() != null;
+            return await _authenticationWebService.GetAccessToken() != null;
         }
 
         public async Task Logout()
         {
             try
             {
-                var refreshtoken = await GetSessionToken();
-                HandleCloseSession();
-
-                await AuthManager.Logout(refreshtoken);
+                await _authenticationWebService.Logout();
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleAuthException(ex, "Logout");
+                _exceptionService.HandleAuthException(ex, nameof(Logout));
             }
         }
 
         public async Task<bool> Register(string username, string name, string email, string password)
         {
-            ApiUserReponse result = null;
+            var result = false;
             try
             {
-                result = await AuthManager.Register(new ApiRegisterRequest(username, name, email, password));
-                handleSuccessfullLogin(result);
+                result = await _authenticationWebService.Register(username, name, email, password);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleAuthException(ex, "UpdateSessionToken");
+                _exceptionService.HandleAuthException(ex, nameof(Register));
             }
 
-            return result != null;
-        }
-
-        public async Task<string> GetSessionToken()
-        {
-            string token = null;
-            if (Barrel.Current.Exists(SESSION_KEY) && !Barrel.Current.IsExpired(SESSION_KEY))
-            {
-                var result = Barrel.Current.Get<ApiTokens>(SESSION_KEY);
-                token = result.Access.Expires > DateTime.UtcNow
-                    ? result.Access.Token
-                    : await UpdateSessionToken(result.Refresh);
-            }
-
-            if (token != null)
-                return token;
-
-            //Procedure when user session is expired
-            HandleCloseSession();
-
-            return null;
+            return result;
         }
 
         #endregion
 
-        #region Private
 
-        void handleSuccessfullLogin(ApiUserReponse response)
-        {
-            Barrel.Current.Add(SESSION_KEY, response.Tokens, TimeSpan.FromDays(30));
-        }
-
-        async Task<string> UpdateSessionToken(TokenObject token)
-        {
-            if (token.Expires > DateTime.UtcNow)
-            {
-                try
-                {
-                    var result = await AuthManager.RefreshTokens(token.Token);
-                    if (result != null)
-                    {
-                        Barrel.Current.Add(SESSION_KEY, result, TimeSpan.FromDays(30));
-                        return result.Access.Token;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _exceptionService.HandleAuthException(ex, "UpdateSessionToken");
-                }
-            }
-            return null;
-        }
-
-        void HandleCloseSession()
-        {
-            Barrel.Current.EmptyAll();
-        }
-
-        #endregion
     }
 }

@@ -1,4 +1,4 @@
-using MonkeyCache.LiteDB;
+using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -8,18 +8,27 @@ namespace ThePage.Core
         readonly IAuthService _authService;
         readonly IExceptionService _exceptionService;
 
+        readonly IGenreWebService _genreWebService;
+        readonly IAuthorWebService _authorWebService;
+        readonly IBookWebService _bookWebService;
+        readonly IBookShelfWebService _bookShelfWebService;
+
         #region Constructor
 
-        public ThePageService(IAuthService authService, IExceptionService exceptionService)
+        public ThePageService(IAuthService authService,
+                              IExceptionService exceptionService,
+                              IGenreWebService genreWebService,
+                              IAuthorWebService authorWebService,
+                              IBookWebService bookWebService,
+                              IBookShelfWebService bookShelfWebService)
         {
             _authService = authService;
             _exceptionService = exceptionService;
 
-            Barrel.ApplicationId = "thepageapplication";
-            Barrel.EncryptionKey = "encryptionKey";
-
-            //LiteDB Upgrade (4 -> 5) | NuGet 1.3 -> 1.5
-            Barrel.Upgrade = true;
+            _genreWebService = genreWebService;
+            _authorWebService = authorWebService;
+            _bookWebService = bookWebService;
+            _bookShelfWebService = bookShelfWebService;
         }
 
         #endregion

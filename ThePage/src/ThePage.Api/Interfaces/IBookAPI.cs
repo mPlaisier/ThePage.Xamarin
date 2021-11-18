@@ -3,7 +3,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public interface IBookApi
+    public interface IBookApi : IApi
     {
         [Get("/books/v2")]
         [Headers("Authorization: Bearer")]

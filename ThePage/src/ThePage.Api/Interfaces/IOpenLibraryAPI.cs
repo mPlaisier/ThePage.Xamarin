@@ -4,7 +4,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public interface IOpenLibraryApi
+    public interface IOpenLibraryApi : IApi
     {
         [Get("/books?bibkeys=ISBN:{isbn}&jscmd=data&format=json")]
         Task<Dictionary<string, OLObject>> Get(string isbn);
