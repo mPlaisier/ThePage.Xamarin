@@ -13,14 +13,11 @@ namespace ThePage.Core
             ApiGenreResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Get(token);
+                result = await _genreWebService.GetList();
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetAllGenres");
+                _exceptionService.HandleThePageException(ex, nameof(GetAllGenres));
             }
             return result;
         }
@@ -30,14 +27,11 @@ namespace ThePage.Core
             ApiGenreResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Get(token, page);
+                result = await _genreWebService.GetList(page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetNextGenres");
+                _exceptionService.HandleThePageException(ex, nameof(GetNextGenres));
             }
             return result;
         }
@@ -47,14 +41,11 @@ namespace ThePage.Core
             ApiGenre result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Get(token, id);
+                result = await _genreWebService.GetDetail(id);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetGenre");
+                _exceptionService.HandleThePageException(ex, nameof(GetGenre));
             }
             return result;
         }
@@ -64,14 +55,11 @@ namespace ThePage.Core
             ApiGenreResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Search(token, search, page);
+                result = await _genreWebService.Search(search, page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "SearchGenres");
+                _exceptionService.HandleThePageException(ex, nameof(SearchGenres));
             }
             return result;
         }
@@ -81,14 +69,11 @@ namespace ThePage.Core
             ApiGenre result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Add(token, genre);
+                result = await _genreWebService.Add(genre);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "AddGenre");
+                _exceptionService.HandleThePageException(ex, nameof(genre));
             }
             return result;
         }
@@ -98,14 +83,11 @@ namespace ThePage.Core
             ApiGenre result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await GenreManager.Update(token, id, genre);
+                result = await _genreWebService.Update(id, genre);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "UpdateGenre");
+                _exceptionService.HandleThePageException(ex, nameof(UpdateGenre));
             }
             return result;
         }
@@ -114,14 +96,12 @@ namespace ThePage.Core
         {
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    return await GenreManager.Delete(token, id);
+                await _genreWebService.Delete(id);
+                return true;
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "DeleteGenre");
+                _exceptionService.HandleThePageException(ex, nameof(DeleteGenre));
             }
             return false;
         }

@@ -13,14 +13,11 @@ namespace ThePage.Core
             ApiAuthorResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Get(token);
+                result = await _authorWebService.GetList();
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetAllAuthors");
+                _exceptionService.HandleThePageException(ex, nameof(GetAllAuthors));
             }
             return result;
         }
@@ -30,14 +27,11 @@ namespace ThePage.Core
             ApiAuthorResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Get(token, page);
+                result = await _authorWebService.GetList(page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetNextAuthors");
+                _exceptionService.HandleThePageException(ex, nameof(GetNextAuthors));
             }
             return result;
         }
@@ -47,14 +41,11 @@ namespace ThePage.Core
             ApiAuthor result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Get(token, id);
+                result = await _authorWebService.GetDetail(id);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetAuthor");
+                _exceptionService.HandleThePageException(ex, nameof(id));
             }
             return result;
         }
@@ -64,14 +55,11 @@ namespace ThePage.Core
             ApiAuthorResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Search(token, search, page);
+                result = await _authorWebService.Search(search, page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "SearchAuthors");
+                _exceptionService.HandleThePageException(ex, nameof(SearchAuthors));
             }
             return result;
         }
@@ -81,14 +69,11 @@ namespace ThePage.Core
             ApiAuthor result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Add(token, author);
+                result = await _authorWebService.Add(author);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "AddAuthor");
+                _exceptionService.HandleThePageException(ex, nameof(AddAuthor));
             }
             return result;
         }
@@ -98,14 +83,11 @@ namespace ThePage.Core
             ApiAuthor result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await AuthorManager.Update(token, id, author);
+                result = await _authorWebService.Update(id, author);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "UpdateAuthor");
+                _exceptionService.HandleThePageException(ex, nameof(UpdateAuthor));
             }
             return result;
         }
@@ -114,14 +96,12 @@ namespace ThePage.Core
         {
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    return await AuthorManager.Delete(token, id);
+                await _authorWebService.Delete(id);
+                return true;
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "DeleteAuthor");
+                _exceptionService.HandleThePageException(ex, nameof(DeleteAuthor));
             }
             return false;
         }

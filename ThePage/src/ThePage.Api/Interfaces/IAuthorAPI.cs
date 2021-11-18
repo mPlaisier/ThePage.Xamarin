@@ -3,7 +3,9 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public interface IAuthorApi
+    public interface IApi { }
+
+    public interface IAuthorApi : IApi
     {
         [Get("/authors/v2")]
         [Headers("Authorization: Bearer")]

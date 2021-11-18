@@ -67,7 +67,6 @@
 		<Folder Include="Constants\" />
 		<Folder Include="Services\Book\Interfaces\" />
 		<Folder Include="Services\Book\ScreenManager\" />
-		<Folder Include="Services\Attributes\" />
 		<Folder Include="Services\Book\ScreenManager\Interfaces\" />
 		<Folder Include="Cells\Book\base\" />
 		<Folder Include="Cells\Book\Interfaces\" />

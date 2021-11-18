@@ -17,9 +17,15 @@
 		<NoWarn>
 		</NoWarn>
 		<NoStdLib>false</NoStdLib>
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	  <LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	  <LangVersion>9.0</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<Folder Include="Managers\" />
 		<Folder Include="Models\" />
 		<Folder Include="Exceptions\" />
 		<Folder Include="Interfaces\" />
@@ -37,11 +43,19 @@
 		<Folder Include="Models\Request\BookShelf\" />
 		<Folder Include="Models\Request\Base\" />
 		<Folder Include="Models\Response\GoogleBooks\" />
+		<Folder Include="Services\" />
+		<Folder Include="Services\Attributes\" />
+		<Folder Include="Services\Interfaces\" />
+		<Folder Include="Services\Webservice\" />
+		<Folder Include="Services\Webservice\Base\" />
+		<Folder Include="Services\Webservice\Base\Interfaces\" />
+		<Folder Include="Services\Webservice\Interfaces\" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="Refit" Version="5.2.4" />
 		<PackageReference Include="MonkeyCache" Version="1.5.2" />
 		<PackageReference Include="MonkeyCache.LiteDB" Version="1.5.2" />
+		<PackageReference Include="MvvmCross" Version="7.1.2" />
 	</ItemGroup>
 </Project>

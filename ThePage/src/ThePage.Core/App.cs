@@ -1,5 +1,6 @@
 ﻿using MvvmCross.IoC;
 using MvvmCross.ViewModels;
+using ThePage.Api;
 
 namespace ThePage.Core
 {
@@ -7,6 +8,8 @@ namespace ThePage.Core
     {
         public override void Initialize()
         {
+            Setup.Initialize();
+
             CreatableTypes().WithAttribute<ThePageLazySingletonServiceAttribute>().AsInterfaces().RegisterAsLazySingleton();
             CreatableTypes().WithAttribute<ThePageTypeServiceAttribute>().AsInterfaces().RegisterAsDynamic();
 

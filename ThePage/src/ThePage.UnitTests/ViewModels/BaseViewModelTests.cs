@@ -2,12 +2,20 @@ using Moq;
 using MvvmCross.Base;
 using MvvmCross.Navigation;
 using MvvmCross.Tests;
+using ThePage.Api;
 using ThePage.Core;
 
 namespace ThePage.UnitTests
 {
     public class BaseServicesTests : MvxIoCSupportingTest
     {
+        #region API Properties
+
+        protected Mock<ILocalDatabaseService> MockLocalDatabaseService { get; private set; }
+        protected Mock<ITimeKeeper> MockTimeKeeper { get; private set; }
+
+        #endregion
+
         #region Properties
 
         protected Mock<IMvxNavigationService> MockNavigation { get; private set; }
@@ -33,6 +41,14 @@ namespace ThePage.UnitTests
             var mockMainThreadAsyncDispatcher = new Mock<IMvxMainThreadAsyncDispatcher>();
             Ioc.RegisterSingleton(mockMainThreadAsyncDispatcher.Object);
 
+            //API
+            MockLocalDatabaseService = new Mock<ILocalDatabaseService>();
+            Ioc.RegisterSingleton(MockLocalDatabaseService.Object);
+
+            MockTimeKeeper = new Mock<ITimeKeeper>();
+            Ioc.RegisterSingleton(MockTimeKeeper.Object);
+
+            //CORE
             MockNavigation = new Mock<IMvxNavigationService>();
             Ioc.RegisterSingleton(MockNavigation.Object);
 

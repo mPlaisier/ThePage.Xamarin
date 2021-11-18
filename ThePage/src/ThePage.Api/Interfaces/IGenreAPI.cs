@@ -3,7 +3,7 @@ using Refit;
 
 namespace ThePage.Api
 {
-    public interface IGenreApi
+    public interface IGenreApi : IApi
     {
         [Get("/genres/v2")]
         [Headers("Authorization: Bearer")]

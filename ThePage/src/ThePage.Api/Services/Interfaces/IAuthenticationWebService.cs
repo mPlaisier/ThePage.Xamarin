@@ -1,19 +1,12 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace ThePage.Core
+namespace ThePage.Api
 {
-    public interface IAuthService
+    public interface IAuthenticationWebService
     {
-        #region Login
-
+        Task<string> GetAccessToken();
         Task<bool> Login(string username, string password);
-
-        Task<bool> IsAuthenticated();
-
         Task Logout();
-
         Task<bool> Register(string username, string name, string email, string password);
-
-        #endregion
     }
 }

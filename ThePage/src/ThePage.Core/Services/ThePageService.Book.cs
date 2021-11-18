@@ -13,14 +13,11 @@ namespace ThePage.Core
             ApiBookResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.Get(token);
+                result = await _bookWebService.GetList();
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetAllBooks");
+                _exceptionService.HandleThePageException(ex, nameof(GetAllBooks));
             }
             return result;
         }
@@ -30,14 +27,11 @@ namespace ThePage.Core
             ApiBookResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.Get(token, page);
+                result = await _bookWebService.GetList(page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetNextBooks");
+                _exceptionService.HandleThePageException(ex, nameof(GetNextBooks));
             }
             return result;
         }
@@ -47,14 +41,11 @@ namespace ThePage.Core
             ApiBookDetailResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.Get(token, id);
+                result = await _bookWebService.GetDetail(id);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "GetBook");
+                _exceptionService.HandleThePageException(ex, nameof(GetBook));
             }
             return result;
         }
@@ -64,14 +55,11 @@ namespace ThePage.Core
             ApiBookResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.SearchTitle(token, search, page);
+                result = await _bookWebService.SearchTitle(search, page);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "SearchBooksTitle");
+                _exceptionService.HandleThePageException(ex, nameof(SearchBooksTitle));
             }
             return result;
         }
@@ -81,14 +69,11 @@ namespace ThePage.Core
             ApiBookDetailResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.Add(token, book);
+                result = await _bookWebService.Add(book);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "AddBook");
+                _exceptionService.HandleThePageException(ex, nameof(AddBook));
             }
             return result;
         }
@@ -98,14 +83,11 @@ namespace ThePage.Core
             ApiBookDetailResponse result = null;
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    result = await BookManager.Update(token, id, book);
+                result = await _bookWebService.Update(id, book);
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "UpdateBook");
+                _exceptionService.HandleThePageException(ex, nameof(UpdateBook));
             }
             return result;
         }
@@ -114,14 +96,12 @@ namespace ThePage.Core
         {
             try
             {
-                var token = await _authService.GetSessionToken();
-
-                if (token != null)
-                    return await BookManager.Delete(token, id);
+                await _bookWebService.Delete(id);
+                return true;
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleThePageException(ex, "DeleteBook");
+                _exceptionService.HandleThePageException(ex, nameof(DeleteBook));
             }
             return false;
         }

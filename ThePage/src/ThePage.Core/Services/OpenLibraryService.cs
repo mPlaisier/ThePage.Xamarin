@@ -8,12 +8,14 @@ namespace ThePage.Core
     public class OpenLibraryService : IOpenLibraryService
     {
         readonly IExceptionService _exceptionService;
+        readonly ITokenlessWebService _webService;
 
         #region Constructor
 
-        public OpenLibraryService(IExceptionService exceptionService)
+        public OpenLibraryService(IExceptionService exceptionService, ITokenlessWebService webService)
         {
             _exceptionService = exceptionService;
+            _webService = webService;
         }
 
         #endregion
@@ -22,16 +24,18 @@ namespace ThePage.Core
 
         public async Task<OLObject> GetBookByISBN(string isbn)
         {
-            OLObject result = null;
             try
             {
-                result = await OpenLibraryManager.Get(isbn);
+                var api = await _webService.GetApi<IOpenLibraryApi>();
+
+                var result = await api.Get(isbn);
+                return result[$"ISBN:{isbn}"];
             }
             catch (Exception ex)
             {
-                _exceptionService.HandleOpenLibraryException(ex, "GetBookByISBN", isbn);
+                _exceptionService.HandleOpenLibraryException(ex, nameof(GetBookByISBN), isbn);
             }
-            return result;
+            return null;
         }
 
         #endregion
