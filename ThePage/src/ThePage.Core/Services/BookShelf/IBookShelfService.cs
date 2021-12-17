@@ -21,7 +21,7 @@ namespace ThePage.Core
 
         Task<IEnumerable<Bookshelf>> LoadNextBookshelves();
 
-        Task<IEnumerable<Bookshelf>> Search(string search);
+        Task<IEnumerable<Bookshelf>> Search(string input);
 
         Task<bool> AddBookshelf(MvxObservableCollection<ICell> cells);
 

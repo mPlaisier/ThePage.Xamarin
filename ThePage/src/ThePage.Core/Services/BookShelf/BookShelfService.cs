@@ -70,23 +70,22 @@ namespace ThePage.Core
                 _hasNextPage = response.HasNextPage;
                 _isLoadingNextPage = false;
 
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
                 return bookshelves;
             }
             return Enumerable.Empty<Bookshelf>();
         }
 
-        public async Task<IEnumerable<Bookshelf>> Search(string search)
+        public async Task<IEnumerable<Bookshelf>> Search(string input)
         {
             _device.HideKeyboard();
 
-            if (SearchText != null && SearchText.Equals(search))
+            if (SearchText != null && SearchText.Equals(input))
                 return Enumerable.Empty<Bookshelf>();
 
-            SearchText = search;
+            SearchText = input;
             IsSearching = true;
 
-            var response = await _thePageService.SearchBookshelves(search);
+            var response = await _thePageService.SearchBookshelves(input);
 
             var bookshelves = BookShelfBusinessLogic.MapBookshelves(response.Docs);
 
@@ -103,7 +102,7 @@ namespace ThePage.Core
 
             if (result)
             {
-                _userInteraction.ToastMessage("Bookshelf added");
+                _userInteraction.ToastMessage("Bookshelf added", EToastType.Success);
                 return true;
             }
             else
@@ -144,7 +143,7 @@ namespace ThePage.Core
             var result = await _thePageService.DeleteBookShelf(id);
             if (result)
             {
-                _userInteraction.ToastMessage("Bookshelf removed", EToastType.Success);
+                _userInteraction.ToastMessage("Bookshelf removed", EToastType.Info);
                 return true;
             }
             else

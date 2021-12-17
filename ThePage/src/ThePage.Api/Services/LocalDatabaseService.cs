@@ -44,7 +44,12 @@ namespace ThePage.Api
 
             return Barrel.Current.Exists(key) && !Barrel.Current.IsExpired(key)
                 ? Barrel.Current.Get<T>(key)
-                : null; //TODO or throw custom exception? LocalDataNotFoundException
+                : null;
+        }
+
+        public void Clear(EApiDataType dataType)
+        {
+            Clear(dataType, null);
         }
 
         public void Clear(EApiDataType dataType, string id)
@@ -73,7 +78,12 @@ namespace ThePage.Api
 
         #region Private
 
-        string GetKey(EApiDataType dataType, string id = null, int? page = null)
+        string GetKey(EApiDataType dataType, string id)
+        {
+            return GetKey(dataType, id, null);
+        }
+
+        string GetKey(EApiDataType dataType, string id, int? page)
         {
             var key = dataType switch
             {
@@ -150,10 +160,5 @@ namespace ThePage.Api
         //Genres
         GenreList,
         GenreDetail
-    }
-
-    public class LocalDataNotFoundException : Exception
-    {
-
     }
 }

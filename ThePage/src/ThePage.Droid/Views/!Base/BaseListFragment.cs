@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Views;
 using AndroidX.AppCompat.Widget;
 using AndroidX.RecyclerView.Widget;
+using CBP.Extensions;
 using MvvmCross.ViewModels;
 using ThePage.Core.ViewModels;
 using ThePage.Droid.Views;
@@ -80,7 +81,7 @@ namespace ThePage.Droid
 
         public bool OnClose()
         {
-            ViewModel.StopSearch();
+            ViewModel.StopSearch().Forget();
             return false;
         }
 

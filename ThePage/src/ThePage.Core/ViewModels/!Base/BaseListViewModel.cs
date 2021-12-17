@@ -15,11 +15,13 @@ namespace ThePage.Core.ViewModels
 
         public abstract Task LoadNextPage();
 
-        public abstract Task Search(string search);
+        public abstract Task Search(string input);
 
-        public virtual void StopSearch()
+        public virtual Task StopSearch()
         {
             //Not always required
+            // => Default return ok
+            return Task.FromResult(true);
         }
 
         #endregion

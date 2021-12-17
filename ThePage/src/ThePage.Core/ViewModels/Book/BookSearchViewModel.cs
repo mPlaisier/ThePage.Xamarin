@@ -57,9 +57,9 @@ namespace ThePage.Core
 
         #endregion
 
-        public override async Task Search(string search)
+        public override async Task Search(string input)
         {
-            var result = await _googleBooksService.SearchBookByTitle(search);
+            var result = await _googleBooksService.SearchBookByTitle(input);
             if (result == null)
                 return;
 

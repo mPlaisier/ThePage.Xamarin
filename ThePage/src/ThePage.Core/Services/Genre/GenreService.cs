@@ -73,23 +73,22 @@ namespace ThePage.Core
                 _hasNextPage = response.HasNextPage;
                 _isLoadingNextPage = false;
 
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
                 return genres;
             }
             return Enumerable.Empty<Genre>();
         }
 
-        public async Task<IEnumerable<Genre>> Search(string search)
+        public async Task<IEnumerable<Genre>> Search(string input)
         {
             _device.HideKeyboard();
 
-            if (SearchText != null && SearchText.Equals(search))
+            if (SearchText != null && SearchText.Equals(input))
                 return Enumerable.Empty<Genre>();
 
-            SearchText = search;
+            SearchText = input;
             IsSearching = true;
 
-            var response = await _thePageService.SearchGenres(search);
+            var response = await _thePageService.SearchGenres(input);
 
             var genres = GenreBusinessLogic.MapGenres(response.Docs);
 
@@ -123,7 +122,7 @@ namespace ThePage.Core
 
             if (result)
             {
-                _userInteraction.ToastMessage("Genre removed", EToastType.Success);
+                _userInteraction.ToastMessage("Genre removed", EToastType.Info);
                 return true;
             }
             else

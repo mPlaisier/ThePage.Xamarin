@@ -151,7 +151,7 @@ namespace ThePage.Core
 
                 if (result)
                 {
-                    _userInteraction.ToastMessage("Author removed");
+                    _userInteraction.ToastMessage("Author removed", EToastType.Info);
                     await _navigation.Close(this, true);
                 }
                 else

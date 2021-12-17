@@ -88,28 +88,28 @@ namespace ThePage.Core
             }
         }
 
-        public override async Task Search(string search)
+        public override async Task Search(string input)
         {
             if (IsLoading)
                 return;
 
             var currentSearch = _bookService.SearchText;
-            if (currentSearch != null && currentSearch.Equals(search))
+            if (currentSearch != null && currentSearch.Equals(input))
                 return;
 
             IsLoading = true;
 
-            var books = await _bookService.Search(search);
+            var books = await _bookService.Search(input);
             var cells = books.Select(x => new CellBookSelect(x, SelectedItems.Contains(x)));
             Items = new MvxObservableCollection<CellBookSelect>(cells);
 
             IsLoading = false;
         }
 
-        public override async void StopSearch()
+        public override async Task StopSearch()
         {
             if (_bookService.IsSearching)
-                await Refresh();
+                await Refresh().ConfigureAwait(false);
         }
 
         #endregion

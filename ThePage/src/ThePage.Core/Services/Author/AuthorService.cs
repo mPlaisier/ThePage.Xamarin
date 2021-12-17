@@ -68,23 +68,22 @@ namespace ThePage.Core
                 _hasNextPage = apiAuthorResponse.HasNextPage;
                 _isLoadingNextPage = false;
 
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
                 return authors;
             }
             return Enumerable.Empty<Author>();
         }
 
-        public async Task<IEnumerable<Author>> Search(string search)
+        public async Task<IEnumerable<Author>> Search(string input)
         {
             _device.HideKeyboard();
 
-            if (SearchText != null && SearchText.Equals(search))
+            if (SearchText != null && SearchText.Equals(input))
                 return Enumerable.Empty<Author>();
 
-            SearchText = search;
+            SearchText = input;
             IsSearching = true;
 
-            var apiAuthorResponse = await _thePageService.SearchAuthors(search);
+            var apiAuthorResponse = await _thePageService.SearchAuthors(input);
 
             var authors = AuthorBusinessLogic.ConvertApiAuthorsToAuthors(apiAuthorResponse.Docs);
 
@@ -94,12 +93,12 @@ namespace ThePage.Core
             return authors;
         }
 
-        public async Task<Author> AddAuthor(string name)
+        public async Task<Author> AddAuthor(string input)
         {
-            var result = await _thePageService.AddAuthor(new ApiAuthorRequest(name.Trim()));
+            var result = await _thePageService.AddAuthor(new ApiAuthorRequest(input.Trim()));
             if (result != null)
             {
-                _userInteraction.ToastMessage("Author added");
+                _userInteraction.ToastMessage("Author added", EToastType.Success);
                 return AuthorBusinessLogic.MapAuthor(result);
             }
             else

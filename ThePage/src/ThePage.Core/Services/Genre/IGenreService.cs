@@ -21,7 +21,7 @@ namespace ThePage.Core
 
         Task<IEnumerable<Genre>> LoadNextGenres();
 
-        Task<IEnumerable<Genre>> Search(string search);
+        Task<IEnumerable<Genre>> Search(string input);
 
         Task<Genre> AddGenre(string name);
 
