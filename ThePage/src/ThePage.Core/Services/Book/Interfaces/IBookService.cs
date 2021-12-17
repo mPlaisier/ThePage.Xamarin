@@ -19,7 +19,7 @@ namespace ThePage.Core
 
         Task<IEnumerable<Book>> LoadNextBooks();
 
-        Task<IEnumerable<Book>> Search(string search);
+        Task<IEnumerable<Book>> Search(string input);
 
         Task<BookDetail> AddBook(IEnumerable<ICellBook> cells);
 

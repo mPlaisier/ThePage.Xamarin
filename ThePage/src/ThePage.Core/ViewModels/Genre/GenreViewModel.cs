@@ -70,27 +70,27 @@ namespace ThePage.Core
             }
         }
 
-        public override async Task Search(string search)
+        public override async Task Search(string input)
         {
             if (IsLoading)
                 return;
 
             var currentSearch = _genreService.SearchText;
-            if (currentSearch != null && currentSearch.Equals(search))
+            if (currentSearch != null && currentSearch.Equals(input))
                 return;
 
             IsLoading = true;
 
-            var genres = await _genreService.Search(search);
+            var genres = await _genreService.Search(input);
             Genres = new MvxObservableCollection<Genre>(genres);
 
             IsLoading = false;
         }
 
-        public override async void StopSearch()
+        public override async Task StopSearch()
         {
             if (_genreService.IsSearching)
-                await Refresh();
+                await Refresh().ConfigureAwait(false);
         }
 
         #endregion

@@ -85,23 +85,22 @@ namespace ThePage.Core
                 _hasNextPage = apiBooksResponse.HasNextPage;
                 _isLoadingNextPage = false;
 
-                _userInteraction.ToastMessage("Data loaded", EToastType.Success);
                 return books;
             }
             return Enumerable.Empty<Book>();
         }
 
-        public async Task<IEnumerable<Book>> Search(string search)
+        public async Task<IEnumerable<Book>> Search(string input)
         {
             _device.HideKeyboard();
 
-            if (SearchText != null && SearchText.Equals(search))
+            if (SearchText != null && SearchText.Equals(input))
                 return Enumerable.Empty<Book>();
 
-            SearchText = search;
+            SearchText = input;
             IsSearching = true;
 
-            var apiBooksResponse = await _thePageService.SearchBooksTitle(search);
+            var apiBooksResponse = await _thePageService.SearchBooksTitle(input);
 
             var books = BookBusinessLogic.MapBooks(apiBooksResponse.Docs);
 
@@ -120,7 +119,7 @@ namespace ThePage.Core
 
             if (result != null)
             {
-                _userInteraction.ToastMessage("Book added");
+                _userInteraction.ToastMessage("Book added", EToastType.Success);
                 return BookBusinessLogic.MapBookDetail(result);
             }
             else
@@ -148,7 +147,7 @@ namespace ThePage.Core
 
             if (result)
             {
-                _userInteraction.ToastMessage("Book removed");
+                _userInteraction.ToastMessage("Book removed", EToastType.Info);
                 return true;
             }
             else

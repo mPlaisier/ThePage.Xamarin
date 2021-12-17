@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ThePage.Api
+﻿namespace ThePage.Api
 {
     public interface ITokenService
     {

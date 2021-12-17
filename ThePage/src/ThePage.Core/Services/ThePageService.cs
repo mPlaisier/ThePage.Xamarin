@@ -5,7 +5,6 @@ namespace ThePage.Core
     [ThePageLazySingletonService]
     public partial class ThePageService : IThePageService
     {
-        readonly IAuthService _authService;
         readonly IExceptionService _exceptionService;
 
         readonly IGenreWebService _genreWebService;
@@ -15,14 +14,12 @@ namespace ThePage.Core
 
         #region Constructor
 
-        public ThePageService(IAuthService authService,
-                              IExceptionService exceptionService,
+        public ThePageService(IExceptionService exceptionService,
                               IGenreWebService genreWebService,
                               IAuthorWebService authorWebService,
                               IBookWebService bookWebService,
                               IBookShelfWebService bookShelfWebService)
         {
-            _authService = authService;
             _exceptionService = exceptionService;
 
             _genreWebService = genreWebService;

@@ -74,6 +74,13 @@ namespace ThePage.Core
             await _screenManager.FetchData();
         }
 
+        public override void ViewDestroy(bool viewFinishing = true)
+        {
+            base.ViewDestroy(viewFinishing);
+
+            _screenManager.PropertyChanged -= _screenManager_PropertyChanged;
+        }
+
         #endregion
 
         #region Private

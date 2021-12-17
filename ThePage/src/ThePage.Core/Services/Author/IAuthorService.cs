@@ -19,9 +19,9 @@ namespace ThePage.Core
 
         Task<IEnumerable<Author>> LoadNextAuthors();
 
-        Task<IEnumerable<Author>> Search(string search);
+        Task<IEnumerable<Author>> Search(string input);
 
-        Task<Author> AddAuthor(string name);
+        Task<Author> AddAuthor(string input);
 
         Task<Author> UpdateAuthor(Author author);
 

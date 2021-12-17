@@ -86,8 +86,8 @@ namespace ThePage.Core
                                                 .IsEdit(isEdit).SetValue(bookDetail.ISBN).NotRequired()
                                                 .AllowSearch(SearchForBookIsbn)
                                                 .Build());
-            items.Add(new CellBookSwitch("Do you own this book?", EBookInputType.Owned, UpdateValidation, isEdit));
-            items.Add(new CellBookSwitch("Have you read this book?", EBookInputType.Read, UpdateValidation, isEdit));
+            items.Add(new CellBookSwitch("Do you own this book?", bookDetail.Owned, EBookInputType.Owned, UpdateValidation, isEdit));
+            items.Add(new CellBookSwitch("Have you read this book?", bookDetail.Read, EBookInputType.Read, UpdateValidation, isEdit));
 
             Items.ReplaceWith(items);
         }
@@ -150,7 +150,7 @@ namespace ThePage.Core
             IsLoading = true;
 
             var result = await _googleBooksService.SearchBookByTitle(title);
-            await HandleSearchResults(result);
+            await HandleSearchResults(result).ConfigureAwait(false);
 
             IsLoading = false;
         }
@@ -167,7 +167,7 @@ namespace ThePage.Core
                 if (book != null)
                 {
                     var title = book.VolumeInfo.Title;
-                    var author = await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First()));
+                    var author = await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First())).ConfigureAwait(false);
 
                     var pages = book.VolumeInfo.PageCount;
                     var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
@@ -202,7 +202,12 @@ namespace ThePage.Core
             IsLoading = false;
         }
 
-        protected async Task<Author> SelectOrCreateAuthor(Author author, string olKey = null)
+        protected async Task<Author> SelectOrCreateAuthor(Author author)
+        {
+            return await SelectOrCreateAuthor(author, null).ConfigureAwait(false);
+        }
+
+        protected async Task<Author> SelectOrCreateAuthor(Author author, string olKey)
         {
             Author newAuthor = null;
 
@@ -213,7 +218,6 @@ namespace ThePage.Core
             {
                 var userChoice = await _userInteraction.ConfirmThreeButtonsAsync($"{author.Name} is not found in your author list. Would you like to add it?",
                                                                              neutral: "Choose from list");
-
 
                 if (userChoice == ConfirmThreeButtonsResponse.Positive)
                 {
