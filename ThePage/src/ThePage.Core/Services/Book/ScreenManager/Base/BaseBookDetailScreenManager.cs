@@ -204,7 +204,7 @@ namespace ThePage.Core
 
         protected async Task<Author> SelectOrCreateAuthor(Author author)
         {
-            return await SelectOrCreateAuthor(author, null);
+            return await SelectOrCreateAuthor(author, null).ConfigureAwait(false);
         }
 
         protected async Task<Author> SelectOrCreateAuthor(Author author, string olKey)
