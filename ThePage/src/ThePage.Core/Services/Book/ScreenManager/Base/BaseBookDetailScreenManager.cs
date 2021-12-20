@@ -169,7 +169,7 @@ namespace ThePage.Core
                     var title = book.VolumeInfo.Title;
 
                     Author author = book.VolumeInfo.Authors.IsNull()
-                        ? await CreateOrGetUnknownAuthor()
+                        ? await CreateOrGetUnknownAuthor().ConfigureAwait(false)
                         : await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First())).ConfigureAwait(false);
 
                     var pages = book.VolumeInfo.PageCount;
@@ -199,7 +199,7 @@ namespace ThePage.Core
             _device.HideKeyboard();
             IsLoading = true;
 
-            var result = await _googleBooksService.SearchBookByISBN(isbn);
+            var result = await _googleBooksService.SearchBookByISBN(isbn).ConfigureAwait(false);
             await HandleSearchResults(result);
 
             IsLoading = false;
