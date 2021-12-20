@@ -167,10 +167,13 @@ namespace ThePage.Core
                 if (book != null)
                 {
                     var title = book.VolumeInfo.Title;
-                    var author = await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First())).ConfigureAwait(false);
+
+                    Author author = book.VolumeInfo.Authors.IsNull()
+                        ? await CreateOrGetUnknownAuthor()
+                        : await SelectOrCreateAuthor(new Author(book.VolumeInfo.Authors.First())).ConfigureAwait(false);
 
                     var pages = book.VolumeInfo.PageCount;
-                    var isbn = book.VolumeInfo.IndustryIdentifiers.First().Identifier;
+                    var isbn = book.VolumeInfo.IndustryIdentifiers?.First().Identifier;
 
                     var bookDetail = new BookDetail
                     {
@@ -200,11 +203,6 @@ namespace ThePage.Core
             await HandleSearchResults(result);
 
             IsLoading = false;
-        }
-
-        protected async Task<Author> SelectOrCreateAuthor(Author author)
-        {
-            return await SelectOrCreateAuthor(author, null).ConfigureAwait(false);
         }
 
         protected async Task<Author> SelectOrCreateAuthor(Author author, string olKey)
@@ -244,6 +242,25 @@ namespace ThePage.Core
             _device.HideKeyboard();
 
             return _navigation.Navigate<AuthorSelectViewModel, AuthorSelectParameter, Author>(new AuthorSelectParameter(author));
+        }
+
+        #endregion
+
+        #region Private
+
+        async Task<Author> SelectOrCreateAuthor(Author author)
+        {
+            return await SelectOrCreateAuthor(author, null).ConfigureAwait(false);
+        }
+
+        async Task<Author> CreateOrGetUnknownAuthor()
+        {
+            var searchAuthors = await _authorService.Search("Unknown");
+            if (searchAuthors.Count() == 1)
+                return searchAuthors.First();
+
+            await _userInteraction.AlertAsync($"No author is defined to selected book. 'Unkown' author will be created");
+            return await _authorService.AddAuthor("Unknown");
         }
 
         #endregion
