@@ -26,10 +26,12 @@
         local:layout_constraintEnd_toStartOf="@id/fabAdd" />
     <MvxRecyclerView
         android:id="@+id/lstItems"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        local:MvxItemTemplate="@layout/item_book"
+        android:layout_gravity="top|center"
+        local:MvxItemTemplate="@layout/item_book_grid"
+        local:layout_constraintStart_toStartOf="parent"
+        local:layout_constraintEnd_toEndOf="parent"
         local:MvxBind="ItemsSource Books;ItemClick ItemClickCommand;" />
     <FrameLayout
         android:layout_width="match_parent"

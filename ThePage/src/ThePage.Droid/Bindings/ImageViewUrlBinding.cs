@@ -1,9 +1,7 @@
 
 using System;
 using System.Net;
-using System.Threading.Tasks;
 using Android.Graphics;
-using Android.Net;
 using Android.Widget;
 using MvvmCross.Binding;
 using MvvmCross.Platforms.Android.Binding.Target;
@@ -35,10 +33,14 @@ namespace ThePage.Droid
         protected override void SetValueImpl(object target, object value)
         {
             if (value == null)
-                return;
-
-            var imageBitmap = GetImageBitmapFromUrl((string)value);
-            View.SetImageBitmap(imageBitmap);
+            {
+                View.SetImageResource(Resource.Drawable.book_cover);
+            }
+            else
+            {
+                var imageBitmap = GetImageBitmapFromUrl((string)value);
+                View.SetImageBitmap(imageBitmap);
+            }
         }
 
         private Bitmap GetImageBitmapFromUrl(string url)
@@ -54,10 +56,7 @@ namespace ThePage.Droid
                 }
             }
             return imageBitmap;
-
         }
-
-
 
         #endregion
     }

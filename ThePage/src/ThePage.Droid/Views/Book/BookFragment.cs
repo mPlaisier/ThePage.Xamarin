@@ -1,3 +1,7 @@
+using Android.Graphics;
+using Android.OS;
+using Android.Views;
+using AndroidX.RecyclerView.Widget;
 using MvvmCross.Base;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
 using MvvmCross.ViewModels;
@@ -43,6 +47,22 @@ namespace ThePage.Droid
         #endregion
 
         #region LifeCycle
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            var view = base.OnCreateView(inflater, container, savedInstanceState);
+
+            var recyclerView = view.FindViewById<RecyclerView>(Resource.Id.lstItems);
+
+            int spanCount = 3;
+            recyclerView.SetLayoutManager(new GridLayoutManager(Context, spanCount));
+
+            int spacing = 25;
+            bool includeEdge = true;
+            recyclerView.AddItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+
+            return view;
+        }
 
         public override void OnResume()
         {

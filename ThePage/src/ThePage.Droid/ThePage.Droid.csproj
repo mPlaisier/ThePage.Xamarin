@@ -121,6 +121,7 @@
     <Compile Include="Views\!Base\BaseListFragment.cs" />
     <Compile Include="Views\Book\BookSearchFragment.cs" />
     <Compile Include="Bindings\ImageViewUrlBinding.cs" />
+    <Compile Include="Utils\GridSpacingItemDecoration.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross">
@@ -568,6 +569,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\book_cover.webp">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\item_book_grid.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

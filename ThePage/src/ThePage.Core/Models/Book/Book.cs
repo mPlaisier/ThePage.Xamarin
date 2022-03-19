@@ -1,3 +1,5 @@
+using CBP.Extensions;
+
 namespace ThePage.Core
 {
     public class Book
@@ -13,6 +15,8 @@ namespace ThePage.Core
         public ImageLinks Images { get; set; }
 
         public string ImageUri => Images?.GetImageUrl();
+
+        public bool ShowLabel => ImageUri.IsNotNull();
 
         #endregion
 
